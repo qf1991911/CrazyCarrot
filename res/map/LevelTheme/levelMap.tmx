@@ -1,0 +1,883 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="9" tilewidth="80" tileheight="80">
+ <tileset firstgid="1" name="levelButton" tilewidth="80" tileheight="80">
+  <image source="levelButton.png" width="80" height="90"/>
+ </tileset>
+ <imagelayer name="图像图层 1" width="100" height="9">
+  <image source="whole.png"/>
+ </imagelayer>
+ <layer name="content" width="100" height="9" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJztwQEBAAAAgiD/r25IQAEAAPBoDhAAAQ==
+  </data>
+ </layer>
+ <objectgroup name="objs" width="100" height="9">
+  <object name="level" x="351" y="433" width="30" height="28">
+   <properties>
+    <property name="level" value="101"/>
+   </properties>
+  </object>
+  <object name="level" x="543" y="481" width="30" height="28">
+   <properties>
+    <property name="level" value="102"/>
+   </properties>
+  </object>
+  <object name="level" x="535" y="347" width="30" height="28">
+   <properties>
+    <property name="level" value="103"/>
+   </properties>
+  </object>
+  <object name="level" x="660" y="273" width="30" height="28">
+   <properties>
+    <property name="level" value="104"/>
+   </properties>
+  </object>
+  <object name="level" x="828" y="320" width="30" height="28">
+   <properties>
+    <property name="level" value="105"/>
+   </properties>
+  </object>
+  <object name="level" x="864" y="492" width="30" height="28">
+   <properties>
+    <property name="level" value="106"/>
+   </properties>
+  </object>
+  <object name="level" x="1050" y="409" width="30" height="28">
+   <properties>
+    <property name="level" value="107"/>
+   </properties>
+  </object>
+  <object name="level" x="1204" y="301" width="30" height="28">
+   <properties>
+    <property name="level" value="108"/>
+   </properties>
+  </object>
+  <object name="level" x="1366" y="343" width="30" height="28">
+   <properties>
+    <property name="level" value="109"/>
+   </properties>
+  </object>
+  <object name="level" x="1316" y="495" width="30" height="28">
+   <properties>
+    <property name="level" value="110"/>
+   </properties>
+  </object>
+  <object name="level" x="2500" y="184" width="30" height="28">
+   <properties>
+    <property name="level" value="205"/>
+   </properties>
+  </object>
+  <object name="level" x="2669" y="284" width="30" height="28">
+   <properties>
+    <property name="level" value="206"/>
+   </properties>
+  </object>
+  <object name="level" x="1874" y="357" width="30" height="28">
+   <properties>
+    <property name="level" value="201"/>
+   </properties>
+  </object>
+  <object name="level" x="2594" y="465" width="30" height="28">
+   <properties>
+    <property name="level" value="207"/>
+   </properties>
+  </object>
+  <object name="level" x="2064" y="371" width="30" height="28">
+   <properties>
+    <property name="level" value="202"/>
+   </properties>
+  </object>
+  <object name="level" x="2813" y="456" width="30" height="28">
+   <properties>
+    <property name="level" value="208"/>
+   </properties>
+  </object>
+  <object name="level" x="2236" y="404" width="30" height="28">
+   <properties>
+    <property name="level" value="203"/>
+   </properties>
+  </object>
+  <object name="level" x="2855" y="263" width="30" height="28">
+   <properties>
+    <property name="level" value="209"/>
+   </properties>
+  </object>
+  <object name="level" x="2283" y="246" width="30" height="28">
+   <properties>
+    <property name="level" value="204"/>
+   </properties>
+  </object>
+  <object name="level" x="3061" y="221" width="30" height="28">
+   <properties>
+    <property name="level" value="210"/>
+   </properties>
+  </object>
+  <object name="level" x="4340" y="468" width="30" height="28">
+   <properties>
+    <property name="level" value="307"/>
+   </properties>
+  </object>
+  <object name="level" x="4760" y="387" width="30" height="28">
+   <properties>
+    <property name="level" value="309"/>
+   </properties>
+  </object>
+  <object name="level" x="3504" y="333" width="30" height="28">
+   <properties>
+    <property name="level" value="302"/>
+   </properties>
+  </object>
+  <object name="level" x="4020" y="408" width="30" height="28">
+   <properties>
+    <property name="level" value="305"/>
+   </properties>
+  </object>
+  <object name="level" x="3503" y="475" width="30" height="28">
+   <properties>
+    <property name="level" value="301"/>
+   </properties>
+  </object>
+  <object name="level" x="4541" y="435" width="30" height="28">
+   <properties>
+    <property name="level" value="308"/>
+   </properties>
+  </object>
+  <object name="level" x="4721" y="237" width="30" height="28">
+   <properties>
+    <property name="level" value="310"/>
+   </properties>
+  </object>
+  <object name="level" x="3956" y="270" width="30" height="28">
+   <properties>
+    <property name="level" value="304"/>
+   </properties>
+  </object>
+  <object name="level" x="4152" y="481" width="30" height="28">
+   <properties>
+    <property name="level" value="306"/>
+   </properties>
+  </object>
+  <object name="level" x="5630" y="321" width="30" height="28">
+   <properties>
+    <property name="level" value="404"/>
+   </properties>
+  </object>
+  <object name="level" x="6027" y="412" width="30" height="28">
+   <properties>
+    <property name="level" value="407"/>
+   </properties>
+  </object>
+  <object name="level" x="6284" y="500" width="30" height="30">
+   <properties>
+    <property name="level" value="410"/>
+   </properties>
+  </object>
+  <object name="level" x="5274" y="359" width="30" height="28">
+   <properties>
+    <property name="level" value="401"/>
+   </properties>
+  </object>
+  <object name="level" x="6159" y="356" width="30" height="28">
+   <properties>
+    <property name="level" value="408"/>
+   </properties>
+  </object>
+  <object name="level" x="5789" y="387" width="30" height="28">
+   <properties>
+    <property name="level" value="405"/>
+   </properties>
+  </object>
+  <object name="level" x="5496" y="463" width="30" height="28">
+   <properties>
+    <property name="level" value="403"/>
+   </properties>
+  </object>
+  <object name="level" x="6294" y="396" width="30" height="28">
+   <properties>
+    <property name="level" value="409"/>
+   </properties>
+  </object>
+  <object name="level" x="5907" y="488" width="30" height="28">
+   <properties>
+    <property name="level" value="406"/>
+   </properties>
+  </object>
+  <object name="level" x="5332" y="518" width="30" height="28">
+   <properties>
+    <property name="level" value="402"/>
+   </properties>
+  </object>
+  <object name="level" x="3789" y="229" width="30" height="28">
+   <properties>
+    <property name="level" value="303"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="points" width="100" height="9">
+  <object name="point1_1" x="402" y="480">
+   <properties>
+    <property name="level" value="102"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point1_2" x="441" y="497">
+   <properties>
+    <property name="level" value="102"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point1_3" x="488" y="507">
+   <properties>
+    <property name="level" value="102"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point2_1" x="612" y="443">
+   <properties>
+    <property name="level" value="103"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point2_2" x="587" y="399">
+   <properties>
+    <property name="level" value="103"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point3_1" x="545" y="324">
+   <properties>
+    <property name="level" value="104"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point3_2" x="580" y="310">
+   <properties>
+    <property name="level" value="104"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point3_3" x="616" y="303">
+   <properties>
+    <property name="level" value="104"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point4_1" x="713" y="299">
+   <properties>
+    <property name="level" value="105"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point4_2" x="754" y="303">
+   <properties>
+    <property name="level" value="105"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point4_3" x="795" y="311">
+   <properties>
+    <property name="level" value="105"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point5_1" x="808" y="396">
+   <properties>
+    <property name="level" value="106"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point5_2" x="794" y="449">
+   <properties>
+    <property name="level" value="106"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point5_3" x="819" y="491">
+   <properties>
+    <property name="level" value="106"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point6_1" x="925" y="516">
+   <properties>
+    <property name="level" value="107"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point6_2" x="975" y="498">
+   <properties>
+    <property name="level" value="107"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point6_3" x="1016" y="469">
+   <properties>
+    <property name="level" value="107"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point7_1" x="1099" y="390">
+   <properties>
+    <property name="level" value="108"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point7_2" x="1133" y="366">
+   <properties>
+    <property name="level" value="108"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point7_3" x="1168" y="345">
+   <properties>
+    <property name="level" value="108"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point8_1" x="1253" y="319">
+   <properties>
+    <property name="level" value="109"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point8_2" x="1301" y="314">
+   <properties>
+    <property name="level" value="109"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point8_3" x="1344" y="331">
+   <properties>
+    <property name="level" value="109"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point9_1" x="1375" y="403">
+   <properties>
+    <property name="level" value="110"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point9_2" x="1353" y="436">
+   <properties>
+    <property name="level" value="110"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point9_3" x="1320" y="467">
+   <properties>
+    <property name="level" value="110"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point1_1" x="1936" y="380">
+   <properties>
+    <property name="level" value="202"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point1_2" x="1982" y="386">
+   <properties>
+    <property name="level" value="202"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point1_3" x="2022" y="392">
+   <properties>
+    <property name="level" value="202"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point2_1" x="2117" y="407">
+   <properties>
+    <property name="level" value="203"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point2_2" x="2154" y="417">
+   <properties>
+    <property name="level" value="203"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point2_3" x="2197" y="426">
+   <properties>
+    <property name="level" value="203"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point3_1" x="2271" y="384">
+   <properties>
+    <property name="level" value="204"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point3_2" x="2274" y="348">
+   <properties>
+    <property name="level" value="204"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point3_3" x="2282" y="305">
+   <properties>
+    <property name="level" value="204"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point4_1" x="2342" y="223">
+   <properties>
+    <property name="level" value="205"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point4_2" x="2391" y="210">
+   <properties>
+    <property name="level" value="205"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point4_3" x="2446" y="208">
+   <properties>
+    <property name="level" value="205"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point5_1" x="2559" y="218">
+   <properties>
+    <property name="level" value="206"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point5_2" x="2604" y="232">
+   <properties>
+    <property name="level" value="206"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point5_3" x="2644" y="254">
+   <properties>
+    <property name="level" value="206"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point6_1" x="2660" y="362">
+   <properties>
+    <property name="level" value="207"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point6_2" x="2627" y="398">
+   <properties>
+    <property name="level" value="207"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point6_3" x="2598" y="435">
+   <properties>
+    <property name="level" value="207"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point7_19" x="2638" y="521">
+   <properties>
+    <property name="level" value="208"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point7_2" x="2696" y="527">
+   <properties>
+    <property name="level" value="208"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point7_3" x="2768" y="517">
+   <properties>
+    <property name="level" value="208"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point8_1" x="2830" y="434">
+   <properties>
+    <property name="level" value="209"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point8_2" x="2823" y="388">
+   <properties>
+    <property name="level" value="209"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point8_3" x="2821" y="339">
+   <properties>
+    <property name="level" value="209"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point9_1" x="2909" y="265">
+   <properties>
+    <property name="level" value="210"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point9_2" x="2955" y="253">
+   <properties>
+    <property name="level" value="210"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point9_3" x="3005" y="250">
+   <properties>
+    <property name="level" value="210"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point1_1" x="3484" y="466">
+   <properties>
+    <property name="level" value="302"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point1_2" x="3464" y="427">
+   <properties>
+    <property name="level" value="302"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point1_3" x="3475" y="390">
+   <properties>
+    <property name="level" value="302"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point2_1" x="3696" y="261">
+   <properties>
+    <property name="level" value="303"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point2_2" x="3748" y="256">
+   <properties>
+    <property name="level" value="303"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point3_1" x="3840" y="251">
+   <properties>
+    <property name="level" value="304"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point3_2" x="3882" y="250">
+   <properties>
+    <property name="level" value="304"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point3_3" x="3923" y="259">
+   <properties>
+    <property name="level" value="304"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point4_1" x="3978" y="326">
+   <properties>
+    <property name="level" value="305"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point4_2" x="3992" y="362">
+   <properties>
+    <property name="level" value="305"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point4_3" x="4004" y="395">
+   <properties>
+    <property name="level" value="305"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point5_1" x="4055" y="460">
+   <properties>
+    <property name="level" value="306"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point5_2" x="4085" y="482">
+   <properties>
+    <property name="level" value="306"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point5_3" x="4113" y="498">
+   <properties>
+    <property name="level" value="306"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point6_1" x="4203" y="508">
+   <properties>
+    <property name="level" value="307"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point6_2" x="4248" y="502">
+   <properties>
+    <property name="level" value="307"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point6_3" x="4290" y="497">
+   <properties>
+    <property name="level" value="307"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point7_1" x="4394" y="485">
+   <properties>
+    <property name="level" value="308"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point7_2" x="4440" y="479">
+   <properties>
+    <property name="level" value="308"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point7_3" x="4494" y="471">
+   <properties>
+    <property name="level" value="308"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point8_1" x="4598" y="455">
+   <properties>
+    <property name="level" value="309"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point8_2" x="4654" y="449">
+   <properties>
+    <property name="level" value="309"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point8_3" x="4704" y="437">
+   <properties>
+    <property name="level" value="309"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point9_1" x="4769" y="365">
+   <properties>
+    <property name="level" value="310"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point9_2" x="4756" y="333">
+   <properties>
+    <property name="level" value="310"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point9_3" x="4740" y="302">
+   <properties>
+    <property name="level" value="310"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point1_1" x="5311" y="422">
+   <properties>
+    <property name="level" value="402"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point1_2" x="5317" y="459">
+   <properties>
+    <property name="level" value="402"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point1_3" x="5321" y="497">
+   <properties>
+    <property name="level" value="402"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point2_1" x="5381" y="560">
+   <properties>
+    <property name="level" value="403"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point2_2" x="5437" y="552">
+   <properties>
+    <property name="level" value="403"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point2_3" x="5473" y="526">
+   <properties>
+    <property name="level" value="403"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point3_1" x="5533" y="440">
+   <properties>
+    <property name="level" value="404"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point3_2" x="5553" y="401">
+   <properties>
+    <property name="level" value="404"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point3_3" x="5590" y="369">
+   <properties>
+    <property name="level" value="404"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point4_1" x="5686" y="337">
+   <properties>
+    <property name="level" value="405"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point4_2" x="5726" y="345">
+   <properties>
+    <property name="level" value="405"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point4_3" x="5766" y="366">
+   <properties>
+    <property name="level" value="405"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point5_1" x="5803" y="452">
+   <properties>
+    <property name="level" value="406"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point5_2" x="5829" y="486">
+   <properties>
+    <property name="level" value="406"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point5_3" x="5868" y="507">
+   <properties>
+    <property name="level" value="406"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point6_1" x="5960" y="515">
+   <properties>
+    <property name="level" value="407"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point6_2" x="5994" y="505">
+   <properties>
+    <property name="level" value="407"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point6_3" x="6022" y="477">
+   <properties>
+    <property name="level" value="407"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point7_1" x="6072" y="390">
+   <properties>
+    <property name="level" value="408"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point7_2" x="6114" y="378">
+   <properties>
+    <property name="level" value="408"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point8_2" x="6224" y="374">
+   <properties>
+    <property name="level" value="409"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+  <object name="point8_3" x="6265" y="388">
+   <properties>
+    <property name="level" value="409"/>
+    <property name="step" value="3"/>
+   </properties>
+  </object>
+  <object name="point9_1" x="6312" y="455">
+   <properties>
+    <property name="level" value="410"/>
+    <property name="step" value="1"/>
+   </properties>
+  </object>
+  <object name="point9_2" x="6306" y="488">
+   <properties>
+    <property name="level" value="410"/>
+    <property name="step" value="2"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="widget" width="100" height="9">
+  <object name="balloon" x="1260" y="196">
+   <properties>
+    <property name="animation" value="map1_balloon"/>
+   </properties>
+  </object>
+  <object name="bubble" x="1464" y="274">
+   <properties>
+    <property name="animation" value="map1_bubble"/>
+   </properties>
+  </object>
+  <object name="penguin1" x="2111" y="507">
+   <properties>
+    <property name="animation" value="map2_penguin1"/>
+   </properties>
+  </object>
+  <object name="eye" x="3590" y="423">
+   <properties>
+    <property name="animation" value="map3_eye"/>
+   </properties>
+  </object>
+  <object name="fountain" x="4460" y="369">
+   <properties>
+    <property name="animation" value="map3_fountain"/>
+   </properties>
+  </object>
+  <object name="balloon2" x="5156" y="126"/>
+  <object name="bubble2" x="5857" y="274">
+   <properties>
+    <property name="animation" value="map1_bubble"/>
+   </properties>
+  </object>
+  <object name="mermaid" x="5699" y="436">
+   <properties>
+    <property name="animation" value="map4_mermaid"/>
+   </properties>
+  </object>
+  <object name="balloon3" x="3990" y="215"/>
+  <object name="balloon4" x="4350" y="227"/>
+  <object name="fountain2" x="2463" y="506">
+   <properties>
+    <property name="animation" value="map2_fountain"/>
+   </properties>
+  </object>
+  <object name="hand" x="501" y="301"/>
+  <object name="duck" x="2477" y="296"/>
+ </objectgroup>
+</map>

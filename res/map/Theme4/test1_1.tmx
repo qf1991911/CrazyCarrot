@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="13" height="7" tilewidth="70" tileheight="70">
+ <tileset firstgid="1" name="theme1MapTile3" tilewidth="70" tileheight="70">
+  <image source="theme1Tiles.png" width="490" height="490"/>
+  <tile id="3">
+   <properties>
+    <property name="thingIdx" value="301"/>
+   </properties>
+  </tile>
+  <tile id="6">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="10">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="11">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="12">
+   <properties>
+    <property name="thingIdx" value="201"/>
+   </properties>
+  </tile>
+  <tile id="13">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="14">
+   <properties>
+    <property name="thingIdx" value="701"/>
+   </properties>
+  </tile>
+  <tile id="17">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="20">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="25">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="26">
+   <properties>
+    <property name="thingIdx" value="101"/>
+   </properties>
+  </tile>
+  <tile id="27">
+   <properties>
+    <property name="thingIdx" value="102"/>
+   </properties>
+  </tile>
+  <tile id="30">
+   <properties>
+    <property name="thingIdx" value="201"/>
+   </properties>
+  </tile>
+  <tile id="31">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="32">
+   <properties>
+    <property name="thingIdx" value="103"/>
+   </properties>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="thingIdx" value="101"/>
+   </properties>
+  </tile>
+  <tile id="35">
+   <properties>
+    <property name="thingIdx" value="501"/>
+   </properties>
+  </tile>
+  <tile id="38">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="39">
+   <properties>
+    <property name="thingIdx" value="101"/>
+   </properties>
+  </tile>
+  <tile id="42">
+   <properties>
+    <property name="thingIdx" value="301"/>
+   </properties>
+  </tile>
+  <tile id="44">
+   <properties>
+    <property name="thingIdx" value="201"/>
+   </properties>
+  </tile>
+  <tile id="45">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="46">
+   <properties>
+    <property name="thingIdx" value="102"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="content" width="13" height="7">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAfqOMQ1wRiCSDWAGJ5NDkpHHqk8KiRhJoHM1MNyhZHUiNHwK3Y7MXlFnxmKqDxlaBugrlNHF0DEgAA7UsC9Q==
+  </data>
+ </layer>
+ <layer name="things" width="13" height="7">
+  <data encoding="base64" compression="zlib">
+   eJxjYBhYoD/A9tMTAAAswAAw
+  </data>
+ </layer>
+ <objectgroup name="objs" width="13" height="7">
+  <object name="way1_0" x="164" y="89" width="25" height="24"/>
+  <object name="way1_1" x="165" y="229" width="26" height="20"/>
+  <object name="way1_2" x="570" y="232" width="26" height="20"/>
+  <object name="way1_3" x="588" y="105" width="20" height="21"/>
+  <object name="way1_4" x="787" y="94" width="20" height="21"/>
+  <object name="way1_5" x="797" y="375" width="21" height="24"/>
+  <object name="way2_0" x="155" y="447" width="29" height="21"/>
+  <object name="way2_1" x="438" y="441" width="21" height="24"/>
+  <object name="way2_2" x="441" y="235" width="25" height="23"/>
+  <object name="way2_3" x="579" y="221" width="23" height="24"/>
+  <object name="way2_4" x="597" y="94" width="23" height="24"/>
+  <object name="way2_5" x="780" y="99" width="20" height="26"/>
+  <object name="way2_6" x="793" y="359" width="21" height="22"/>
+ </objectgroup>
+</map>

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="13" height="7" tilewidth="70" tileheight="70">
+ <tileset firstgid="1" name="theme1Tiles" tilewidth="70" tileheight="70" spacing="2" margin="2">
+  <image source="theme3Tiles.png" width="512" height="512"/>
+  <tile id="5">
+   <properties>
+    <property name="thingIdx" value="302"/>
+   </properties>
+  </tile>
+  <tile id="7">
+   <properties>
+    <property name="thingIdx" value="401"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="thingIdx" value="402"/>
+   </properties>
+  </tile>
+  <tile id="11">
+   <properties>
+    <property name="thingIdx" value="204"/>
+   </properties>
+  </tile>
+  <tile id="12">
+   <properties>
+    <property name="thingIdx" value="301"/>
+   </properties>
+  </tile>
+  <tile id="14">
+   <properties>
+    <property name="thingIdx" value="101"/>
+   </properties>
+  </tile>
+  <tile id="15">
+   <properties>
+    <property name="thingIdx" value="102"/>
+   </properties>
+  </tile>
+  <tile id="16">
+   <properties>
+    <property name="thingIdx" value="103"/>
+   </properties>
+  </tile>
+  <tile id="17">
+   <properties>
+    <property name="thingIdx" value="104"/>
+   </properties>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="thingIdx" value="105"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="thingIdx" value="106"/>
+   </properties>
+  </tile>
+  <tile id="20">
+   <properties>
+    <property name="thingIdx" value="103"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="thingIdx" value="106"/>
+   </properties>
+  </tile>
+  <tile id="25">
+   <properties>
+    <property name="thingIdx" value="105"/>
+   </properties>
+  </tile>
+  <tile id="26">
+   <properties>
+    <property name="thingIdx" value="104"/>
+   </properties>
+  </tile>
+  <tile id="27">
+   <properties>
+    <property name="thingIdx" value="102"/>
+   </properties>
+  </tile>
+  <tile id="28">
+   <properties>
+    <property name="thingIdx" value="203"/>
+   </properties>
+  </tile>
+  <tile id="29">
+   <properties>
+    <property name="thingIdx" value="202"/>
+   </properties>
+  </tile>
+  <tile id="30">
+   <properties>
+    <property name="thingIdx" value="201"/>
+   </properties>
+  </tile>
+  <tile id="32">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="34">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="35">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="36">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="37">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="38">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="39">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="40">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="41">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="42">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="43">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="44">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="45">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="46">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="47">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="content" width="13" height="7">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAO0GNgcFBnYDgAwpoMDAsIqVdmYEhQAtJKEDYDUF8CIT3qSOaC2KTo0YPYQ5QeZYg/GGBYmQj/EAMA6u0K5g==
+  </data>
+ </layer>
+ <layer name="things" width="13" height="7">
+  <data encoding="base64" compression="zlib">
+   eJxjYIAAUSIwMmAGYhYG/ABdDRcQcxPQg00NsjnCRLoD2Rx0PYTswAVw+QcUNrxAzAe1C8YWRbMLAIArAf8=
+  </data>
+ </layer>
+ <objectgroup name="objs" width="13" height="7">
+  <object name="thingBomb" x="442" y="28" width="30" height="24"/>
+  <object name="thingBomb" x="511" y="27" width="30" height="24"/>
+  <object name="thingBomb" x="585" y="26" width="30" height="24"/>
+  <object name="thingBomb" x="653" y="28" width="30" height="24"/>
+  <object name="thingBomb" x="722" y="27" width="30" height="24"/>
+  <object name="thingBomb" x="731" y="101" width="30" height="24"/>
+  <object name="thingBomb" x="733" y="157" width="30" height="24"/>
+  <object name="thingBomb" x="662" y="237" width="30" height="24"/>
+  <object name="thingBomb" x="656" y="298" width="30" height="24"/>
+  <object name="thingBomb" x="731" y="379" width="30" height="24"/>
+  <object name="thingBomb" x="732" y="443" width="30" height="24"/>
+  <object name="thingBomb" x="655" y="443" width="30" height="24"/>
+  <object name="thingBomb" x="568" y="445" width="30" height="24"/>
+  <object name="thingBomb" x="513" y="443" width="30" height="24"/>
+  <object name="thingBomb" x="446" y="443" width="30" height="24"/>
+  <object name="thingBomb" x="369" y="440" width="30" height="24"/>
+  <object name="thingBomb" x="304" y="442" width="30" height="24"/>
+  <object name="thingBomb" x="228" y="441" width="30" height="24"/>
+  <object name="thingBomb" x="146" y="431" width="30" height="24"/>
+  <object name="thingBomb" x="146" y="375" width="30" height="24"/>
+  <object name="thingBomb" x="174" y="301" width="30" height="24"/>
+  <object name="thingBomb" x="159" y="243" width="30" height="24"/>
+  <object name="thingBomb" x="143" y="168" width="30" height="24"/>
+  <object name="thingBomb" x="157" y="100" width="30" height="24"/>
+  <object name="thingBomb" x="160" y="21" width="30" height="24"/>
+  <object name="thingBomb" x="230" y="23" width="30" height="24"/>
+  <object name="thingBomb" x="303" y="28" width="30" height="24"/>
+  <object name="thingBomb" x="369" y="31" width="30" height="24"/>
+  <object name="hero" x="645" y="217" width="24" height="25"/>
+  <object name="preTower" x="439" y="234" width="29" height="28">
+   <properties>
+    <property name="level" value="2"/>
+    <property name="towerIdx" value="1"/>
+   </properties>
+  </object>
+  <object name="way1_0" x="373" y="91" width="26" height="22"/>
+  <object name="way1_1" x="574" y="94" width="26" height="22"/>
+  <object name="way1_2" x="579" y="366" width="26" height="22"/>
+  <object name="way1_3" x="309" y="369" width="26" height="22"/>
+  <object name="way1_4" x="307" y="170" width="26" height="22"/>
+  <object name="way1_5" x="506" y="167" width="26" height="22"/>
+  <object name="way1_6" x="509" y="301" width="26" height="22"/>
+  <object name="way1_7" x="436" y="302" width="26" height="22"/>
+ </objectgroup>
+</map>

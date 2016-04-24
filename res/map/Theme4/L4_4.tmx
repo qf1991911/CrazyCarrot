@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="13" height="7" tilewidth="70" tileheight="70">
+ <tileset firstgid="1" name="theme1Tiles" tilewidth="70" tileheight="70" spacing="2" margin="2">
+  <image source="theme4Tiles.png" width="512" height="512"/>
+  <tile id="3">
+   <properties>
+    <property name="thingIdx" value="309"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="thingIdx" value="310"/>
+   </properties>
+  </tile>
+  <tile id="7">
+   <properties>
+    <property name="thingIdx" value="405"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="thingIdx" value="201"/>
+   </properties>
+  </tile>
+  <tile id="10">
+   <properties>
+    <property name="thingIdx" value="308"/>
+   </properties>
+  </tile>
+  <tile id="12">
+   <properties>
+    <property name="thingIdx" value="121"/>
+   </properties>
+  </tile>
+  <tile id="13">
+   <properties>
+    <property name="thingIdx" value="122"/>
+   </properties>
+  </tile>
+  <tile id="15">
+   <properties>
+    <property name="thingIdx" value="120"/>
+   </properties>
+  </tile>
+  <tile id="16">
+   <properties>
+    <property name="thingIdx" value="123"/>
+   </properties>
+  </tile>
+  <tile id="17">
+   <properties>
+    <property name="thingIdx" value="101"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="20">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="21">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="23">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="25">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="26">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="27">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="28">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="29">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="30">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="31">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="32">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="34">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="35">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="36">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="37">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="38">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="39">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="40">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="41">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="42">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="43">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="44">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="45">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="46">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+  <tile id="47">
+   <properties>
+    <property name="way" value="1"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="content" width="13" height="7">
+  <data encoding="base64" compression="zlib">
+   eJxjYKA+0AViPSjWJ1KtBpKYKhLbAAljk8cnhqxHDYt7cOkBYXUkjOw2TSx6iAUAxvYEOQ==
+  </data>
+ </layer>
+ <layer name="things" width="13" height="7">
+  <data encoding="base64" compression="zlib">
+   eJxjYIAAbiDmYcAE/EAsiEUcGfBBaRYgZiWglpeAPD8BeWR1IHcxAjETDvfgso8DiDmJtIeQu/jQ+CB1QlA2LDxgegG4hAEQ
+  </data>
+ </layer>
+ <objectgroup name="objs" width="13" height="7">
+  <object name="way1_0" x="799" y="370" width="16" height="17"/>
+  <object name="way1_1" x="794" y="104" width="16" height="17"/>
+  <object name="way1_2" x="587" y="106" width="16" height="17"/>
+  <object name="way1_3" x="577" y="160" width="16" height="17"/>
+  <object name="way1_4" x="447" y="168" width="16" height="17"/>
+  <object name="way1_5" x="446" y="297" width="16" height="17"/>
+  <object name="way1_6" x="577" y="309" width="16" height="17"/>
+  <object name="way1_7" x="581" y="371" width="16" height="17"/>
+  <object name="way1_8" x="234" y="375" width="16" height="17"/>
+  <object name="way1_9" x="238" y="235" width="16" height="17"/>
+  <object name="way1_10" x="94" y="235" width="16" height="17"/>
+  <object name="water" x="373" y="451" width="24" height="22"/>
+  <object name="water" x="373" y="304" width="24" height="22"/>
+  <object name="water" x="371" y="168" width="24" height="22"/>
+  <object name="water" x="365" y="98" width="24" height="22"/>
+  <object name="water" x="368" y="24" width="24" height="22"/>
+  <object name="waterTowerSeat" x="438" y="451" width="27" height="23"/>
+  <object name="waterTowerSeat" x="515" y="243" width="27" height="23"/>
+  <object name="waterTowerSeat" x="725" y="175" width="27" height="23"/>
+  <object name="waterTowerSeat" x="583" y="37" width="27" height="23"/>
+  <object name="waterTowerSeat" x="652" y="381" width="27" height="23"/>
+  <object name="waterTowerSeat" x="791" y="455" width="27" height="23"/>
+  <object name="water" x="443" y="25" width="24" height="22"/>
+  <object name="water" x="514" y="32" width="24" height="22"/>
+  <object name="water" x="654" y="25" width="24" height="22"/>
+  <object name="water" x="724" y="28" width="24" height="22"/>
+  <object name="water" x="791" y="26" width="24" height="22"/>
+  <object name="water" x="442" y="98" width="24" height="22"/>
+  <object name="water" x="513" y="94" width="24" height="22"/>
+  <object name="water" x="652" y="95" width="24" height="22"/>
+  <object name="water" x="727" y="97" width="24" height="22"/>
+  <object name="water" x="514" y="165" width="24" height="22"/>
+  <object name="water" x="656" y="167" width="24" height="22"/>
+  <object name="water" x="734" y="231" width="24" height="22"/>
+  <object name="water" x="648" y="230" width="24" height="22"/>
+  <object name="water" x="581" y="231" width="24" height="22"/>
+  <object name="water" x="656" y="306" width="24" height="22"/>
+  <object name="water" x="720" y="306" width="24" height="22"/>
+  <object name="water" x="720" y="379" width="24" height="22"/>
+  <object name="water" x="722" y="444" width="24" height="22"/>
+  <object name="water" x="656" y="440" width="24" height="22"/>
+  <object name="water" x="579" y="440" width="24" height="22"/>
+  <object name="preTower" x="505" y="234" width="24" height="25">
+   <properties>
+    <property name="level" value="2"/>
+    <property name="towerIdx" value="16"/>
+   </properties>
+  </object>
+  <object name="hero" x="257" y="374" width="19" height="22"/>
+  <object name="water" x="788" y="363" width="24" height="22"/>
+  <object name="water" x="792" y="302" width="24" height="22"/>
+  <object name="water" x="793" y="243" width="24" height="22"/>
+  <object name="water" x="788" y="170" width="24" height="22"/>
+  <object name="water" x="776" y="95" width="24" height="22"/>
+  <object name="water" x="594" y="98" width="24" height="22"/>
+  <object name="water" x="580" y="158" width="24" height="22"/>
+  <object name="water" x="451" y="182" width="24" height="22"/>
+  <object name="water" x="439" y="240" width="24" height="22"/>
+  <object name="water" x="455" y="302" width="24" height="22"/>
+  <object name="water" x="520" y="306" width="24" height="22"/>
+  <object name="water" x="577" y="318" width="24" height="22"/>
+  <object name="water" x="573" y="371" width="24" height="22"/>
+  <object name="water" x="507" y="371" width="24" height="22"/>
+  <object name="water" x="444" y="369" width="24" height="22"/>
+  <object name="water" x="380" y="371" width="24" height="22"/>
+ </objectgroup>
+</map>

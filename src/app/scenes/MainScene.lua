@@ -9,7 +9,6 @@ function MainScene:ctor()
    self:TopButton()
    self:RightButton()
    
-   
 end
 
 function MainScene:createBackGround()

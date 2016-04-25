@@ -33,7 +33,7 @@ function StartScene:startUI()
 	local logo = display.newSprite("#mainLogo.png")
 	:pos(display.cx, display.cy*1.57)
 	:scale(1)
-	:addTo(logolayer)
+	:addTo(logolayer) --开始界面布局
 
 end
 
@@ -81,7 +81,7 @@ function StartScene:button()
 	:pos(display.width - display.cy / 4, display.height - display.cy / 4)
 	:setScale(0.9)
 	:addTo(self)
-	self:buttonEvent(moregames)
+	self:buttonEvent(moregames) --开始界面按钮
 
 end
 
@@ -164,7 +164,7 @@ function StartScene:music(setbutton,startbutton)
 		musicset:removeFromParent()
 		setbutton:setButtonEnabled(true)
 		startbutton:setButtonEnabled(true)
-	end)
+	end) --设置按钮界面
 
 end
 
@@ -218,14 +218,14 @@ function StartScene:restrat(setagain,soundeffect,bgm)
 	self:buttonEvent(cancel)
 
 
-	-- body
+	-- body -- --重置按钮界面
 
 end
 
 function StartScene:logoaction()
 	local move = cc.MoveTo:create(1,cc.p(0,0))
 	local el = cc.EaseElasticOut:create(move)
-	return el
+	return el --logo动作
 
 end
 
@@ -237,11 +237,11 @@ function StartScene:playaction()
 	local sq = cc.Sequence:create(scale,el3,del)
 
 	local rep = cc.RepeatForever:create(sq)
-	return rep
+	return rep --开始按钮动作
 
 end
 
-function StartScene:buttonEvent(btnname)
+function StartScene:buttonEvent(btnname) -- 按钮点击动作
 	btnname:onButtonPressed(function(event)
 		local scl = cc.ScaleTo:create(0.1,1.2)
 		btnname:runAction(scl)

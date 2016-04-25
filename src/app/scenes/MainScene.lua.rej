@@ -1,9 +1,0 @@
-diff a/src/app/scenes/MainScene.lua b/src/app/scenes/MainScene.lua	(rejected hunks)
-@@ -0,6 +0,7 @@
-    self:BottomButton()
-    self:TopButton()
-    self:RightButton()
-+   
-    
- end
- 

@@ -1,6 +1,7 @@
 local LevelButton = require(".app.UIClass.LevelButton")
-local Batel = require(".app.stageConfig.stageLevelInformation")
+local Tatel = require(".app.stageConfig.stageLevelInformation")
 display.addSpriteFrames("UI/ui_public1.plist","UI/ui_public1.png")
+display.addSpriteFrames("UI/ui_dailytask.plist","UI/ui_dailytask.png")
 local UI = class("UI", function()
     return display.newScene("UI")
 end)
@@ -41,7 +42,7 @@ function UI:createBackGround()
 	backGround4:setPosition(display.cx + backGround1Size.width + backGround2Size.width + (backGround3Size.width + backGround4Size.width) / 2, display.cy)
 	node:addChild(backGround4)
 
-	for i,v in pairs(Batel["position"]) do
+	for i,v in pairs(Tatel["levelButtonPosition"]) do
 		self.tabel[i] = LevelButton.new(v[1], v[2], i, node)
 		:onButtonClicked(function(event)
 			print("···")
@@ -72,14 +73,34 @@ function UI:BottomButton()
 	local node1 = display.newNode()
 	self:addChild(node1)
 
+	
+
 	local MenuDailyTask = self:createButton("#MenuDailyTask.png", 0.25, 0.1,0.01, 0.9,node1)
 	:onButtonClicked(function(event)
-		print("···")
-		end)	
+		
+		local dailytaskLayer = cc.LayerColor:create(cc.c4b(100, 100, 100, 50))
+		:setContentSize(display.width, display.height)
+		self:addChild(dailytaskLayer)
+		local node3 = display.newNode()
+		node3:setContentSize(display.width, display.height)
+		dailytaskLayer:addChild(node3)
+		node3:setTouchEnabled(true)
+		node3:addNodeEventListener(cc.NODE_TOUCH_EVENT, function ()			
+		end)
+
+		local dailytask = self:createSprite("#dailytaskBg.png",0.5,0.5, node3)
+		local dailytask_bar = self:createSprite("#dailytask_bar1.png",0.52,0.459, node3)
+		local dailytaskDiamond = self:createSprite("#dailytaskDiamond.png",0.5,0.385, node3)
+		local dailytaskRunning = self:createSprite("#dailyTaskRunning.png",0.5,0.3, node3)
+		local dailytaskReturnButton = self:createButton("#dailytaskreturn.png", 0.68, 0.65,0.01, 0.9,node3)
+		:onButtonClicked(function(event)
+			dailytaskLayer:removeFromParent()
+		end)
+	end)	
 	
 	local MenuAchievementButton = self:createButton("#MenuAchievement.png", 0.4, 0.1,0.01, 0.9,node1)
 	:onButtonClicked(function(event)
-		print("···")
+		
 	end)	
 	
 	local MenuHero1 = self:createButton("#MenuHero1.png", 0.55, 0.115,0.01, 0.9,node1)
@@ -104,8 +125,14 @@ function UI:createButton(path, posX, posY,time, scale, parentNode)
 	pressed = path
 	}
 	local button = cc.ui.UIPushButton.new(images)
-	:setPosition(display.width * posX, display.height * posY)
-	:scaleTo(time, scale)	
+	button:setPosition(display.width * posX, display.height * posY)
+	:scaleTo(time, scale)
+	:onButtonPressed(function(event)
+		button:scaleTo(0.1, 1.1)
+		end)
+	:onButtonRelease(function(event)
+		button:scaleTo(0.1, scale)
+		end)	
 	parentNode:addChild(button)
 	return button
 end

@@ -1,6 +1,7 @@
 display.addSpriteFrames("fight/ui_play.plist","fight/ui_play.png")
 display.addSpriteFrames("map/Theme1/theme1Scene.plist","map/Theme1/theme1Scene.png")
 display.addSpriteFrames("UI/ui_public1.plist","UI/ui_public1.png")
+local Monster = require(".app.monster.monster")
 local FightScene = class("FightScene", function()
 	return display.newScene("FightScene")
 end)
@@ -74,6 +75,30 @@ function FightScene:fightMap() --地图
 	map:setPosition(self.sizeofBG.width / 2,self.sizeofBG.height / 2)
 	:align(1)
 	map:addTo(self.sprtieBG)
+
+
+	local num = 0
+	local mapPoint = {}
+	while table.nums(map:getObjectGroup("objs"):getObject("way1_"..num)) ~= 0 do
+		local objPoint = map:getObjectGroup("objs"):getObject("way1_"..num)
+		num = num+1
+		table.insert(mapPoint,objPoint)
+	end
+	local monster = Monster.new("02")
+	monster:pos(mapPoint[1].x, mapPoint[1].y)
+	monster:move(mapPoint)
+	monster:addTo(map,1)
+
+	local rabbit = display.newSprite("#protectPoint.png")
+	rabbit:pos(mapPoint[#mapPoint].x, mapPoint[#mapPoint].y)
+	rabbit:setAnchorPoint(0.5,0)
+	rabbit:addTo(map,1)
+
+	local flag = display.newSprite("#Theme1_EnemyHome.png")
+	flag:pos(mapPoint[1].x, mapPoint[1].y)
+	flag:setAnchorPoint(0.5,0)
+	flag:addTo(map,1)
+
 end
 
 function FightScene:spriteCreate(way,posx,posy) --精灵创建
@@ -112,7 +137,7 @@ function FightScene:buttonCreate(way,posx,posy) --按钮创建
 end
 
 function FightScene:mission() --任务按钮界面
-	local mislayer = display.newColorLayer(cc.c4b(0, 0, 0, 100))
+	local mislayer = display.newColorLayer(cc.c4b(0, 0, 0, 80))
 	mislayer:pos(0,0)
 	mislayer:addTo(self)
 	mislayer:setTouchEnabled(true)

@@ -4,15 +4,9 @@ local LevelButton = class("LevelButton", function(posX, posY, number,parentNode)
 	pressed = "#levelButton.png"
 	}
 	local button = cc.ui.UIPushButton.new(images)
-	button:setColor(cc.c4b(100, 100, 100, 255))
+	:setColor(cc.c4b(100, 100, 100, 255))
 	:setPosition(display.width * posX, display.height * posY)
 	:scaleTo(0.01, 0.8)
-	:onButtonPressed(function(event)
-		button:scaleTo(0.1, 1.0)
-		end)
-	:onButtonRelease(function(event)
-		button:scaleTo(0.1, 0.8)
-		end)
 	parentNode:addChild(button)
 	local size = button:getContentSize()
 	local label = cc.ui.UILabel.new({

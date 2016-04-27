@@ -1,6 +1,6 @@
 display.addSpriteFrames("monster/E41.plist","monster/E41.png")
 display.addSpriteFrames("monster/enemyCommon.plist","monster/enemyCommon.png")
-local MonsterData = require(".app.stageConfig.MonsterDate")
+local MonsterData = require(".app.stageConfig.MonsterData")
 local Monster = class("Monster", function (num)
 	local path = "#E" .. num .. "_1.png"
 	local sprite = display.newSprite(path)
@@ -10,7 +10,7 @@ local Monster = class("Monster", function (num)
 end)
 
 function Monster:ctor()
-	self:runAction(self:attack())
+	self:runAction(self:walk())
 end
 
 function Monster:walk()
@@ -46,7 +46,6 @@ end
 
 function Monster:move(posT)
 	local action
-	print("ad")
 	for i = 1, #posT - 1 do
 		local offsetX = posT[i].x - posT[i + 1].x
 		local offsetY = posT[i].y - posT[i + 1].y

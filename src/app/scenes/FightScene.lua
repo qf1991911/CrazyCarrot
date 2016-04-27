@@ -1,7 +1,9 @@
 display.addSpriteFrames("fight/ui_play.plist","fight/ui_play.png")
 display.addSpriteFrames("map/Theme1/theme1Scene.plist","map/Theme1/theme1Scene.png")
 display.addSpriteFrames("UI/ui_public1.plist","UI/ui_public1.png")
-local Monster = require(".app.monster.monster")
+local Monster = require(".app.monster.Monster")
+local Tower = require(".app.tower.Tower")
+local PassData = require(".app.stageConfig.PassData")
 local FightScene = class("FightScene", function()
 	return display.newScene("FightScene")
 end)
@@ -71,34 +73,59 @@ function FightScene:fightUI() --战斗场景布局
 end
 
 function FightScene:fightMap() --地图
-	local map = cc.TMXTiledMap:create("map/Theme1/L1_1.tmx")
-	map:setPosition(self.sizeofBG.width / 2,self.sizeofBG.height / 2)
+	self.map = cc.TMXTiledMap:create(PassData["L1_1"].map)
+	self.map:setPosition(self.sizeofBG.width / 2,self.sizeofBG.height / 2)
 	:align(1)
-	map:addTo(self.sprtieBG)
-
-
+	self.map:addTo(self.sprtieBG)
 	local num = 0
-	local mapPoint = {}
-	while table.nums(map:getObjectGroup("objs"):getObject("way1_"..num)) ~= 0 do
-		local objPoint = map:getObjectGroup("objs"):getObject("way1_"..num)
+	self.way = {}
+	while table.nums(self.map:getObjectGroup("objs"):getObject("way1_"..num)) ~= 0 do
+		local objPoint = self.map:getObjectGroup("objs"):getObject("way1_"..num)
 		num = num+1
-		table.insert(mapPoint,objPoint)
+		table.insert(self.way,objPoint)
 	end
-	local monster = Monster.new("02")
-	monster:pos(mapPoint[1].x, mapPoint[1].y)
-	monster:move(mapPoint)
-	monster:addTo(map,1)
+	local wave = 1
+	local time = os.time()
+	local jiange = 0
+	local num = 15
+	self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function (dt)
+		if os.time()-time > PassData["L1_1"]["wavetime"..wave] and jiange == 0 and num > 0 then
+			self:monsterCreate(PassData["L1_1"]["wave"..wave])
+			num = num - 1
+		end
+		if num == 0 then
+			wave = wave + 1
+			num = 15
+		end
+		jiange = (jiange + 1) % 60
+	end)
+	self:scheduleUpdate()
+
+
+	
 
 	local rabbit = display.newSprite("#protectPoint.png")
-	rabbit:pos(mapPoint[#mapPoint].x, mapPoint[#mapPoint].y)
+	rabbit:pos(self.way[#self.way].x, self.way[#self.way].y)
 	rabbit:setAnchorPoint(0.5,0)
-	rabbit:addTo(map,1)
+	rabbit:addTo(self.map,1)
 
 	local flag = display.newSprite("#Theme1_EnemyHome.png")
-	flag:pos(mapPoint[1].x, mapPoint[1].y)
+	flag:pos(self.way[1].x, self.way[1].y)
 	flag:setAnchorPoint(0.5,0)
-	flag:addTo(map,1)
+	flag:addTo(self.map,1)
 
+	local tower = Tower.new(PassData["L1_1"].pretower)
+	local pretower = self.map:getObjectGroup("objs"):getObject("preTower")
+	tower:pos(pretower.x, pretower.y)
+	tower:addTo(self.map)
+
+end
+
+function FightScene:monsterCreate(numofmonster)
+	local monster = Monster.new(numofmonster)
+	monster:pos(self.way[1].x, self.way[1].y)
+	monster:move(self.way)
+	monster:addTo(self.map,1)
 end
 
 function FightScene:spriteCreate(way,posx,posy) --精灵创建

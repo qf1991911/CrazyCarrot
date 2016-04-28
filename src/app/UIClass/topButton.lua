@@ -1,4 +1,5 @@
 display.addSpriteFrames("UI/ui_public1.plist","UI/ui_public1.png")
+display.addSpriteFrames("UI/ui_shop.plist","UI/ui_shop.png")
 local topButton = class("topButton", function(parentNode, sceneName)
     local node2 = display.newNode()
     node2.tScene = sceneName
@@ -10,15 +11,24 @@ function topButton:ctor()
 	local buttonbg1 = self:createSprite("#buttonBg.png", 0.28, 0.9)
 	:setScaleX(2.2)
 	:setScaleY(0.9)
+	self.bloodTable = self:createLabel(buttonbg1, GameState.GameData.UItopData.bloodNow, 25, 0.54, 0.5,cc.c3b(255, 215, 0))
+	:setScaleX(0.45)
+	:setScaleY(1.1)	
 	local bloodNow = self:createSprite("#bloodNew.png", 0.22, 0.9)
 	local addNew1 = self:createButton("#addNew.png", 0.35, 0.9, 0.01, 0.9)
 	:onButtonClicked(function(event)
-		print("···")
+		-- local shop_bg = self:createSprite("#shop_bg.png", 0.5, 0.5)
+		self:CreateBuyScene()
+		-------6666666666666-------- 
+		--666666666666666666666666--
 	end)
 
 	local buttonbg2 = self:createSprite("#buttonBg.png", 0.53, 0.9)
 	:setScaleX(2.2)
 	:setScaleY(0.9)
+	self.coinTabel = self:createLabel(buttonbg2, GameState.GameData.UItopData.coin, 25, 0.54, 0.5,cc.c3b(255, 204, 0))
+	:setScaleX(0.45)
+	:setScaleY(1.1)	
 	local  coinNew = self:createSprite("#coinNew.png", 0.47, 0.9)
 	local addNew2 = self:createButton("#addNew.png", 0.6, 0.9, 0.01, 0.9)
 	:onButtonClicked(function(event)
@@ -28,6 +38,9 @@ function topButton:ctor()
 	local buttonbg2 = self:createSprite("#buttonBg.png", 0.78, 0.9)
 	:setScaleX(2.2)
 	:setScaleY(0.9)
+	self.diamondTabel = self:createLabel(buttonbg2, GameState.GameData.UItopData.diamond, 25, 0.54, 0.5,cc.c3b(255, 204, 0))
+	:setScaleX(0.45)
+	:setScaleY(1.1)	
 	local diamondNew = self:createSprite("#diamondNew.png", 0.72, 0.9)
 	local addNew3 = self:createButton("#addNew.png", 0.85, 0.9, 0.01, 0.9)
 	:onButtonClicked(function(event)
@@ -61,6 +74,32 @@ function topButton:ctor()
 		end	
 	end)
 end
+function topButton:CreateBuyScene()
+	-- local shop_bg = self:createSprite("#shop_bg.png", 0.5, 0.5)
+	local dailytaskLayer = cc.LayerColor:create(cc.c4b(100, 100, 100, 50))
+	:setContentSize(display.width, display.height)
+	self:addChild(dailytaskLayer)
+	local node = display.newNode()
+	node:setContentSize(display.width* (1 / 0.9), display.height )
+	:setScale(0.9)
+	dailytaskLayer:addChild(node)
+	node:setTouchEnabled(true)
+	node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function ()			
+	end)
+
+	local shop_bg = self:createSprite("#shop_bg.png",0.5,0.4, node)
+	local shopBg1 = self:createSprite("#shopBg.png",0.19,0.4, shop_bg)
+	local shopBg2 = self:createSprite("#shopBg.png",0.4,0.4, shop_bg)
+	local shopBg3 = self:createSprite("#shopBg.png",0.61,0.4, shop_bg)
+	local shopBg4 = self:createSprite("#shopBg.png",0.82,0.4, shop_bg)
+	local shopTitleBg = self:createSprite("#shopTitleBg.png",0.5,0.75, node)
+	local shopEnergyTitle = self:createSprite("#shopEnergyTitle.png",0.5,0.8, shopTitleBg)
+	local shop_energy1 = self:createSprite("#shop_energy.png",0.5,0.3, shopBg1)
+	local shop_energy2 = self:createSprite("#shop_energy.png",0.5,0.3, shopBg2)
+	local shop_energy3 = self:createSprite("#shop_energy.png",0.5,0.3, shopBg3)
+	local shop_energy4 = self:createSprite("#energyNum4.png",0.5,0.3, shopBg4)
+
+end
 function topButton:createButton(path, posX, posY,time, scale)
 	local images = {
 	normal = path,
@@ -78,12 +117,30 @@ function topButton:createButton(path, posX, posY,time, scale)
 	self:addChild(button)
 	return button
 end
-function topButton:createSprite(pic,posX,posY)
+function topButton:createSprite(pic,posX,posY,parentNode)
 	local sprite = display.newSprite(pic)
 	:setPosition(display.width * posX, display.height * posY)
-	self:addChild(sprite)
+	
+	if not parentNode then
+		parentNode = self
+	end
+	parentNode:addChild(sprite)
 	return sprite
 end
+function topButton:createLabel(parentNode, text, size, posX, posY,color)
+
+	local label = cc.ui.UILabel.new({
+			UILabelType = 2,
+			text = text,
+			size = size,
+			color = color
+			})
+		:align(display.CENTER, display.cx, display.cy)
+		:setPosition(parentNode:getContentSize().width * posX, parentNode:getContentSize().height * posY)
+		parentNode:addChild(label)
+	return label
+end
+
 function topButton:onEnter()
 	-- body
 end

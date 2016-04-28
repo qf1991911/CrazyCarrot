@@ -14,8 +14,9 @@ function UI:ctor()
 	self.tabel = {}
 	self:createBackGround()
     self:BottomButton()
-    self:TopButton()
     self:RightButton()
+ 	self:TopButton()
+
 
 end
 --背景
@@ -122,7 +123,7 @@ function UI:gamePrepare(num)
 	local prepareLayer = display.newColorLayer(cc.c4b(100, 100, 100, 100))
 	self:addChild(prepareLayer)
 	prepareLayer.trun = true
-	topButton.new(prepareLayer, "self")
+	local topButton = topButton.new(prepareLayer, "self")
 
 	self.topButton:hide()
 	local pre_previewBg = self:createSprite("#pre_previewBg.png",0.5, 0.5 ,prepareLayer)
@@ -130,7 +131,7 @@ function UI:gamePrepare(num)
 	:setScale(0.8, 0.9)
 	print(num)
 	local pre_previewBgLabel = self:createSprite("map/LevelTheme/levelPreview/L"..num..".png",0.5, 0.46 ,pre_previewBg)
-	self:createLabel(pre_previewBg,"第"..num.."关" , 20, 0.43, 0.73,cc.c3b(47, 79, 79))
+	self:createLabel(pre_previewBg,"第"..num.."关" , 20, 0.5, 0.73,cc.c3b(47, 79, 79))
 	self:setweapon(num, pre_previewBgLabel)
 	
 	prepareLayer.pre_taskBg = self:createSprite("#pre_taskBg.png",0.33, 0.45 ,prepareLayer)
@@ -153,11 +154,11 @@ function UI:gamePrepare(num)
 			item:addContent(content)
 			item:setItemSize(content:getContentSize().width * 1, content:getContentSize().height * 1)
 			prepareLayer.listView:addItem(item)	
-			self:createLabel(content, Tabel["taskItem"][num][i], 20, 0.3, 0.5,cc.c3b(47, 79, 79))
+			self:createLabel(content, Tabel["taskItem"][num][i], 20, 0.35, 0.5,cc.c3b(47, 79, 79))
 			local taskPic = self:createSprite(Tabel["taskItempic"][num][i],0.14,0.5 ,content)
 			taskPic:setScale(0.9, 0.8)
 			self:createSprite("#pre_taskGifted.png",0.83,0.5 ,content)
-			self:createLabel(content, "x"..(28 + 4 * num), 18, 0.8,0.38,cc.c3b(255, 255, 255))
+			self:createLabel(content, "x"..(28 + 4 * num), 18, 0.85,0.38,cc.c3b(255, 255, 255))
 				
 		end
 	prepareLayer.listView:reload()
@@ -175,13 +176,13 @@ function UI:gamePrepare(num)
 			item:addContent(content)
 			item:setItemSize(content:getContentSize().width * 1, content:getContentSize().height * 1)
 			prepareLayer.listView2:addItem(item)	
-			self:createLabel(content, Tabel["tackleIntroduction"][i], 15, 0.3, 0.38,cc.c3b(47, 79, 79))
+			self:createLabel(content, Tabel["tackleIntroduction"][i], 15, 0.4, 0.38,cc.c3b(47, 79, 79))
 			local taskPic = self:createSprite(Tabel["tackle"][i],0.14,0.5 ,content)
 			taskPic:setScale(0.9, 0.8)
 			self:createButton("#pre_itemPurchase.png",0.83,0.5 ,0.01, 1,content)
 			local listCoin = self:createSprite("#coinNew.png",0.29, 0.67, content)
 			:setScale(0.43)
-			self:createLabel(content, Tabel["tacklePrice"][i], 18, 0.33,0.67,cc.c3b(255, 255, 255))
+			self:createLabel(content, Tabel["tacklePrice"][i], 18, 0.37,0.67,cc.c3b(255, 255, 255))
 				
 		end
 	prepareLayer.listView2:reload()
@@ -191,6 +192,7 @@ function UI:gamePrepare(num)
 
 	local pre_startButton = self:createButton("#pre_startButton.png", 0.67, 0.13,0.01, 0.9,prepareLayer)
 	:onButtonClicked(function(event)
+
 		if prepareLayer.trun then
 			local scale1 = cc.ScaleTo:create(0.5, 0, 0.9, 1)
 			local callback = cc.CallFunc:create(function()	
@@ -200,14 +202,23 @@ function UI:gamePrepare(num)
 				prepareLayer.listView:hide()
 				prepareLayer.pre_taskLabel:hide()
 				prepareLayer.littleTaskIcon:hide()
+				-- self.bloodTabel:hide() 
+				-- self.coinTabel:hide() 
+				-- self.diamondTabel:hide() 
 			end)
 			local scale2 = cc.ScaleTo:create(0.5, 0.8, 0.9, 1)
 			local action = cc.Sequence:create(scale1, callback, scale2)
 			prepareLayer.pre_taskBg:runAction(action)
 			prepareLayer.trun = false
-		else 
-			local Fightscene = import("app.scenes.Fightscene").new(num)
-		display.replaceScene(Fightscene,"flipAngular",0.5)
+		else
+			if GameState.GameData.UItopData.bloodNow >= 1 then
+				GameState.GameData.UItopData.bloodNow = GameState.GameData.UItopData.bloodNow - 1
+				topButton.bloodTable:setString(GameState.GameData.UItopData.bloodNow)
+				GameState.save(GameState.GameData)
+				local Fightscene = import("app.scenes.Fightscene").new(num)
+				display.replaceScene(Fightscene,"flipAngular",1)
+			end
+			
 		end
 
 	end)
@@ -255,6 +266,7 @@ function UI:createLabel(parentNode, text, size, posX, posY,color)
 			size = size,
 			color = color
 			})
+		:align(display.CENTER, display.cx, display.cy)
 		:setPosition(parentNode:getContentSize().width * posX, parentNode:getContentSize().height * posY)
 		parentNode:addChild(label)
 	return label
@@ -280,6 +292,10 @@ function UI:createButton(path, posX, posY,time, scale, parentNode)
 end
 --上面的button
 function UI:TopButton()
+	
+	-- self:createLabel(self, GameState.GameData.UItopData.bloodNow, 28, 0.29, 0.9,cc.c3b(255, 215, 0))
+	-- self.coinTabel = self:createLabel(self, GameState.GameData.UItopData.coin, 28, 0.54, 0.9,cc.c3b(255, 204, 0))
+	-- self.diamondTabel = self:createLabel(self, GameState.GameData.UItopData.diamond, 28, 0.79, 0.9,cc.c3b(255, 204, 0))
 	self.topButton = topButton.new(self, "StartScene")
 	self.topButton:setTag(1)
 end

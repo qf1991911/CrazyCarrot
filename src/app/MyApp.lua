@@ -6,7 +6,9 @@ local MyApp = class("MyApp", cc.mvc.AppBase)
 
 function MyApp:ctor()
     MyApp.super.ctor(self)
-    GameState = require("framework.cc.utils.GameState")
+    
+    GameState = require(".app.GameData.GameData")
+    GameState.save(GameState.GameData)
 end
 
 function MyApp:run()

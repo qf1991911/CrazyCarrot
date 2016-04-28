@@ -1,6 +1,8 @@
+display.addSpriteFrames("UI/ui_public1.plist","UI/ui_public1.png")
 display.addSpriteFrames("UI/ui_achievement.plist","UI/ui_achievement.png")
 display.addSpriteFrames("UI/ui_handbook.plist","UI/ui_handbook.png")
 local Tabel = require(".app.stageConfig.stageLevelInformation")
+local topButton = require(".app.UIClass.topButton")
 local achievementScenes = class("achievementScenes", function()
     return display.newScene("achievementScenes")
 end)
@@ -12,7 +14,7 @@ function achievementScenes:ctor()
 	
 	local achievetitle = self:createSprite("#achievetitle.png",0.5, 0.78 ,self)
 	self:listView()
-	
+	self:TopButton()
 
 
 
@@ -45,51 +47,33 @@ function achievementScenes:listView()
 		listView:addItem(item)
 		local achieveDiamond = self:createSprite("#achieveDiamond.png",0.088, 0.13,content)
 		:setScale(0.8)
-		local tabel1 = cc.ui.UILabel.new({
+		local label1 = cc.ui.UILabel.new({
 			UILabelType = 2,
 			text = Tabel["item"][i][1],
 			size = 20
 			})
 		:setPosition(display.width * 0.074, display.height * 0.07)
-		content:addChild(tabel1)
-		local tabel2 = cc.ui.UILabel.new({
+		content:addChild(label1)
+		local label2 = cc.ui.UILabel.new({
 			UILabelType = 2,
 			text = Tabel["item"][i][2],
-			size = 30
+			size = 30,
+			color = cc.c3b(255, 100, 0)
 			})
 		:setPosition(display.width * 0.25, display.height * 0.15)
-		content:addChild(tabel2)
-		-- local loadBar = cc.ui.UILoadingBar.new({
-		-- 	scale9 = true,
-		-- 	capInsets = cc.rect(0, 0, 337,24),
-		-- 	image = "#achieve_bar2.png",
-		-- 	viewRect = cc.rect(0, 0, 337,24 ),
-		-- 	percent = 60,
-		-- 	direction = DIRETION_RIGHT_TO_LEFT 			
-		-- 	})
-		-- :setPosition(display.width * 0.244, display.height * 0.071)
-		-- content:addChild(loadBar)
-		local running = self:createSprite("#running.png",0.7, 0.1,content)
-		 -- 创建进度条的动画渲染器  
-	  local left = cc.ProgressTimer:create(display.newSprite("#achieve_bar2.png"))  
-	  -- 设置进度条类型，这里是条形进度类型  
-	  left:setType(cc.PROGRESS_TIMER_TYPE_BAR)  
-	  -- 设置圆心位置为左下角  
-	  -- left:setMidpoint(cc.p(0, 0))  
-	  -- 设置横向进度条变化率，y=0意味着没有竖向的变化  
-	  --left:setBarChangeRate(cc.p(1, 0))  
-	  -- 设置在x=100,y为屏幕宽度一半的位置  
-	  left:setPosition(100, 5)  
-	  
-	  content:addChild(left)
-
-		
-
+		content:addChild(label2)
+		local scale9sp = ccui.Scale9Sprite 
+		local progressbar = scale9sp:createWithSpriteFrameName("achieve_bar2.png", cc.rect(0, 0, 337,24));
+		progressbar:setPreferredSize(cc.size(300, 24)) -- xiugai 300
+		progressbar:setAnchorPoint(cc.p(0, 0.5))
+		progressbar:setPosition(cc.p(234.5, 57))
+		content:addChild(progressbar)
+		local achieveDiamond = self:createSprite("#running.png",0.7, 0.1,content)
 	end
 	listView:reload()
-
-
-
+end
+function achievementScenes:TopButton()
+	topButton.new(self, "UI")
 end
 function achievementScenes:onEnter()
 	-- body

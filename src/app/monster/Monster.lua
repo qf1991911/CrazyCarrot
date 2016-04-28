@@ -13,7 +13,7 @@ function Monster:ctor()
 	self:runAction(self:walk())
 end
 
-function Monster:walk()
+function Monster:walk() --行走帧动画
 	local frames = display.newFrames("E" .. self.num .. "_%01d.png", 1, MonsterData["E"..self.num].walk)
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
@@ -21,7 +21,7 @@ function Monster:walk()
 	return rep
 end
 
-function Monster:attack()
+function Monster:attack() --攻击帧动画
 	local frames = display.newFrames("E" .. self.num.."_attack_%01d.png", 1, MonsterData["E"..self.num].attack)
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
@@ -33,7 +33,7 @@ function Monster:blood()
 
 end
 
-function Monster:dead()
+function Monster:dead() --死亡帧动画
 	local frames = display.newFrames("explosion_died_demotion_%01d.png", 1, 6)
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
@@ -44,7 +44,7 @@ end
 
 
 
-function Monster:move(posT)
+function Monster:move(posT)--按路径移动
 	local action
 	for i = 1, #posT - 1 do
 		local offsetX = posT[i].x - posT[i + 1].x
@@ -58,9 +58,13 @@ function Monster:move(posT)
 			local flip = cc.FlipX:create(false)
 			action = cc.Sequence:create(action, flip, move)
 		end
-
 	end
-	self:runAction(action)
+	local callfun = cc.CallFunc:create(function()
+			self:removeFromParent()
+			self = nil
+		end)
+	local sq = cc.Sequence:create(action,callfun)
+	self:runAction(sq) 
 end
 
 function Monster:onEnter()

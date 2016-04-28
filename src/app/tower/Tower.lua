@@ -5,6 +5,7 @@ display.addSpriteFrames("Tower/T07.plist","Tower/T07.png")
 display.addSpriteFrames("Tower/T11.plist","Tower/T11.png")
 display.addSpriteFrames("Tower/T16.plist","Tower/T16.png")
 display.addSpriteFrames("Tower/T18.plist","Tower/T18.png")
+display.addSpriteFrames("Tower/bullet.plist","Tower/bullet.png")
 local TowerData = require(".app.stageConfig.TowerData")
 local Tower = class("Tower", function (num)
 	local tower = display.newNode()
@@ -30,11 +31,8 @@ function Tower:ctor()
 		
 	end
 
-	
-
-
 end
-function Tower:stage1()
+function Tower:stage1() --炮塔状态
 	local frame = display.newFrames("T"..self.num.."_"..self.stage.."_%01d.png",1,TowerData["T"..self.num]["stage"..self.stage])
 	local animation = display.newAnimation(frame,0.2)
 	local animate = cc.Animate:create(animation)
@@ -43,7 +41,7 @@ function Tower:stage1()
 end
 
 
-function Tower:t18create()
+function Tower:t18create() --18号炮塔
 	self.base = display.newSprite("#T18_seat"..self.stage..".png")
 	:pos(0, -display.cx /20)
 	:addTo(self)
@@ -56,7 +54,7 @@ function Tower:t18create()
 	self.ball:runAction(self:actiont18ball())
 end
 
-function Tower:actiont18()
+function Tower:actiont18() --18号炮塔状态
 	local up = cc.MoveTo:create(1,cc.p(0,3))
 	local down = cc.MoveTo:create(1,cc.p(0,-3))
 	local sq = cc.Sequence:create(up,down)
@@ -64,7 +62,7 @@ function Tower:actiont18()
 	return rep
 end
 
-function Tower:actiont18ball()
+function Tower:actiont18ball() --18号环绕球动作
 	local bezier1 = cc.BezierBy:create(1,{cc.p(0,-10),cc.p(60,-10),cc.p(60,0)})
 	local bezier2 = cc.BezierBy:create(1,{cc.p(0,10),cc.p(-60,10),cc.p(-60,0)})
 	local callfun = cc.CallFunc:create(function ()
@@ -78,6 +76,10 @@ function Tower:actiont18ball()
 	return rep
 end
 
+function Tower:bullet()
+	local bullet = display.newSprite("#B01_0.png")
+	
+end
 
 
 

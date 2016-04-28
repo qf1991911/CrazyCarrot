@@ -4,13 +4,21 @@ display.addSpriteFrames("UI/ui_public1.plist","UI/ui_public1.png")
 local Monster = require(".app.monster.Monster")
 local Tower = require(".app.tower.Tower")
 local PassData = require(".app.stageConfig.PassData")
-local FightScene = class("FightScene", function()
-	return display.newScene("FightScene")
+
+local FightScene = class("FightScene", function(passnum)
+	local scene = display.newScene("FightScene")
+	
+	self.Theme = math.floor(passnum-1/10)+1
+	self.pass =  passnum % 10
+	return scene
 end)
 
 function FightScene:ctor()
 	self:fightUI()
 	self:fightMap()
+	self.monster = {}
+	self.way = {}
+
 end
 
 function FightScene:fightUI() --战斗场景布局
@@ -20,8 +28,19 @@ function FightScene:fightUI() --战斗场景布局
 	self.sizeofBG = self.sprtieBG:getContentSize()
 
 	local skillbg = self:spriteCreate("#skillBg.png",self.sizeofBG.width / 2,self.sizeofBG.height / 11)
+
 	local moneybg = self:spriteCreate("#ui_moneyBg.png",self.sizeofBG.width*.16,self.sizeofBG.height*.88)
-	local wavebg = self:spriteCreate("#ui_waveBg.png",self.sizeofBG.width*.45,self.sizeofBG.height*.88) 
+
+	local wavebg = self:spriteCreate("#ui_waveBg.png",self.sizeofBG.width*.45,self.sizeofBG.height*.88)
+	local wbgsize = wavebg:getContentSize() 
+	local wavelb = self:waveLabel1()
+	wavelb:pos(wbgsize.width*.38, wbgsize.height*.45)
+	wavelb:addTo(wavebg)
+	self.wavelbnow = self:waveLabel1()
+	self.wavelbnow:pos(wbgsize.width*.1, wbgsize.height*.45)
+	self.wavelbnow:setString(1)
+	self.wavelbnow:addTo(wavebg)
+
 	local hero = self:spriteCreate("#taskHeroIcon1.png",self.sizeofBG.width*.78 , self.sizeofBG.height *.11)
 
 	self.mission1 = self:misButtonCreate("#littleTaskIcon4.png",self.sizeofBG.width*.2 , self.sizeofBG.height *.1)
@@ -73,36 +92,45 @@ function FightScene:fightUI() --战斗场景布局
 end
 
 function FightScene:fightMap() --地图
-	self.map = cc.TMXTiledMap:create(PassData["L1_1"].map)
+	self.map = cc.TMXTiledMap:create(PassData["L"..self.Theme.."_"..self.pass].map)
 	self.map:setPosition(self.sizeofBG.width / 2,self.sizeofBG.height / 2)
 	:align(1)
 	self.map:addTo(self.sprtieBG)
 	local num = 0
-	self.way = {}
 	while table.nums(self.map:getObjectGroup("objs"):getObject("way1_"..num)) ~= 0 do
 		local objPoint = self.map:getObjectGroup("objs"):getObject("way1_"..num)
 		num = num+1
 		table.insert(self.way,objPoint)
 	end
+
 	local wave = 1
 	local time = os.time()
-	local jiange = 0
+	local septum = 0
 	local num = 15
+	
+	local enemyhome = self:enemyHomePos()
+	enemyhome:runAction(self:enemyhomeAction())
+	enemyhome:setOpacity(0)
 	self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function (dt)
-		if os.time()-time > PassData["L1_1"]["wavetime"..wave] and jiange == 0 and num > 0 then
-			self:monsterCreate(PassData["L1_1"]["wave"..wave])
+		if wave<= PassData["L"..self.Theme.."_"..self.pass].wave and os.time()-time > PassData["L"..self.Theme.."_"..self.pass]["wavetime"..wave] and septum == 0 and num > 0 then
+			local monster = self:monsterCreate(PassData["L"..self.Theme.."_"..self.pass]["wave"..wave])
+			table.insert(self.monster,monster)
 			num = num - 1
+			enemyhome:setOpacity(255)
+			self.wavelbnow:setString(wave)
 		end
 		if num == 0 then
+			enemyhome:setOpacity(0)
 			wave = wave + 1
 			num = 15
 		end
-		jiange = (jiange + 1) % 60
+		septum = (septum + 1) % 60
+		-- for k,v in pairs(self.monster) do
+		-- 	local x,y = v:getPosition()
+
+		-- end
 	end)
 	self:scheduleUpdate()
-
-
-	
 
 	local rabbit = display.newSprite("#protectPoint.png")
 	rabbit:pos(self.way[#self.way].x, self.way[#self.way].y)
@@ -114,18 +142,41 @@ function FightScene:fightMap() --地图
 	flag:setAnchorPoint(0.5,0)
 	flag:addTo(self.map,1)
 
-	local tower = Tower.new(PassData["L1_1"].pretower)
+	local tower = Tower.new(PassData["L"..self.Theme.."_"..self.pass].pretower)
 	local pretower = self.map:getObjectGroup("objs"):getObject("preTower")
 	tower:pos(pretower.x, pretower.y)
 	tower:addTo(self.map)
 
 end
 
-function FightScene:monsterCreate(numofmonster)
+function FightScene:waveLabel1() --波数文字
+	local label = cc.ui.UILabel.new({
+		UILabelType = 1,
+		text = PassData["L"..self.Theme.."_"..self.pass].wave,
+		font = "font/fontTitleNumber.fnt"
+		})
+	return label
+end
+
+function FightScene:enemyHomePos() --出怪漩涡
+	local enemyhome = display.newSprite("#enemyHomePos.png")
+	:pos(self.way[1].x, self.way[1].y)
+	:addTo(self.map)
+	return enemyhome
+end
+function FightScene:enemyhomeAction()--漩涡动作
+	local rotate = cc.RotateBy:create(0.5,60)
+	local rep = cc.RepeatForever:create(rotate)
+	return rep
+	-- body
+end
+
+function FightScene:monsterCreate(numofmonster) --出怪
 	local monster = Monster.new(numofmonster)
 	monster:pos(self.way[1].x, self.way[1].y)
 	monster:move(self.way)
 	monster:addTo(self.map,1)
+	return monster
 end
 
 function FightScene:spriteCreate(way,posx,posy) --精灵创建

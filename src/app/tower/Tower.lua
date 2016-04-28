@@ -10,6 +10,8 @@ local TowerData = require(".app.stageConfig.TowerData")
 local Tower = class("Tower", function (num)
 	local tower = display.newNode()
 	tower.num = num
+	tower.attackArea = TowerData["T" .. tower.num].attackArea
+	tower.target = nil
 	return tower
 end)
 
@@ -75,10 +77,10 @@ function Tower:actiont18ball() --18号环绕球动作
 	local rep = cc.RepeatForever:create(sq)
 	return rep
 end
-
-function Tower:bullet()
-	local bullet = display.newSprite("#B01_0.png")
-	
+function Tower:towerAim(degree)
+	local rotate = cc.RotateBy:create(0.1,degree)
+	self:runAction(rotate)
+	-- body
 end
 
 

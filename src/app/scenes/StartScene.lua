@@ -1,5 +1,5 @@
 display.addSpriteFrames("StartScene/ui_settings.plist","StartScene/ui_settings.png")
-local FightScene = require(".app.scenes.FightScene")
+local UI = require(".app.scenes.UI")
 
 local StartScene = class("StartScene", function()
     return display.newScene("StartScene")
@@ -50,8 +50,8 @@ function StartScene:button()
 	:addTo(self)
 	startbutton:runAction(playaction)
 	startbutton:onButtonClicked(function()
-		local fightscene = FightScene:new()
-		display.replaceScene(fightscene,"flipX",1)
+		local ui = UI:new()
+		display.replaceScene(ui,"flipX",1)
 	end)	
 	self:buttonEvent(startbutton)
 

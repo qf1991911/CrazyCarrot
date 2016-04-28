@@ -1,24 +1,30 @@
 display.addSpriteFrames("fight/ui_play.plist","fight/ui_play.png")
 display.addSpriteFrames("map/Theme1/theme1Scene.plist","map/Theme1/theme1Scene.png")
 display.addSpriteFrames("UI/ui_public1.plist","UI/ui_public1.png")
+display.addSpriteFrames("Tower/T01.plist","Tower/T01.png")
+display.addSpriteFrames("Tower/T02.plist","Tower/T02.png")
+display.addSpriteFrames("Tower/T03.plist","Tower/T03.png")
+display.addSpriteFrames("Tower/T07.plist","Tower/T07.png")
+display.addSpriteFrames("Tower/T11.plist","Tower/T11.png")
+display.addSpriteFrames("Tower/T16.plist","Tower/T16.png")
+display.addSpriteFrames("Tower/T18.plist","Tower/T18.png")
+display.addSpriteFrames("Tower/bullet.plist","Tower/bullet.png")
 local Monster = require(".app.monster.Monster")
 local Tower = require(".app.tower.Tower")
 local PassData = require(".app.stageConfig.PassData")
 
 local FightScene = class("FightScene", function(passnum)
 	local scene = display.newScene("FightScene")
-	
-	self.Theme = math.floor(passnum-1/10)+1
-	self.pass =  passnum % 10
+	scene.pass =  passnum
 	return scene
 end)
 
 function FightScene:ctor()
-	self:fightUI()
-	self:fightMap()
 	self.monster = {}
 	self.way = {}
-
+	self.tower = {}
+	self:fightUI()
+	self:fightMap()
 end
 
 function FightScene:fightUI() --战斗场景布局
@@ -92,7 +98,7 @@ function FightScene:fightUI() --战斗场景布局
 end
 
 function FightScene:fightMap() --地图
-	self.map = cc.TMXTiledMap:create(PassData["L"..self.Theme.."_"..self.pass].map)
+	self.map = cc.TMXTiledMap:create(PassData["L"..self.pass].map)
 	self.map:setPosition(self.sizeofBG.width / 2,self.sizeofBG.height / 2)
 	:align(1)
 	self.map:addTo(self.sprtieBG)
@@ -107,13 +113,20 @@ function FightScene:fightMap() --地图
 	local time = os.time()
 	local septum = 0
 	local num = 15
-	
+	local firetime = 0
 	local enemyhome = self:enemyHomePos()
 	enemyhome:runAction(self:enemyhomeAction())
 	enemyhome:setOpacity(0)
+
+	local tower = Tower.new(PassData["L"..self.pass].pretower)
+	local pretower = self.map:getObjectGroup("objs"):getObject("preTower")
+	tower:pos(pretower.x, pretower.y)
+	tower:addTo(self.map,2)
+	table.insert(self.tower,tower)
+
 	self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function (dt)
-		if wave<= PassData["L"..self.Theme.."_"..self.pass].wave and os.time()-time > PassData["L"..self.Theme.."_"..self.pass]["wavetime"..wave] and septum == 0 and num > 0 then
-			local monster = self:monsterCreate(PassData["L"..self.Theme.."_"..self.pass]["wave"..wave])
+		if wave<= PassData["L"..self.pass].wave and os.time()-time > PassData["L"..self.pass]["wavetime"..wave] and septum == 0 and num > 0 then
+			local monster = self:monsterCreate(PassData["L"..self.pass]["wave"..wave])
 			table.insert(self.monster,monster)
 			num = num - 1
 			enemyhome:setOpacity(255)
@@ -125,10 +138,25 @@ function FightScene:fightMap() --地图
 			num = 15
 		end
 		septum = (septum + 1) % 60
-		-- for k,v in pairs(self.monster) do
-		-- 	local x,y = v:getPosition()
+		for k,v in pairs(self.monster) do
+			local x,y = v:getPosition()
+			for i,j in pairs(self.tower) do
+				local tx,ty = j:getPosition()
+				local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
+				if distance <= j.attackArea then 
+					j.target = v
+					local degree = math.deg(math.asin((y-ty)/distance))
+					j:towerAim(degree)					
+				end
+			end
+		end
+		firetime = firetime + 1
+		if firetime == 30 then
+			local bullet = self:fire()
+			firetime = firetime - 30
+			bullet:runAction(self:fireAction(200,100))
+		end
 
-		-- end
 	end)
 	self:scheduleUpdate()
 
@@ -142,17 +170,14 @@ function FightScene:fightMap() --地图
 	flag:setAnchorPoint(0.5,0)
 	flag:addTo(self.map,1)
 
-	local tower = Tower.new(PassData["L"..self.Theme.."_"..self.pass].pretower)
-	local pretower = self.map:getObjectGroup("objs"):getObject("preTower")
-	tower:pos(pretower.x, pretower.y)
-	tower:addTo(self.map)
+	
 
 end
 
 function FightScene:waveLabel1() --波数文字
 	local label = cc.ui.UILabel.new({
 		UILabelType = 1,
-		text = PassData["L"..self.Theme.."_"..self.pass].wave,
+		text = PassData["L"..self.pass].wave,
 		font = "font/fontTitleNumber.fnt"
 		})
 	return label
@@ -174,7 +199,7 @@ end
 function FightScene:monsterCreate(numofmonster) --出怪
 	local monster = Monster.new(numofmonster)
 	monster:pos(self.way[1].x, self.way[1].y)
-	monster:move(self.way)
+	monster:move(self.way, self.monster)
 	monster:addTo(self.map,1)
 	return monster
 end
@@ -288,6 +313,17 @@ function FightScene:buttonEvent(btnname) -- 按钮点击动作
 	
 end
 
+function FightScene:fire()
+	local posx,posy = self.tower[1]:getPosition()
+	local bullet = display.newSprite("#B01_0.png")
+	:pos(posx, posy)
+	:addTo(self.map)
+	return bullet
+end
+function FightScene:fireAction(posx,posy)
+	local move = cc.MoveBy:create(0.2,cc.p(posx,posy))
+	return move
+end
 
 function FightScene:onEnter()
 

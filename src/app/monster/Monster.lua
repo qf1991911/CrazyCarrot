@@ -4,7 +4,7 @@ local MonsterData = require(".app.stageConfig.MonsterData")
 local Monster = class("Monster", function (num)
 	local path = "#E" .. num .. "_1.png"
 	local sprite = display.newSprite(path)
-	sprite:setAnchorPoint(0.5,0)
+	sprite:setAnchorPoint(0.5,0.2)
 	sprite.num = num
 	return sprite
 end)
@@ -44,7 +44,7 @@ end
 
 
 
-function Monster:move(posT)--按路径移动
+function Monster:move(posT, monsterTable)--按路径移动
 	local action
 	for i = 1, #posT - 1 do
 		local offsetX = posT[i].x - posT[i + 1].x
@@ -60,9 +60,16 @@ function Monster:move(posT)--按路径移动
 		end
 	end
 	local callfun = cc.CallFunc:create(function()
-			self:removeFromParent()
-			self = nil
-		end)
+		for k,v in pairs(monsterTable) do
+			if v == self then
+				print("....................................................")
+				table.remove(monsterTable, k)
+				self:removeFromParent()
+				self = nil
+			end
+		end
+
+	end)
 	local sq = cc.Sequence:create(action,callfun)
 	self:runAction(sq) 
 end

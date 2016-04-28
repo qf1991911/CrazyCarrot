@@ -36,11 +36,26 @@ function topButton:ctor()
 
 	local returnButton = self:createButton("#returnNew.png", 0.15, 0.9,0.01, 0.9)
 	:onButtonClicked(function(event)
-		if self.tScene == "self" then
+		if self.tScene == "self" and self:getParent().trun then
 			local parentNode = self:getParent()
 			parentNode:getParent():getChildByTag(1):show()
 			parentNode:removeFromParent()
 			parentNode = nil
+		elseif self.tScene == "self" and not self:getParent().trun then
+			local parentNode = self:getParent()
+			local scale1 = cc.ScaleTo:create(0.5, 0, 0.9, 1)
+			local callback = cc.CallFunc:create(function()	
+				parentNode.listView2:hide()
+				parentNode.pre_itemBarBg:hide()
+				parentNode.pre_itemLabel:hide()
+				parentNode.listView:show()
+				parentNode.pre_taskLabel:show()
+				parentNode.littleTaskIcon:show()
+				self:getParent().trun = not self:getParent().trun
+			end)
+			local scale2 = cc.ScaleTo:create(0.5, 0.8, 0.9, 1)
+			local action = cc.Sequence:create(scale1, callback, scale2)
+			parentNode.pre_taskBg:runAction(action)			
 		else
 			display.replaceScene(require(".app.scenes." .. self.tScene):new())
 		end	

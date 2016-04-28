@@ -36,7 +36,7 @@ function achievementScenes:listView()
 	-- :onTouch(print("···"))
 	self:addChild(listView)
 	listView:setBounceable(false)
-	for i = 1, #Tabel["item"] do
+	for i = 1, #Tabel["achieveItem"] do
 	-- for i,v in pairs(Tabel["item"]) do
 		local item = listView:newItem()
 
@@ -49,14 +49,14 @@ function achievementScenes:listView()
 		:setScale(0.8)
 		local label1 = cc.ui.UILabel.new({
 			UILabelType = 2,
-			text = Tabel["item"][i][1],
+			text = Tabel["achieveItem"][i][1],
 			size = 20
 			})
 		:setPosition(display.width * 0.074, display.height * 0.07)
 		content:addChild(label1)
 		local label2 = cc.ui.UILabel.new({
 			UILabelType = 2,
-			text = Tabel["item"][i][2],
+			text = Tabel["achieveItem"][i][2],
 			size = 30,
 			color = cc.c3b(255, 100, 0)
 			})

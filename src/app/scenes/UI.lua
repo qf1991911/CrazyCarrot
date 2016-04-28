@@ -51,7 +51,7 @@ function UI:createBackGround()
 	end
 	cc.ui.UIScrollView.new({
 		direction = cc.ui.UIScrollView.DIRECTION_BOTH,
-		viewRect = {x = 0, y = 0, width = 960, height = 640}
+		viewRect = {x = 0, y = 0, width = display.width, height = display.height}
 		})
 	:addScrollNode(node)
 	:setDirection(cc.ui.UIScrollView.DIRECTION_HORIZONTAL)
@@ -63,6 +63,7 @@ end
 --下面的button
 function UI:BottomButton()
 	local node1 = display.newNode()
+	:setContentSize(display.width, display.height)
 	self:addChild(node1)
 
 	local MenuDailyTask = self:createButton("#MenuDailyTask.png", 0.25, 0.1,0.01, 0.9,node1)
@@ -116,77 +117,132 @@ function UI:BottomButton()
 	end)
 end
 
+--创建准备界面
 function UI:gamePrepare(num)
-	local prepareLayer = display.newColorLayer(cc.c4b(100, 100, 100, 100)) 
+	local prepareLayer = display.newColorLayer(cc.c4b(100, 100, 100, 100))
 	self:addChild(prepareLayer)
+	prepareLayer.trun = true
 	topButton.new(prepareLayer, "self")
+
 	self.topButton:hide()
-	local pre_previewBg = self:createSprite("#pre_previewBg.png",0.67, 0.5 ,prepareLayer)
+	local pre_previewBg = self:createSprite("#pre_previewBg.png",0.5, 0.5 ,prepareLayer)
+	pre_previewBg:setAnchorPoint(0, 0.5)
 	:setScale(0.8, 0.9)
 	print(num)
-	local pre_previewBg = self:createSprite("map/LevelTheme/levelPreview/L"..num..".png",0.67, 0.5 ,prepareLayer)
-	self:createLabel(pre_previewBg,"第"..num.."关" , 20, 0.135, 0.28,cc.c3b(47, 79, 79))
-	self:setweapon(num, pre_previewBg)
+	local pre_previewBgLabel = self:createSprite("map/LevelTheme/levelPreview/L"..num..".png",0.5, 0.46 ,pre_previewBg)
+	self:createLabel(pre_previewBg,"第"..num.."关" , 20, 0.43, 0.73,cc.c3b(47, 79, 79))
+	self:setweapon(num, pre_previewBgLabel)
 	
-	local pre_startButton = self:createButton("#pre_startButton.png", 0.67, 0.13,0.01, 0.9,prepareLayer)
-	:onButtonClicked(function(event)
-		print("···")
-	end)
-
-	local pre_taskBg = self:createSprite("#pre_taskBg.png",0.3, 0.45 ,prepareLayer)
-	:setScale(0.8, 0.9)
-	local pre_taskLabel = self:createSprite("#pre_taskLabel.png",0.22, 0.78 ,pre_taskBg)
+	prepareLayer.pre_taskBg = self:createSprite("#pre_taskBg.png",0.33, 0.45 ,prepareLayer)
+	-- prepareLayer.pre_taskBg:setAnchorPoint(1, 0.5)
+	prepareLayer.pre_taskBg:setPositionX(display.cx - prepareLayer.pre_taskBg:getContentSize().width / 2.5)
+	prepareLayer.pre_taskBg:setScale(0.8, 0.9)
+	prepareLayer.pre_taskLabel = self:createSprite("#pre_taskLabel.png",0.5, 0.9 ,prepareLayer.pre_taskBg)
 	
-	local littleTaskIcon = self:createSprite("#littleTaskIcon5.png",0.3, 0.13 ,prepareLayer)
-	local pre_itemBarBg = self:createSprite("#pre_itemBarBg.png",0.3, 0.445 ,prepareLayer)
-	:setScale(0.8, 0.9)
-	local listView = cc.ui.UIListView.new({
-
-		viewRect = cc.rect(display.width * 0.025, display.height * 0.025, display.width * 0.35, display.height * 0.55)
+	prepareLayer.littleTaskIcon = self:createSprite("#littleTaskIcon5.png",0.5, 0.1 ,prepareLayer.pre_taskBg)
+	:setScale(1.08,0.96)
+	prepareLayer.listView = cc.ui.UIListView.new({
+		bg = "#pre_itemBarBg.png",
+		viewRect = cc.rect(prepareLayer.pre_taskBg:getContentSize().width * 0.06, prepareLayer.pre_taskBg:getContentSize().height * 0.16, prepareLayer.pre_taskBg:getContentSize().width * 0.9, prepareLayer.pre_taskBg:getContentSize().height * 0.68)
 		})
-		pre_itemBarBg:addChild(listView)
+		prepareLayer.pre_taskBg:addChild(prepareLayer.listView)
 
 		for i=1,3 do
-			local item = listView:newItem()
-			local content = display.newSprite("#pre_taskSingleBg.png")
-			:setScale(0.9, 0.9)
+			local item = prepareLayer.listView:newItem()
+			local content = display.newSprite("#pre_taskSingleBg.png")			
 			item:addContent(content)
-			item:setItemSize(content:getContentSize().width * 0.86, content:getContentSize().height * 0.9)
-			listView:addItem(item)	
-			self:createLabel(content, Tabel["taskItem"][num][i], 20, 0.1, 0.1,cc.c3b(47, 79, 79))
-			local taskPic = self:createSprite(Tabel["taskItempic"][num][i],0.06,0.11 ,content)
-			:setScale(0.9, 0.8)
-			self:createSprite("#pre_taskGifted.png",0.32,0.11 ,content)
-			self:createLabel(content, "x"..(28 + 4 * num), 18, 0.315, 0.085,cc.c3b(255, 255, 255))
+			item:setItemSize(content:getContentSize().width * 1, content:getContentSize().height * 1)
+			prepareLayer.listView:addItem(item)	
+			self:createLabel(content, Tabel["taskItem"][num][i], 20, 0.3, 0.5,cc.c3b(47, 79, 79))
+			local taskPic = self:createSprite(Tabel["taskItempic"][num][i],0.14,0.5 ,content)
+			taskPic:setScale(0.9, 0.8)
+			self:createSprite("#pre_taskGifted.png",0.83,0.5 ,content)
+			self:createLabel(content, "x"..(28 + 4 * num), 18, 0.8,0.38,cc.c3b(255, 255, 255))
 				
 		end
-	listView:reload()
-end
+	prepareLayer.listView:reload()
+	prepareLayer.pre_itemLabel = self:createSprite("#pre_itemLabel.png",0.5, 0.9 ,prepareLayer.pre_taskBg)
+	prepareLayer.listView2 = cc.ui.UIListView.new({
+		viewRect = cc.rect(prepareLayer.pre_taskBg:getContentSize().width * 0.06, prepareLayer.pre_taskBg:getContentSize().height * 0.05, prepareLayer.pre_taskBg:getContentSize().width * 0.9, prepareLayer.pre_taskBg:getContentSize().height * 0.75)
+		})
+	prepareLayer.pre_itemBarBg = self:createSprite("#pre_itemBarBg.png",0.51, 0.43 ,prepareLayer.pre_taskBg)
+	:setScale(1, 1.1)
+		prepareLayer.pre_taskBg:addChild(prepareLayer.listView2)
 
+		for i=1,4 do
+			local item = prepareLayer.listView2:newItem()
+			local content = display.newSprite("#pre_itemSingleBg.png")			
+			item:addContent(content)
+			item:setItemSize(content:getContentSize().width * 1, content:getContentSize().height * 1)
+			prepareLayer.listView2:addItem(item)	
+			self:createLabel(content, Tabel["tackleIntroduction"][i], 15, 0.3, 0.38,cc.c3b(47, 79, 79))
+			local taskPic = self:createSprite(Tabel["tackle"][i],0.14,0.5 ,content)
+			taskPic:setScale(0.9, 0.8)
+			self:createButton("#pre_itemPurchase.png",0.83,0.5 ,0.01, 1,content)
+			local listCoin = self:createSprite("#coinNew.png",0.29, 0.67, content)
+			:setScale(0.43)
+			self:createLabel(content, Tabel["tacklePrice"][i], 18, 0.33,0.67,cc.c3b(255, 255, 255))
+				
+		end
+	prepareLayer.listView2:reload()
+	prepareLayer.listView2:hide()
+	prepareLayer.pre_itemBarBg:hide()
+	prepareLayer.pre_itemLabel:hide()
+
+	local pre_startButton = self:createButton("#pre_startButton.png", 0.67, 0.13,0.01, 0.9,prepareLayer)
+	:onButtonClicked(function(event)
+		if prepareLayer.trun then
+			local scale1 = cc.ScaleTo:create(0.5, 0, 0.9, 1)
+			local callback = cc.CallFunc:create(function()	
+				prepareLayer.listView2:show()
+				prepareLayer.pre_itemBarBg:show()
+				prepareLayer.pre_itemLabel:show()
+				prepareLayer.listView:hide()
+				prepareLayer.pre_taskLabel:hide()
+				prepareLayer.littleTaskIcon:hide()
+			end)
+			local scale2 = cc.ScaleTo:create(0.5, 0.8, 0.9, 1)
+			local action = cc.Sequence:create(scale1, callback, scale2)
+			prepareLayer.pre_taskBg:runAction(action)
+			prepareLayer.trun = false
+		else 
+			local Fightscene = import("app.scenes.Fightscene").new(num)
+		display.replaceScene(Fightscene,"flipAngular",0.5)
+		end
+
+	end)
+end
+function UI:createSprite(pic,posX,posY,parentNode)
+	local sprite = display.newSprite(pic)
+	:setPosition(parentNode:getContentSize().width * posX, parentNode:getContentSize().height * posY)
+	parentNode:addChild(sprite)
+	return sprite
+end
+--放置准备界面里面的武器
 function UI:setweapon(a,parentNode)
 	if #Tabel["weapon"][a] == 1 then
-		local weapon1 = self:createSprite(Tabel["weapon"][a][1],0.17,-0.085 ,parentNode)
+		local weapon1 = self:createSprite(Tabel["weapon"][a][1],0.5,-0.32 ,parentNode)
 		:setScale(0.5)
 	elseif #Tabel["weapon"][a] == 2 then	
-		local weapon1 = self:createSprite(Tabel["weapon"][a][1],0.145,-0.085 ,parentNode)
+		local weapon1 = self:createSprite(Tabel["weapon"][a][1],0.4,-0.32 ,parentNode)
 		:setScale(0.5)
-		local weapon2 = self:createSprite(Tabel["weapon"][a][2],0.195,-0.085 ,parentNode)
+		local weapon2 = self:createSprite(Tabel["weapon"][a][2],0.6,-0.32 ,parentNode)
 		:setScale(0.5)
 	elseif #Tabel["weapon"][a] == 3 then	
-		local weapon1 = self:createSprite(Tabel["weapon"][a][1],0.12,-0.085 ,parentNode)
+		local weapon1 = self:createSprite(Tabel["weapon"][a][1],0.3,-0.32 ,parentNode)
 		:setScale(0.5)
-		local weapon2 = self:createSprite(Tabel["weapon"][a][2],0.17,-0.085 ,parentNode)
+		local weapon2 = self:createSprite(Tabel["weapon"][a][2],0.5,-0.32 ,parentNode)
 		:setScale(0.5)
-		local weapon3 = self:createSprite(Tabel["weapon"][a][3],0.22,-0.085 ,parentNode)
+		local weapon3 = self:createSprite(Tabel["weapon"][a][3],0.7,-0.32 ,parentNode)
 		:setScale(0.5)
-	elseif #Tabel["weapon"][a] == 4 then
-		local weapon1 = self:createSprite(Tabel["weapon"][a][1],0.095,-0.085 ,parentNode)
+	else
+		local weapon1 = self:createSprite(Tabel["weapon"][a][1],0.2,-0.32 ,parentNode)
 		:setScale(0.5)
-		local weapon2 = self:createSprite(Tabel["weapon"][a][2],0.145,-0.085 ,parentNode)
+		local weapon2 = self:createSprite(Tabel["weapon"][a][2],0.4,-0.32 ,parentNode)
 		:setScale(0.5)
-		local weapon3 = self:createSprite(Tabel["weapon"][a][3],0.195,-0.085 ,parentNode)
+		local weapon3 = self:createSprite(Tabel["weapon"][a][3],0.6,-0.32 ,parentNode)
 		:setScale(0.5)
-		local weapon4 = self:createSprite(Tabel["weapon"][a][4],0.245,-0.085 ,parentNode)
+		local weapon4 = self:createSprite(Tabel["weapon"][a][4],0.8,-0.32 ,parentNode)
 		:setScale(0.5)
 	end
 end
@@ -199,7 +255,7 @@ function UI:createLabel(parentNode, text, size, posX, posY,color)
 			size = size,
 			color = color
 			})
-		:setPosition(display.width * posX, display.height * posY)
+		:setPosition(parentNode:getContentSize().width * posX, parentNode:getContentSize().height * posY)
 		parentNode:addChild(label)
 	return label
 end
@@ -210,9 +266,16 @@ function UI:createButton(path, posX, posY,time, scale, parentNode)
 	pressed = path
 	}
 	local button = cc.ui.UIPushButton.new(images)
-	:setPosition(display.width * posX, display.height * posY)
+	:setPosition(parentNode:getContentSize().width * posX, parentNode:getContentSize().height * posY)
 	:scaleTo(time, scale)	
 	parentNode:addChild(button)
+	button:onButtonPressed(function (event)
+		button:setScale(1.1,1.1)
+	end)
+	button:onButtonRelease(function (event)
+		button:setScale(scale, scale)
+	end)
+	
 	return button
 end
 --上面的button
@@ -220,14 +283,7 @@ function UI:TopButton()
 	self.topButton = topButton.new(self, "StartScene")
 	self.topButton:setTag(1)
 end
---创建精灵的函数
-function UI:createSprite(pic,posX,posY,parentNode)
-	local sprite = display.newSprite(pic)
-	:setPosition(display.width * posX, display.height * posY)
-	parentNode:addChild(sprite)
-	return sprite
-end
---右面的button
+
 function UI:RightButton()
 	local newBag = self:createButton("#newBag.png", 0.93, 0.67,0.01, 0.9,self)
 	:onButtonClicked(function(event)

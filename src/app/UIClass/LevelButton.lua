@@ -8,6 +8,12 @@ local LevelButton = class("LevelButton", function(posX, posY, number,parentNode)
 	:setPosition(display.width * posX, display.height * posY)
 	:scaleTo(0.01, 0.8)
 	parentNode:addChild(button)
+	button:onButtonPressed(function (event)
+		button:setScale(0.9,0.9)
+	end)
+	button:onButtonRelease(function (event)
+		button:setScale(0.8, 0.8)
+	end)
 	local size = button:getContentSize()
 	local label = cc.ui.UILabel.new({
 		UIlabelType = 2,

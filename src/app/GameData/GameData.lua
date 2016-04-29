@@ -25,7 +25,7 @@ local initTable = {
         mp = 200
     },
     UItopData = {
-        bloodNow = 5,
+        bloodNow = 99999999999,
         coin = 500,
         diamond = 200
     }

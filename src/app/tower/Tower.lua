@@ -12,6 +12,7 @@ local Tower = class("Tower", function (num)
 	tower.num = num
 	tower.attackArea = TowerData["T" .. tower.num].attackArea
 	tower.target = nil
+	tower.firetime = 0
 	return tower
 end)
 

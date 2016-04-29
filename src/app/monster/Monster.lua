@@ -6,6 +6,7 @@ local Monster = class("Monster", function (num)
 	local sprite = display.newSprite(path)
 	sprite:setAnchorPoint(0.5,0.2)
 	sprite.num = num
+	sprite.target = {}
 	return sprite
 end)
 
@@ -62,7 +63,9 @@ function Monster:move(posT, monsterTable)--按路径移动
 	local callfun = cc.CallFunc:create(function()
 		for k,v in pairs(monsterTable) do
 			if v == self then
-				print("....................................................")
+				for i,j in pairs(self.target) do
+					j.target = nil
+				end
 				table.remove(monsterTable, k)
 				self:removeFromParent()
 				self = nil

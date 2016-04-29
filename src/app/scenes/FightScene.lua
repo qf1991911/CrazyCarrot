@@ -113,7 +113,6 @@ function FightScene:fightMap() --地图
 	local time = os.time()
 	local septum = 0
 	local num = 15
-	local firetime = 0
 	local enemyhome = self:enemyHomePos()
 	enemyhome:runAction(self:enemyhomeAction())
 	enemyhome:setOpacity(0)
@@ -121,8 +120,12 @@ function FightScene:fightMap() --地图
 	local tower = Tower.new(PassData["L"..self.pass].pretower)
 	local pretower = self.map:getObjectGroup("objs"):getObject("preTower")
 	tower:pos(pretower.x, pretower.y)
-	tower:addTo(self.map,2)
+	tower:addTo(self.map,3)
 	table.insert(self.tower,tower)
+	local tower2 = Tower.new(PassData["L"..self.pass].pretower)
+	tower2:pos(200,300)
+	tower2:addTo(self.map,3)
+	table.insert(self.tower,tower2)
 
 	self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function (dt)
 		if wave<= PassData["L"..self.pass].wave and os.time()-time > PassData["L"..self.pass]["wavetime"..wave] and septum == 0 and num > 0 then
@@ -144,6 +147,13 @@ function FightScene:fightMap() --地图
 				local tx,ty = v.target:getPosition()
 				local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
 				if distance > v.attackArea then
+					
+					for a,b in pairs(v.target.target) do
+						if b == v then
+							table.remove(table, a)
+						end
+					end
+					
 					v.target = nil
 				else
 					local degree = math.deg(math.asin((ty-y)/distance))
@@ -153,6 +163,12 @@ function FightScene:fightMap() --地图
 						degree = -180 - degree
 					end
 					v:towerAim(90 - degree)
+					v.firetime = v.firetime + 1
+					if v.firetime == 30 then
+						local bullet = self:fire(k)
+						v.firetime = v.firetime - 30
+						bullet:runAction(self:fireAction(tx,ty))
+					end
 				end
 			else
 				for i,j in pairs(self.monster) do
@@ -160,12 +176,7 @@ function FightScene:fightMap() --地图
 					local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
 					if distance <= v.attackArea then 
 						v.target = j
-						firetime = firetime + 1
-						if firetime == 30 then
-							local bullet = self:fire()
-							firetime = firetime - 30
-							bullet:runAction(self:fireAction(tx,ty))
-						end
+						table.insert(j.target,v)						
 						break
 					end
 				end
@@ -329,16 +340,25 @@ function FightScene:buttonEvent(btnname) -- 按钮点击动作
 	
 end
 
-function FightScene:fire()
-	local posx,posy = self.tower[1]:getPosition()
+function FightScene:fire(k)
+	local posx,posy = self.tower[k]:getPosition()
 	local bullet = display.newSprite("#B01_0.png")
 	:pos(posx, posy)
-	:addTo(self.map)
+	:addTo(self.map,2)
 	return bullet
 end
 function FightScene:fireAction(posx,posy)
-	local move = cc.MoveBy:create(0.2,cc.p(posx,posy))
-	return move
+	local move = cc.MoveTo:create(0.1,cc.p(posx,posy))
+	local boom = self:fireAnimation()
+	local sq = cc.Sequence:create(move,boom)
+	return sq
+end
+function FightScene:fireAnimation()
+	local frame = display.newFrames("B01_%01d.png",0,3)
+	local animation = display.newAnimation(frame, 0.2)
+	local animate = cc.Animate:create(animation)
+	return animate
+	-- body
 end
 
 function FightScene:onEnter()

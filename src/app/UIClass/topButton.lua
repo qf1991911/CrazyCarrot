@@ -11,7 +11,7 @@ function topButton:ctor()
 	local buttonbg1 = self:createSprite("#buttonBg.png", 0.28, 0.9)
 	:setScaleX(2.2)
 	:setScaleY(0.9)
-	self.bloodTable = self:createLabel(buttonbg1, GameState.GameData.UItopData.bloodNow, 25, 0.54, 0.5,cc.c3b(255, 215, 0))
+	self.bloodTable = self:createLabel(buttonbg1, GameState.GameData.UItopData.bloodNow, 25, 0.54, 0.5,cc.c3b(255, 255, 255))
 	:setScaleX(0.45)
 	:setScaleY(1.1)	
 	local bloodNow = self:createSprite("#bloodNew.png", 0.22, 0.9)
@@ -80,24 +80,28 @@ function topButton:CreateBuyScene()
 	:setContentSize(display.width, display.height)
 	self:addChild(dailytaskLayer)
 	local node = display.newNode()
-	node:setContentSize(display.width* (1 / 0.9), display.height )
-	:setScale(0.9)
+	node:setContentSize(display.width, display.height )
+	:setScale(0.8,0.9)
 	dailytaskLayer:addChild(node)
 	node:setTouchEnabled(true)
 	node:addNodeEventListener(cc.NODE_TOUCH_EVENT, function ()			
 	end)
 
-	local shop_bg = self:createSprite("#shop_bg.png",0.5,0.4, node)
-	local shopBg1 = self:createSprite("#shopBg.png",0.19,0.4, shop_bg)
-	local shopBg2 = self:createSprite("#shopBg.png",0.4,0.4, shop_bg)
-	local shopBg3 = self:createSprite("#shopBg.png",0.61,0.4, shop_bg)
-	local shopBg4 = self:createSprite("#shopBg.png",0.82,0.4, shop_bg)
-	local shopTitleBg = self:createSprite("#shopTitleBg.png",0.5,0.75, node)
-	local shopEnergyTitle = self:createSprite("#shopEnergyTitle.png",0.5,0.8, shopTitleBg)
-	local shop_energy1 = self:createSprite("#shop_energy.png",0.5,0.3, shopBg1)
-	local shop_energy2 = self:createSprite("#shop_energy.png",0.5,0.3, shopBg2)
-	local shop_energy3 = self:createSprite("#shop_energy.png",0.5,0.3, shopBg3)
-	local shop_energy4 = self:createSprite("#energyNum4.png",0.5,0.3, shopBg4)
+	local shop_bg = self:createShopSprite("#shop_bg.png",0.5,0.45, node)
+	local shopBg1 = self:createShopSprite("#shopBg.png",0.19,0.5, shop_bg)
+	local shopBg2 = self:createShopSprite("#shopBg.png",0.4,0.5, shop_bg)
+	local shopBg3 = self:createShopSprite("#shopBg.png",0.61,0.5, shop_bg)
+	local shopBg4 = self:createShopSprite("#shopBg.png",0.82,0.5, shop_bg)
+	local shopTitleBg = self:createShopSprite("#shopTitleBg.png",0.5,0.8, node)
+	local shopEnergyTitle = self:createShopSprite("#shopEnergyTitle.png",0.5,0.72, shopTitleBg)
+	local shop_energy1 = self:createShopSprite("#shop_energy.png",0.35,0.8, shopBg1)
+	local energyNum1 = self:createShopSprite("#energyNum1.png",0.6,0.8, shopBg1)
+	local shop_energy1 = self:createShopSprite("#shop_energy1.png",0.5,0.55, shopBg1)
+	local shop_energy2 = self:createShopSprite("#shop_energy.png",0.35,0.8, shopBg2)
+	local energyNum2 = self:createShopSprite("#energyNum2.png",0.6,0.8, shopBg2)
+	local shop_energy3 = self:createShopSprite("#shop_energy.png",0.35,0.8, shopBg3)
+	local energyNum2 = self:createShopSprite("#energyNum3.png",0.6,0.8, shopBg3)
+	local shop_energy4 = self:createShopSprite("#energyNum4.png",0.5,0.8, shopBg4)
 
 end
 function topButton:createButton(path, posX, posY,time, scale)
@@ -120,6 +124,16 @@ end
 function topButton:createSprite(pic,posX,posY,parentNode)
 	local sprite = display.newSprite(pic)
 	:setPosition(display.width * posX, display.height * posY)
+	
+	if not parentNode then
+		parentNode = self
+	end
+	parentNode:addChild(sprite)
+	return sprite
+end
+function topButton:createShopSprite(pic,posX,posY,parentNode)
+	local sprite = display.newSprite(pic)
+	:setPosition(parentNode:getContentSize().width * posX, parentNode:getContentSize().height * posY)
 	
 	if not parentNode then
 		parentNode = self

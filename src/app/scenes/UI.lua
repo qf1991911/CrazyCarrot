@@ -1,3 +1,4 @@
+local Hero = require(".app.monster.Hero")
 local LevelButton = require(".app.UIClass.LevelButton")
 local topButton = require(".app.UIClass.topButton")
 local Tabel = require(".app.stageConfig.stageLevelInformation")
@@ -16,7 +17,7 @@ function UI:ctor()
     self:BottomButton()
     self:RightButton()
  	self:TopButton()
-
+ 	-- self:hero()
 
 end
 --背景
@@ -61,6 +62,9 @@ function UI:createBackGround()
 	:setBounceable(false)	
 end
 
+-- function UI:hero()
+-- 	Hero.new("#h01_move_1.png",200, 200, self)
+-- end
 --下面的button
 function UI:BottomButton()
 	local node1 = display.newNode()
@@ -115,6 +119,26 @@ function UI:BottomButton()
 	local helpButton = self:createButton("#helpButton.png", 0.85, 0.1,0.01, 0.9,self)
 	:onButtonClicked(function(event)
 		print("···")
+		local hero = Hero.new("#h01_move_1.png",200, 200, self)
+		hero:attack(2)
+		-- hero:hurt(1)
+		-- hero:wait(1)
+		-- hero:tornado()
+		-- hero:move(1)
+		-- hero:magic1(1)
+		-- hero:magic2(1)
+		-- hero:dead(1)
+		-- hero:skill()
+		-- hero:skill_bomb()
+		-- hero:skill_stop()
+		-- hero:s12_fly()
+		-- local action1 = hero:s05()
+		-- local action2 = hero:s05Move()
+		-- local action3 = hero:s05Explode()
+		-- local seq = cc.Sequence:create(action1,action2,action3)
+		-- hero:runAction(seq)
+		-- hero:s02(2)
+		hero:s12(200, 200)
 	end)
 end
 

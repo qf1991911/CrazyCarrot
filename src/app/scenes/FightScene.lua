@@ -138,24 +138,40 @@ function FightScene:fightMap() --地图
 			num = 15
 		end
 		septum = (septum + 1) % 60
-		for k,v in pairs(self.monster) do
+		for k,v in pairs(self.tower) do
 			local x,y = v:getPosition()
-			for i,j in pairs(self.tower) do
-				local tx,ty = j:getPosition()
+			if v.target then
+				local tx,ty = v.target:getPosition()
 				local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
-				if distance <= j.attackArea then 
-					j.target = v
-					local degree = math.deg(math.asin((y-ty)/distance))
-					j:towerAim(degree)					
+				if distance > v.attackArea then
+					v.target = nil
+				else
+					local degree = math.deg(math.asin((ty-y)/distance))
+					if tx < x and degree > 0 then
+						degree = 180 - degree
+					elseif tx < x and degree <= 0 then
+						degree = -180 - degree
+					end
+					v:towerAim(90 - degree)
+				end
+			else
+				for i,j in pairs(self.monster) do
+					local tx,ty = j:getPosition()
+					local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
+					if distance <= v.attackArea then 
+						v.target = j
+						firetime = firetime + 1
+						if firetime == 30 then
+							local bullet = self:fire()
+							firetime = firetime - 30
+							bullet:runAction(self:fireAction(tx,ty))
+						end
+						break
+					end
 				end
 			end
 		end
-		firetime = firetime + 1
-		if firetime == 30 then
-			local bullet = self:fire()
-			firetime = firetime - 30
-			bullet:runAction(self:fireAction(200,100))
-		end
+		
 
 	end)
 	self:scheduleUpdate()

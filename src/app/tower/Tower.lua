@@ -16,20 +16,22 @@ local Tower = class("Tower", function (num)
 end)
 
 function Tower:ctor()
+	self.rotate = false
+
 	self.stage = 3
 	if self.num == "18" then
 		self:t18create()
 	elseif self.num == "03" or self.num == "11" or self.num == "16" then
 		self.gun = display.newSprite("#T"..self.num.."_"..self.stage.."_1.png")
 		:addTo(self)
-		self.gun:runAction(self:stage1())
+		-- self.gun:runAction(self:stage1())
 	else		
 		self.base = display.newSprite("#T"..self.num.."_seat"..self.stage..".png")
 			:addTo(self)
 		self.gun = display.newSprite("#T"..self.num.."_"..self.stage.."_1.png")   
 		:addTo(self)
 		self.gun:setAnchorPoint(cc.p(0.5, 0.15))
-		self.gun:runAction(self:stage1())
+		-- self.gun:runAction(self:stage1())
 		
 	end
 
@@ -78,9 +80,7 @@ function Tower:actiont18ball() --18号环绕球动作
 	return rep
 end
 function Tower:towerAim(degree)
-	local rotate = cc.RotateBy:create(0.1,degree)
-	self:runAction(rotate)
-	-- body
+		self:setRotation(degree)
 end
 
 

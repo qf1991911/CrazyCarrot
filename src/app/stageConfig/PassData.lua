@@ -29,37 +29,37 @@ local PassData = {
 		wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
 		
 
-	L7 = {wave = 8, map = "map/Theme1/L1_1.tmx", pretower = "01",
+	L7 = {wave = 8, map = "map/Theme1/L1_7.tmx", pretower = "01",
 			wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 			wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 			wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
 
-	L8 = {wave = 8, map = "map/Theme1/L1_1.tmx", pretower = "01",
+	L8 = {wave = 8, map = "map/Theme1/L1_8.tmx", pretower = "01",
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 		wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
-	L9 = {wave = 8, map = "map/Theme1/L1_1.tmx", pretower = "01",
+	L9 = {wave = 8, map = "map/Theme1/L1_9.tmx", pretower = "01",
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 		wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
 
-	L10 = {wave = 8, map = "map/Theme1/L1_1.tmx", pretower = "01",
+	L10 = {wave = 8, map = "map/Theme1/L1_10.tmx", pretower = "01",
 			wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 			wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 			wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
 
-	L11 = {wave = 8, map = "map/Theme1/L1_1.tmx", pretower = "01",
+	L11 = {wave = 8, map = "map/Theme2/L2_1.tmx", pretower = "01",
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 		wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
 			
 
-	L12 = {wave = 8, map = "map/Theme1/L1_1.tmx", pretower = "01",
+	L12 = {wave = 8, map = "map/Theme2/L2_2.tmx", pretower = "01",
 			wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 			wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 			wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
 
-	L13 = {wave = 8, map = "map/Theme1/L1_1.tmx", pretower = "01",
+	L13 = {wave = 8, map = "map/Theme1/L2_3.tmx", pretower = "01",
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 		wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},

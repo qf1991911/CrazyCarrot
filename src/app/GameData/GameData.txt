@@ -1,1 +1,1 @@
-{"data":"{\"hero\":{\"mp\":200,\"hp\":100},\"UItopData\":{\"coin\":500,\"diamond\":200,\"bloodNow\":99999999977}}"}
+{"data":"{\"hero\":{\"mp\":200,\"hp\":100},\"UItopData\":{\"coin\":500,\"diamond\":200,\"bloodNow\":99999999828}}"}

@@ -1,4 +1,5 @@
 display.addSpriteFrames("fight/ui_play.plist","fight/ui_play.png")
+display.addSpriteFrames("fight/fight.plist","fight/fight.png")
 display.addSpriteFrames("map/Theme1/theme1Scene.plist","map/Theme1/theme1Scene.png")
 display.addSpriteFrames("UI/ui_public1.plist","UI/ui_public1.png")
 display.addSpriteFrames("Tower/T01.plist","Tower/T01.png")
@@ -36,6 +37,8 @@ function FightScene:fightUI() --战斗场景布局
 	local skillbg = self:spriteCreate("#skillBg.png",self.sizeofBG.width / 2,self.sizeofBG.height / 11)
 
 	local moneybg = self:spriteCreate("#ui_moneyBg.png",self.sizeofBG.width*.16,self.sizeofBG.height*.88)
+	local pausing = self:spriteCreate("#ui_waveSuspend.png",self.sizeofBG.width*.45,self.sizeofBG.height*.88)
+	pausing:hide()
 
 	local wavebg = self:spriteCreate("#ui_waveBg.png",self.sizeofBG.width*.45,self.sizeofBG.height*.88)
 	local wbgsize = wavebg:getContentSize() 
@@ -59,12 +62,14 @@ function FightScene:fightUI() --战斗场景布局
 	pause:onButtonClicked(function (event)
 		if state then			
 			pause:setButtonImage(cc.ui.UIPushButton.NORMAL, "#ui_continue.png")
-			local frame = display.newSpriteFrame("ui_waveSuspend.png")
-			wavebg:setSpriteFrame(frame)
+			local director = cc.Director:getInstance():pause()
+			pausing:show()
+			wavebg:hide()
 		else			
-			pause:setButtonImage(cc.ui.UIPushButton.NORMAL, "#ui_stop.png")	
-			local frame = display.newSpriteFrame("ui_waveBg.png")
-			wavebg:setSpriteFrame(frame)
+			pause:setButtonImage(cc.ui.UIPushButton.NORMAL, "#ui_stop.png")
+			local director = cc.Director:getInstance():resume()
+			pausing:hide()
+			wavebg:show()
 		end
 		state = not state
 	end)
@@ -73,6 +78,7 @@ function FightScene:fightUI() --战斗场景布局
 	local setting = self:buttonCreate("#ui_setting.png",self.sizeofBG.width*.86,self.sizeofBG.height*.88)
 	setting:onButtonClicked(function (event)
 		self:settingUI()
+		local director = cc.Director:getInstance():pause()
 	end)
 	setting:addTo(self.sprtieBG)
 
@@ -113,6 +119,7 @@ function FightScene:fightMap() --地图
 	local time = os.time()
 	local septum = 0
 	local num = 15
+
 	local enemyhome = self:enemyHomePos()
 	enemyhome:runAction(self:enemyhomeAction())
 	enemyhome:setOpacity(0)
@@ -143,55 +150,67 @@ function FightScene:fightMap() --地图
 		septum = (septum + 1) % 60
 		for k,v in pairs(self.tower) do
 			local x,y = v:getPosition()
-			if v.target then
-				local tx,ty = v.target:getPosition()
-				local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
-				if distance > v.attackArea then
-					
-					for a,b in pairs(v.target.target) do
-						if b == v then
-							table.remove(table, a)
+			if v.num == "16" or v.num =="18" or v.num == "11" or v.num == "03" then 
+			else
+				if v.target then
+					local tx,ty = v.target:getPosition()
+					local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
+					if distance > v.attackArea then					
+						for a,b in pairs(v.target.target) do
+							if b == v then
+								table.remove(table, a)
+							end
+						end						
+						v.target = nil
+					else
+						local degree = math.deg(math.asin((ty-y)/distance))
+						if tx < x and degree > 0 then
+							degree = 180 - degree
+						elseif tx < x and degree <= 0 then
+							degree = -180 - degree
+						end
+						v:towerAim(90 - degree)
+						v.firetime = v.firetime + 1
+						if v.firetime == 30 then
+							local bullet = v:fire()
+							v.firetime = v.firetime - 30
+							bullet:runAction(v:fireAction(tx,ty+10,bullet))
+							v.target.Hptag:show()
+							v.target.hpnow = v.target.hpnow -  v.power
+							v.target.Hptag.hptag:setPercent(v.target.hpnow / v.target.hp *100)
+							if v.target.hpnow <= 0 then
+								for i,j in pairs(self.monster) do
+									if j == v.target then
+										for x,y in pairs(v.target.target) do
+											y.target = nil
+										end
+										table.remove(self.monster,i)
+										j:dead()
+										j:removeFromParent()
+										j = nil
+									end
+								end
+								
+							end
 						end
 					end
-					
-					v.target = nil
 				else
-					local degree = math.deg(math.asin((ty-y)/distance))
-					if tx < x and degree > 0 then
-						degree = 180 - degree
-					elseif tx < x and degree <= 0 then
-						degree = -180 - degree
-					end
-					v:towerAim(90 - degree)
-					v.firetime = v.firetime + 1
-					if v.firetime == 30 then
-						local bullet = self:fire(k)
-						v.firetime = v.firetime - 30
-						bullet:runAction(self:fireAction(tx,ty))
-					end
-				end
-			else
-				for i,j in pairs(self.monster) do
-					local tx,ty = j:getPosition()
-					local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
-					if distance <= v.attackArea then 
-						v.target = j
-						table.insert(j.target,v)						
-						break
+					for i,j in pairs(self.monster) do
+						local tx,ty = j:getPosition()
+						local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
+						if distance <= v.attackArea then 
+							v.target = j
+							table.insert(j.target,v)						
+							break
+						end
 					end
 				end
 			end
 		end
-		
-
 	end)
 	self:scheduleUpdate()
-
-	local rabbit = display.newSprite("#protectPoint.png")
-	rabbit:pos(self.way[#self.way].x, self.way[#self.way].y)
-	rabbit:setAnchorPoint(0.5,0)
-	rabbit:addTo(self.map,1)
-
+	self:rabbit()
+	
 	local flag = display.newSprite("#Theme1_EnemyHome.png")
 	flag:pos(self.way[1].x, self.way[1].y)
 	flag:setAnchorPoint(0.5,0)
@@ -226,7 +245,7 @@ end
 function FightScene:monsterCreate(numofmonster) --出怪
 	local monster = Monster.new(numofmonster)
 	monster:pos(self.way[1].x, self.way[1].y)
-	monster:move(self.way, self.monster)
+	monster:move(self.way, self.monster,self.rabbit)
 	monster:addTo(self.map,1)
 	return monster
 end
@@ -249,6 +268,7 @@ function FightScene:misButtonCreate(way,posx,posy) --按钮创建
 	:addTo(self.sprtieBG)
 	button:onButtonClicked(function (event)
 		self:mission()
+		local director = cc.Director:getInstance():pause()
 	end)
 	return button 
 
@@ -287,6 +307,7 @@ function FightScene:mission() --任务按钮界面
 	local missionClose = self:buttonCreate("#taskClose.png",MBGsize.width *.96,MBGsize.height*.9)
 	missionClose:onButtonClicked(function ()
 		mislayer:removeFromParent()
+		local director = cc.Director:getInstance():resume()
 	end)
 	missionClose:addTo(missionbg)
 	
@@ -305,7 +326,6 @@ function FightScene:settingUI() --设置按钮界面
 	end)
 	local sizeofSL = setlayer:getContentSize()
 
-
 	local settingBG = display.newSprite("#settingBg.png")
 	settingBG:pos(sizeofSL.width / 2, sizeofSL.height / 2)
 	settingBG:addTo(setlayer)
@@ -314,16 +334,35 @@ function FightScene:settingUI() --设置按钮界面
 	continue:addTo(settingBG)
 	continue:onButtonClicked(function (event)
 		setlayer:removeFromParent()
-		-- body
+		local director = cc.Director:getInstance():resume()
 	end)
+
 	local restart = self:buttonCreate("#settingRestart.png", settingUIsize.width / 2 , settingUIsize.height * .5)
 	restart:addTo(settingBG)
+	restart:onButtonClicked(function(event)
+		local restart = self.new(self.pass)
+		display.replaceScene(restart,"flipX",1)
+	end)
+
 	local getback = self:buttonCreate("#settingReturn.png", settingUIsize.width / 2 , settingUIsize.height * .25)
 	getback:addTo(settingBG)
+	getback:onButtonClicked(function (event)
+		local UI = require(".app.scenes.UI")
+		local ui = UI.new()
+		display.replaceScene(ui,"splitRows",1)
+	end)
+
 	local levelnum = display.newSprite("#settingFlag.png")
 	levelnum:pos(settingUIsize.width *.2 , settingUIsize.height * 0.88)
 	levelnum:addTo(settingBG)
-	-- body
+	local flagsize = levelnum:getContentSize()
+	local labelpass = cc.ui.UILabel.new({
+		UILabelType = 1,
+		text = self.pass,
+		font = "font/fontLevelButton.fnt"
+		})
+	:align(1,flagsize.width / 2, flagsize.height / 1.7)
+	:addTo(levelnum)
 end
 
 
@@ -340,25 +379,26 @@ function FightScene:buttonEvent(btnname) -- 按钮点击动作
 	
 end
 
-function FightScene:fire(k)
-	local posx,posy = self.tower[k]:getPosition()
-	local bullet = display.newSprite("#B01_0.png")
-	:pos(posx, posy)
-	:addTo(self.map,2)
-	return bullet
-end
-function FightScene:fireAction(posx,posy)
-	local move = cc.MoveTo:create(0.1,cc.p(posx,posy))
-	local boom = self:fireAnimation()
-	local sq = cc.Sequence:create(move,boom)
-	return sq
-end
-function FightScene:fireAnimation()
-	local frame = display.newFrames("B01_%01d.png",0,3)
-	local animation = display.newAnimation(frame, 0.2)
-	local animate = cc.Animate:create(animation)
-	return animate
-	-- body
+function FightScene:rabbit() --兔子
+	self.rabbit = display.newSprite("#protectPoint.png")
+	self.rabbit:pos(self.way[#self.way].x, self.way[#self.way].y)
+	self.rabbit:setAnchorPoint(0.5,0)
+	self.rabbit:addTo(self.map,1)
+	local sizeR = self.rabbit:getContentSize()
+
+	local rabbitHp = display.newSprite("#blood-1.png")
+	rabbitHp:pos(sizeR.width / 2, sizeR.height)
+	:addTo(self.rabbit)
+	local sizeHp = rabbitHp:getContentSize()
+
+	self.rabbit.Rhplabel = cc.ui.UILabel.new({
+		UILabelType = 1,
+		text = 10,
+		font = "font/fontBlood.fnt"
+		}) 
+	:align(1, sizeHp.width / 1.6, sizeHp.height /1.9)
+	:addTo(rabbitHp)
+
 end
 
 function FightScene:onEnter()

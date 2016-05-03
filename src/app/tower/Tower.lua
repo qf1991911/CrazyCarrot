@@ -13,6 +13,7 @@ local Tower = class("Tower", function (num)
 	tower.attackArea = TowerData["T" .. tower.num].attackArea
 	tower.target = nil
 	tower.firetime = 0
+	tower.power = TowerData["T" .. tower.num].power
 	return tower
 end)
 
@@ -82,6 +83,32 @@ function Tower:actiont18ball() --18号环绕球动作
 end
 function Tower:towerAim(degree)
 		self:setRotation(degree)
+end
+
+function Tower:fire()
+	local parent = self:getParent()
+	local posx,posy = self:getPosition()
+	local bullet = display.newSprite("#B"..self.num.."_0.png")
+	:pos(posx, posy)
+	:addTo(parent,2)
+	return bullet
+end
+function Tower:fireAction(posx,posy,bullet)
+	local move = cc.MoveTo:create(0.1,cc.p(posx,posy))
+	local boom = self:fireAnimation()
+	local sq = cc.Sequence:create(move,boom)
+	return sq
+end
+function Tower:fireAnimation(bullet)
+	local frame = display.newFrames("B"..self.num.."_%01d.png",0,3)
+	local animation = display.newAnimation(frame, 0.1)
+	local animate = cc.Animate:create(animation)
+	local callfun = cc.CallFunc:create(function (bullet)
+		bullet:removeFromParent()
+		bullet = nil
+	end)
+	local sq = cc.Sequence:create(animate,callfun)
+	return sq
 end
 
 

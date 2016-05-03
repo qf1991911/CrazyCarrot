@@ -44,9 +44,9 @@ function Hero:wait(heroNum)
 	local animate = cc.Animate:create(animation)
 	self:runAction(animate)
 end
-
-function Hero:wait2(heroNum)
-	local frames = display.newFrames("h0"..heroNum.."_wait_%d.png",1,Tabel[heroNum]["wait2"])
+--英雄二的等待二
+function Hero:wait2()
+	local frames = display.newFrames("h02_wait_%d.png",1,3)
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
 	self:runAction(animate)
@@ -161,7 +161,7 @@ function Hero:skill()
 	local seq = cc.Sequence:create(animate, animate1, animate2)
 	self:runAction(seq)
 end
---UFO出场几动作
+--UFO出场动作
 function Hero:s12(posX, posY)
 	local node = display.newNode()
 	:setPosition(posX, posY)
@@ -208,28 +208,23 @@ function Hero:s12_heaven()
 	local animate = cc.Animate:create(animation)
 	self:runAction(animate)
 end
-
+--英雄四技能一头上效果
 function Hero:s12_wing()
-	local frames = display.newFrames("s12_wing_%d.png",1,8)
+	local frames = display.newFrames("s14_wing_%d.png",1,8)
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
 	self:runAction(animate)
 end
 
-function Hero:ufolight()
-	local frames = display.newFrames("ufolight%d.png",1,2)
-	local animation = display.newAnimation(frames,0.2)
-	local animate = cc.Animate:create(animation)
-	self:runAction(animate)
-end
 
+--英雄四的技能二
 function Hero:bomb()
 	local frames = display.newFrames("h04_bomb_%d.png",1,2)
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
 	self:runAction(animate)
 end
-
+--英雄四的炸弹爆炸效果
 function Hero:bombExplode()
 	local frames = display.newFrames("h04_bombExplode_%d.png",1,7)
 	local animation = display.newAnimation(frames,0.2)

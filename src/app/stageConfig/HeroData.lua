@@ -5,7 +5,7 @@ HeroData[1] = 	{ 	["attack"] = 8,		["dead"] = 7 ,		["hurt"] = 4, 		["wait"] = 17
 				}
 
 HeroData[2] =	{	["attack"] = 12,	["dead"] = 9 ,		["hurt"] = 4, 		["wait"] = 8,
-					["s06"] = 11,		["move"] = 8,		["magic1"] = 20,	["magic2"] = 4,
+					["s06"] = 11,		["move"] = 4,		["magic1"] = 20,	["magic2"] = 4,
 					["focus"] = 4,		["focusPre"] = 2,	["s01"] = 6,		["s05Move"] = 7,
 					["s05"] = 10,		["s05Explode"] = 7,	
 					["skill1"] = "#skillIcon6.png",

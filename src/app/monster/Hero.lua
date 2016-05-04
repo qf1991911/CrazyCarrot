@@ -11,6 +11,28 @@ local Hero = class("Hero", function (pic, posX, posY, parentNode)
 end)
 function Hero:ctor()
 	-- self:attack()
+	self.face = "left"
+	self:MoveTo()
+end
+--移动和英雄转向
+function Hero:MoveTo()
+	
+	self:getParent():setTouchEnabled(true)
+	self:getParent():addNodeEventListener(cc.NODE_TOUCH_EVENT,function(event)
+		local posx, posy = self:getPosition()
+		if event.x > posx and self.face == "left" then
+			local FlipX = cc.FlipX:create(true)
+			self:runAction(FlipX)
+			self.face = "right"
+		elseif event.x < posx and self.face == "right" then
+			local FlipX = cc.FlipX:create(false)
+			self:runAction(FlipX)
+			self.face = "left"
+		end
+		self:runAction(self:move(GameState.GameData.HeroNumber))
+		self:setPosition(event.x, event.y)
+		print(event.x, event.y)
+	end)
 end
 
 --攻击
@@ -61,15 +83,12 @@ function Hero:tornado()
 	
 end
 
---移动
-function Hero:move(heroNum, posx, posy)
+--移动动作
+function Hero:move(heroNum)
 	local frames = display.newFrames("h0"..heroNum.."_move_%d.png",1,Tabel[heroNum]["move"])
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
-
-	local move = cc.MoveTo:create(posx, posy)
-	local action = cc.Spawn:create(animate, move)
-	return(action)
+	return(animate)
 end
 
 --技能1
@@ -87,24 +106,31 @@ function Hero:magic2(heroNum)
 	return(animate)
 end
 --技能2 
-function Hero:magic12(heroNum, posX, posY)
+function Hero:magic12(heroNum,posx,posy)
 	local frames = display.newFrames("h0"..heroNum.."_magic_%d.png",1,Tabel[heroNum]["magic1"])
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
 
 	local callback = cc.CallFunc:create(function()
+		self:runAction(Hero:wait(GameState.GameData.HeroNumber))
 		local sprite = display.newSprite("#tornado_1.png")
-		sprite:setPosition(90, 80)
-		self:addChild(sprite)
+		sprite:setPosition(posx, posy)
+		sprite:setTag(1)
+		self:getParent():addChild(sprite)
 		local frames = display.newFrames("tornado_%d.png",1,6)
 		local animation = display.newAnimation(frames,0.2)
 		local animate1 = cc.Animate:create(animation)
-		local rep = cc.Repeat:create(animate1,10)
-		sprite:runAction(rep)
+		local rep = cc.Repeat:create(animate1,7)
+		local callback1 = cc.CallFunc:create(function()	
+			sprite:removeFromParent()	
+			 
+		end)
+		local seq = cc.Sequence:create(rep, callback1)
+		sprite:runAction(seq)			
 	end)
 	
-	local seq = cc.Sequence:create(animate, callback)
-	return(seq)
+	local seq1 = cc.Sequence:create(animate, callback)
+	return(seq1)
 end
 
 function Hero:focus(heroNum)
@@ -120,21 +146,37 @@ function Hero:focusPre(heroNum)
 	local animate = cc.Animate:create(animation)
 	return(animate)
 end
---英雄2的第三个技能
+--英雄2的技能三
 function Hero:s01()
+	local sprite = display.newSprite("#h02_s01_1.png")
+	-- :setPosition(posx,posy)
+	:setAnchorPoint(0.5, 0.3)
+	self:getParent():addChild(sprite)
+	local posx, posy = self:getPosition()
+	if self.face == "left" then
+		sprite:setPosition(posx - 80, posy)
+	else
+		sprite:setPosition(posx + 80, posy)
+	end
+
 	local frames = display.newFrames("h02_s01_%d.png",1,6)
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
-	return(animate)
+	local callback = cc.CallFunc:create(function()
+		sprite:removeFromParent()
+	end)
+	local seq = cc.Sequence:create(animate, callback)
+	sprite:runAction(seq)
 end
 
 function Hero:s02(heroNum)
 	local frames = display.newFrames("h0"..heroNum.."_focusPre_%d.png",1,Tabel[heroNum]["focusPre"])
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
-	return(animate)
+	local rep = cc.Repeat:create(animate,3)
+	return(rep)
 end
-
+--
 function Hero:s05()
 
 	local frames = display.newFrames("s05_%d.png",1,Tabel[2]["s05"])
@@ -143,47 +185,46 @@ function Hero:s05()
 
 	return(animate)
 end
-
+--英雄2的第三个技能
 function Hero:s05Move(posX,posY)
-	local tabel = {[1] = {30, 0}, [2] = {-30, 0},[3] = {23,23}, [4] = {0, 30}, [5] = {-23,23},[6] = {23,-23},[7] = {-23,-23},[8] = {0,-30}}
+	local table = {[1] = {45, 0}, [2] = {-45, 0},[3] = {30,30}, [4] = {0, 45}, [5] = {-30,30},[6] = {30,-30},[7] = {-30,-30},[8] = {0,-45}}
 	math.randomseed(os.time())
 	
 	local node = display.newNode()
 	:setPosition(posX, posY)
-	self:getParent():addChild(node)	
-	
-		local sprite = display.newSprite("#s05_move_1.png")
-		for i,v in ipairs(table) do
-			node:setPosition(v[1], v[2])
+	self:getParent():addChild(node)
+	local num = 1
+	node:schedule(function()
+		if num >= 9 then
+			return
 		end
-		
+		local sprite = display.newSprite("#s05_move_1.png")
+		sprite:setRotation(15)
+		sprite:setPosition(table[num][1], table[num][2])
 		sprite:setAnchorPoint(0.5, 0)
 		node:addChild(sprite)
-		
-
 		local frames = display.newFrames("s05_move_%d.png",1,Tabel[2]["s05Move"])
-		local animation = display.newAnimation(frames,0.2)
+		local animation = display.newAnimation(frames,0.1)
 		local animate = cc.Animate:create(animation)
 		local callback = cc.CallFunc:create(function()
 			local frames = display.newFrames("s05_explode_%d.png",1,Tabel[2]["s05Explode"])
-			local animation = display.newAnimation(frames,0.2)
+			local animation = display.newAnimation(frames,0.1)
 			local animate1 = cc.Animate:create(animation)
-				local callback1 = cc.CallFunc:create(function()
-					node:removeFromParent()
-				end)
-				local seq1 = cc.Sequence:create(animate1, callback1)
+			local callback1 = cc.CallFunc:create(function()
+				sprite:removeFromParent()
+				sprite = nil		
+			end)
+			local seq1 = cc.Sequence:create(animate1, callback1)
 			sprite:runAction(seq1)	
 		end)
 		local seq = cc.Sequence:create(animate, callback) 
-		local rep = cc.Repeat:create(seq,9)
-		sprite:runAction(rep)
+		-- local rep = cc.Repeat:create(seq,9)
+		sprite:runAction(seq)
+		num = num + 1
+	end, .25)
 
-	
 end
 
-function Hero:s05Explode()
-	
-end
 
 function Hero:s06()
 	local frames = display.newFrames("s06_%d.png",1,Tabel[2]["s06"])
@@ -191,14 +232,54 @@ function Hero:s06()
 	local animate = cc.Animate:create(animation)
 	return(animate)
 end
+--英雄3的技能二
+function Hero:lightLine(posx, posy, angle)
+	local frames = display.newFrames("h03_skill09_pre%d.png",1,7)
+	local animation = display.newAnimation(frames,0.1)
+	local animate1 = cc.Animate:create(animation)
+	
+	local frames = display.newFrames("h03_skill09_bomb%d.png",1,3)
+	local animation = display.newAnimation(frames,0.1)
+	local animate2 = cc.Animate:create(animation)
 
-function Hero:lightLine()
-	local frames = display.newFrames("h03_lightLine_%d.png",1,6)
-	local animation = display.newAnimation(frames,0.2)
-	local animate = cc.Animate:create(animation)
-	return(animate)
+	local seq = cc.Sequence:create(animate1, animate2)
+	
+	local callback = cc.CallFunc:create(function(event)
+		local sprite = display.newSprite("#h03_lightLine1.png")
+		sprite:setRotation(angle)
+		local sx, sy = self:getPosition()
+		local distance = math.sqrt((posx - sx)^2 + (posy - sy)^2)
+		if distance < 460 then
+			sprite:setPosition((posx + sx) / 2, (posy + sy) / 2)
+			sprite:setScale(distance / 460)
+			local moveTo = cc.MoveTo:create(0.1, cc.p(posx, posy))
+			self:runAction(moveTo)
+		else
+			sprite:setPosition(cc.p(sx + 460 / distance * (posx - sx) / 2, sy + 460 / distance * (posy - sy) / 2))
+			local moveTo = cc.MoveBy:create(0.1, cc.p(460 / distance * (posx - sx), 460 / distance * (posy - sy)))
+			self:runAction(moveTo)
+		end
+		
+		local frames = display.newFrames("h03_lightLine%d.png",1,6)
+		local animation = display.newAnimation(frames,0.1)
+		local animate = cc.Animate:create(animation)
+		self:getParent():addChild(sprite)
+		sprite:runAction(animate)
+
+		local frames = display.newFrames("h03_skill09_stop%d.png",1,12)
+		local animation = display.newAnimation(frames,0.1)
+		local animate3 = cc.Animate:create(animation)
+		
+		local callback1 = cc.CallFunc:create(function()						
+			self:runAction(self:wait(GameState.GameData.HeroNumber))
+		end)
+		local seq1 = cc.Sequence:create(animate3, callback1)
+		self:runAction(seq1)
+	end)
+	local seq2 = cc.Sequence:create(seq, callback)
+	return seq2
 end
---英雄3的技能二，skill_pre -> skill_bomb ->skill_stop
+
 function Hero:skill()
 	local frames = display.newFrames("h03_skill09_pre%d.png",1,7)
 	local animation = display.newAnimation(frames,0.2)
@@ -269,10 +350,7 @@ function Hero:s12(posX, posY)
 
 	local action = cc.Sequence:create(animate, callback, rep)
 
-	sprite1:runAction(action)
-	
-
-	
+	sprite1:runAction(action)	
 end
 
 

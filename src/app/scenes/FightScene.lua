@@ -10,6 +10,8 @@ display.addSpriteFrames("Tower/T11.plist","Tower/T11.png")
 display.addSpriteFrames("Tower/T16.plist","Tower/T16.png")
 display.addSpriteFrames("Tower/T18.plist","Tower/T18.png")
 display.addSpriteFrames("Tower/bullet.plist","Tower/bullet.png")
+local Tabel = require(".app.stageConfig.HeroData")
+local Hero = require(".app.monster.Hero")
 local Monster = require(".app.monster.Monster")
 local Tower = require(".app.tower.Tower")
 local PassData = require(".app.stageConfig.PassData")
@@ -57,6 +59,17 @@ function FightScene:fightUI() --战斗场景布局
 	self.mission3 = self:misButtonCreate("#littleTaskIcon1.png",self.sizeofBG.width*.32 , self.sizeofBG.height *.1)
 	local mission4 = self:spriteCreate("#littleTaskIcon5.png",self.sizeofBG.width*.38 , self.sizeofBG.height *.1)
 
+	local heroSprite = Hero.new("#h01_move_"..GameState.GameData.HeroNumber..".png",200, 200, self)
+	heroSprite:runAction(heroSprite:wait(GameState.GameData.HeroNumber))
+	for i,v in ipairs(self.monster) do
+		local tx,ty = v:getPosition()
+		local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
+		if distance <= 500 then 
+			heroSprite:runAction(heroSprite:move(GameState.GameData.HeroNumber, tx, ty))
+			heroSprite:runAction(heroSprite:attack(GameState.GameData.HeroNumber))
+		end
+	end
+	
 	local pause = self:buttonCreate("#ui_stop.png",self.sizeofBG.width*.79,self.sizeofBG.height*.88)
 	local state = true
 	pause:onButtonClicked(function (event)
@@ -82,11 +95,100 @@ function FightScene:fightUI() --战斗场景布局
 	end)
 	setting:addTo(self.sprtieBG)
 
-	local skill1 = self:buttonCreate("#skillIcon2.png",self.sizeofBG.width*.6 , self.sizeofBG.height *.1)
-	skill1:addTo(self.sprtieBG)
+	if GameState.GameData.HeroNumber == 1 then
+		local skill1 = self:buttonCreate("#skillIcon2.png",self.sizeofBG.width*.6 , self.sizeofBG.height *.1)
+		:onButtonClicked(function (event)
+			heroSprite:stopAllActions()
+			local magic1 = heroSprite:magic1(GameState.GameData.HeroNumber)
+			local callback = cc.CallFunc:create(function ()
+				heroSprite:runAction(heroSprite:wait(GameState.GameData.HeroNumber))
+			end)
+			local action = cc.Sequence:create(magic1, callback) 
+			heroSprite:runAction(action)
+		end)
+		skill1:addTo(self.sprtieBG)
 
-	local skill2 = self:buttonCreate("#skillIcon1.png",self.sizeofBG.width*.69 , self.sizeofBG.height *.1)
-	skill2:addTo(self.sprtieBG)
+		local skill2 = self:buttonCreate("#skillIcon1.png",self.sizeofBG.width*.69 , self.sizeofBG.height *.1)
+		skill2:onButtonClicked(function (event)
+			heroSprite:stopAllActions()				
+			local magic2 = heroSprite:magic12(GameState.GameData.HeroNumber)
+			local callback = cc.CallFunc:create(function ()
+				heroSprite:runAction(heroSprite:wait(GameState.GameData.HeroNumber))
+			end)
+			local action = cc.Sequence:create(magic2, callback) 
+			heroSprite:runAction(action)
+		end)
+		skill2:addTo(self.sprtieBG)
+	else 
+		local skill1 = self:buttonCreate(Tabel[GameState.GameData.HeroNumber]["skill1"],self.sizeofBG.width*.51 , self.sizeofBG.height *.1)
+		skill1:onButtonClicked(function (event)
+
+			if GameState.GameData.HeroNumber == 4 then
+				local magic1 = heroSprite:magic2(GameState.GameData.HeroNumber)
+				local callback = cc.CallFunc:create(function ()
+					heroSprite:s12(200,100)
+					heroSprite:runAction(heroSprite:wait(GameState.GameData.HeroNumber))
+				end)
+				local action = cc.Sequence:create(magic1, callback) 
+				heroSprite:runAction(action)
+			end
+		end)
+		skill1:addTo(self.sprtieBG)
+
+		local skill2 = display.newSprite(Tabel[GameState.GameData.HeroNumber]["skill2"])
+		skill2:setPosition(self.sizeofBG.width*.6 , self.sizeofBG.height *.1)	
+		self.sprtieBG:addChild(skill2)
+		skill2:setTouchEnabled(true)
+		skill2:addNodeEventListener(cc.NODE_TOUCH_EVENT,function(event)
+
+			if event.name == "began" then
+				self.skillPic = display.newSprite(Tabel[GameState.GameData.HeroNumber]["skillPic"])
+				:setScale(0.6)
+				self.skillPic:setPosition(event.x, event.y)
+				self:addChild(self.skillPic)
+				return true
+			elseif event.name == "moved" then
+				self.skillPic:setPosition(event.x, event.y)
+			else
+				print("···")
+				if GameState.GameData.HeroNumber == 2 then
+					heroSprite:s05Move(event.x, event.y)
+				elseif GameState.GameData.HeroNumber == 3 then
+					heroSprite:stopAllActions()
+					local skillNow = heroSprite:skill()
+					local callback = cc.CallFunc:create(function(event)
+						heroSprite:runAction(heroSprite:wait(GameState.GameData.HeroNumber))
+						end)
+					local seq = cc.Sequence:create(skillNow,callback)
+					heroSprite:runAction(seq)
+				else
+					heroSprite:runAction(heroSprite:bomb(event.x, event.y))
+				end
+				self.skillPic:removeFromParent()
+				self.skillPic = nil
+				print("end")
+			end			
+		end)
+	end
+		local skill3 = self:buttonCreate(Tabel[GameState.GameData.HeroNumber]["skill3"],self.sizeofBG.width*.69 , self.sizeofBG.height *.1)
+		skill3:onButtonClicked(function (event)
+			heroSprite:stopAllActions()
+			if GameState.GameData.HeroNumber == 3 then
+				local magic2 = heroSprite:skill()
+				local callback = cc.CallFunc:create(function ()
+					heroSprite:runAction(heroSprite:wait(GameState.GameData.HeroNumber))
+				end)
+				local action = cc.Sequence:create(magic2, callback) 
+				heroSprite:runAction(action)				
+			elseif GameState.GameData.HeroNumber == 4 then
+				heroSprite:runAction(heroSprite:wait(GameState.GameData.HeroNumber))
+				heroSprite:bomb(300, 100)
+			elseif GameState.GameData.HeroNumber == 2 then
+				heroSprite:s05Move(event.x,event.y)
+			end
+		end)
+		skill3:addTo(self.sprtieBG)
+
 
 	local imagespeed = {
 	on ="#ui_speed2x.png",

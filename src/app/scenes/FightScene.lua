@@ -10,7 +10,7 @@ display.addSpriteFrames("Tower/T11.plist","Tower/T11.png")
 display.addSpriteFrames("Tower/T16.plist","Tower/T16.png")
 display.addSpriteFrames("Tower/T18.plist","Tower/T18.png")
 display.addSpriteFrames("Tower/bullet.plist","Tower/bullet.png")
-local Tabel = require(".app.stageConfig.HeroData")
+local HeroData = require(".app.stageConfig.HeroData")
 local Hero = require(".app.monster.Hero")
 local Monster = require(".app.monster.Monster")
 local Tower = require(".app.tower.Tower")
@@ -31,22 +31,6 @@ function FightScene:ctor()
 	self:fightUI()
 	self:fightMap()
 	self:buildArea()
-	self:touch()
-
-end
-
-function FightScene:touch()
-	self:setTouchEnabled(true)
-	self:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-		if nil == self.heroSprite or nil == self:getChildByTag(1) then
-			return
-		end
-		if event.name == "began" then
-			local moveTo = cc.MoveTo:create(0.1,cc.p(event.x,event.y))
-			self:getChildByTag(1):runAction(moveTo)
-			return true
-		end		
-	end)
 end
 
 function FightScene:fightUI() --战斗场景布局
@@ -137,7 +121,7 @@ function FightScene:fightUI() --战斗场景布局
 	else
 --英雄二三四的技能	
 --**技能一**--	
-		local skill1 = self:buttonCreate(Tabel[GameState.GameData.HeroNumber]["skill1"],self.sizeofBG.width*.51 , self.sizeofBG.height *.1)
+		local skill1 = self:buttonCreate(HeroData[GameState.GameData.HeroNumber]["skill1"],self.sizeofBG.width*.51 , self.sizeofBG.height *.1)
 		skill1:onButtonClicked(function (event)
 			self.heroSprite:stopAllActions()
 			if GameState.GameData.HeroNumber == 4 then
@@ -155,14 +139,14 @@ function FightScene:fightUI() --战斗场景布局
 		end)
 		skill1:addTo(self.sprtieBG)
 --**技能二**--
-		local skill2 = display.newSprite(Tabel[GameState.GameData.HeroNumber]["skill2"],self.sizeofBG.width*.6 , self.sizeofBG.height *.1)
+		local skill2 = display.newSprite(HeroData[GameState.GameData.HeroNumber]["skill2"],self.sizeofBG.width*.6 , self.sizeofBG.height *.1)
 		skill2:setPosition(self.sizeofBG.width*.6 , self.sizeofBG.height *.1)	
 		self.sprtieBG:addChild(skill2)
 		skill2:setTouchEnabled(true)
 		skill2:addNodeEventListener(cc.NODE_TOUCH_EVENT,function(event)
 
 			if event.name == "began" then
-				self.skillPic = display.newSprite(Tabel[GameState.GameData.HeroNumber]["skillPic"])
+				self.skillPic = display.newSprite(HeroData[GameState.GameData.HeroNumber]["skillPic"])
 				:setScale(0.6)
 				self.skillPic:setPosition(event.x, event.y)
 				self:addChild(self.skillPic)
@@ -208,9 +192,7 @@ function FightScene:fightUI() --战斗场景布局
 --英雄四
 					else
 						self.heroSprite:bomb(event.x, event.y)
-
 					end
-					print("remove")
 					self.skillPic:removeFromParent()
 					self.skillPic = nil
 					
@@ -219,7 +201,7 @@ function FightScene:fightUI() --战斗场景布局
 		end)
 	end
 --**技能三**--
-		local skill3 = self:buttonCreate(Tabel[GameState.GameData.HeroNumber]["skill3"],self.sizeofBG.width*.69 , self.sizeofBG.height *.1)
+		local skill3 = self:buttonCreate(HeroData[GameState.GameData.HeroNumber]["skill3"],self.sizeofBG.width*.69 , self.sizeofBG.height *.1)
 		skill3:onButtonClicked(function (event)
 			self.heroSprite:stopAllActions()
 			if GameState.GameData.HeroNumber == 3 then
@@ -237,8 +219,6 @@ function FightScene:fightUI() --战斗场景布局
 				end)
 				local action = cc.Sequence:create(magic1, callback) 
 				self.heroSprite:runAction(action)
-				-- self.heroSprite:runAction(self.heroSprite:wait(GameState.GameData.HeroNumber))
-				-- self.heroSprite:bomb(300, 100)
 			elseif GameState.GameData.HeroNumber == 2 then
 				self.heroSprite:s01()
 			end

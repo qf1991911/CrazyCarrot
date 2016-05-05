@@ -203,16 +203,14 @@ function FightScene:fightUI() --战斗场景布局
 						local skillNow = self.heroSprite:lightLine(event.x, event.y, angle)
 						print(self.heroSprite.face)
 						self.heroSprite:runAction(skillNow)
-						else
+					else
 						self.heroSprite:runAction(self.heroSprite:bomb(event.x, event.y))
 					end
 					self.skillPic:removeFromParent()
-					self.skillPic = nil
-					
+					self.skillPic = nil					
 				end	
 			end		
 		end)
-	end
 		local skill3 = self:buttonCreate(Tabel[GameState.GameData.HeroNumber]["skill3"],self.sizeofBG.width*.69 , self.sizeofBG.height *.1)
 		skill3:onButtonClicked(function (event)
 			self.heroSprite:stopAllActions()
@@ -231,7 +229,7 @@ function FightScene:fightUI() --战斗场景布局
 			end
 		end)
 		skill3:addTo(self.sprtieBG)
-
+	end
 
 	local imagespeed = {
 	on ="#ui_speed2x.png",

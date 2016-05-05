@@ -29,7 +29,7 @@ local initTable = {
         coin = 500,
         diamond = 200
     },
-    HeroNumber = 3
+    HeroNumber = 2
 }
 
 GameState.GameData = GameState.load() or initTable

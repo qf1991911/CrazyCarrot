@@ -111,6 +111,9 @@ function Tower:fireAnimation(bullet)
 	return sq
 end
 
+function Tower:bullet( ... )
+	-- body
+end
 
 
 function Tower:onEnter()

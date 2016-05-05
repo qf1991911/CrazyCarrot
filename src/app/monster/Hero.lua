@@ -17,21 +17,36 @@ end
 --移动和英雄转向
 function Hero:MoveTo()
 	
-	self:getParent():setTouchEnabled(true)
-	self:getParent():addNodeEventListener(cc.NODE_TOUCH_EVENT,function(event)
-		local posx, posy = self:getPosition()
-		if event.x > posx and self.face == "left" then
-			local FlipX = cc.FlipX:create(true)
-			self:runAction(FlipX)
-			self.face = "right"
-		elseif event.x < posx and self.face == "right" then
-			local FlipX = cc.FlipX:create(false)
-			self:runAction(FlipX)
-			self.face = "left"
+	self:setTouchEnabled(true)
+	self:addNodeEventListener(cc.NODE_TOUCH_EVENT,function(event)
+		if event.name == "began" then
+			local posx, posy = self:getPosition()
+			if event.x > posx and self.face == "left" then
+				local FlipX = cc.FlipX:create(true)
+				self:runAction(FlipX)
+				self.face = "right"
+			elseif event.x < posx and self.face == "right" then
+				local FlipX = cc.FlipX:create(false)
+				self:runAction(FlipX)
+				self.face = "left"
+			end
+			return true
+			-- self:runAction(self:move(GameState.GameData.HeroNumber))
+			-- self:setPosition(event.x, event.y)
+		elseif event.name == "moved" then
+			local posx, posy = self:getPosition()
+			if event.x > posx and self.face == "left" then
+				local FlipX = cc.FlipX:create(true)
+				self:runAction(FlipX)
+				self.face = "right"
+			elseif event.x < posx and self.face == "right" then
+				local FlipX = cc.FlipX:create(false)
+				self:runAction(FlipX)
+				self.face = "left"
+	 
+	 		end
+			self:setPosition(event.x, event.y)
 		end
-		self:runAction(self:move(GameState.GameData.HeroNumber))
-		self:setPosition(event.x, event.y)
-		print(event.x, event.y)
 	end)
 end
 
@@ -221,11 +236,11 @@ function Hero:s05Move(posX,posY)
 		-- local rep = cc.Repeat:create(seq,9)
 		sprite:runAction(seq)
 		num = num + 1
-	end, .25)
+	end, 0.25)
 
 end
 
-
+--英雄二的技能一绿光特效
 function Hero:s06()
 	local frames = display.newFrames("s06_%d.png",1,Tabel[2]["s06"])
 	local animation = display.newAnimation(frames,0.2)
@@ -299,27 +314,37 @@ end
 function Hero:s12(posX, posY)
 	local node = display.newNode()
 	:setPosition(posX, posY)
-	self:addChild(node)	
+	self:getParent():addChild(node)	
 	local sprite1 = display.newSprite("#s12_dropout_1.png")
-	:setPosition(posX, posY)
+	-- :setPosition(posX, posY)
 	:setLocalZOrder(2)
 	node:addChild(sprite1)
 
 	local sprite2 = display.newSprite("#s12_dropout_1.png")
-	:setPosition(posX, posY + 50)
+	:setPosition(0, 50)
 	:setLocalZOrder(2)
 	node:addChild(sprite2)
+	
+
 	local frames = display.newFrames("s12_heaven_%d.png",1,6)
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
-	
+
 	local callback1 = cc.CallFunc:create(function()
 		sprite2:removeFromParent()
+		sprite1:setTouchEnabled(true)
+		sprite1:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+			if event.name == "began" then
+				print(event.x, event.y)
+				return true
+			elseif event.name == "moved" then
+				node:setPosition(event.x, event.y)
+			end
+		end)
 	end)
 	local seq = cc.Sequence:create(animate, callback1)
-	sprite2:runAction(seq)
-	
 
+	sprite2:runAction(seq)
 
 	local frames = display.newFrames("s12_dropout_%d.png",1,9)
 	local animation = display.newAnimation(frames,0.2)
@@ -327,17 +352,17 @@ function Hero:s12(posX, posY)
 
 	local callback = cc.CallFunc:create(function ()
 		local sprite3 = display.newSprite("#ufolight1.png")
-		:setPosition(posX, posY - 120)
+		:setPosition(0, - 120)
 		:setLocalZOrder(1)
 		node:addChild(sprite3)
 
 		local frames = display.newFrames("ufolight%d.png",1,2)
 		local animation2 = display.newAnimation(frames,0.2)
 		local animate2 = cc.Animate:create(animation2)
-		local rep1 = cc.Repeat:create(animate2, 4 / 0.4)
+		local rep1 = cc.Repeat:create(animate2, 48)
 
 		local callback1 = cc.CallFunc:create(function()
-			node:removeFromParent()
+			node:removeFromParent()		
 		end)
 		local seq1 = cc.Sequence:create(rep1, callback1)
 		sprite3:runAction(seq1)
@@ -346,20 +371,42 @@ function Hero:s12(posX, posY)
 	local frames = display.newFrames("s12_fly_%d.png",1,6)
 	local animation1 = display.newAnimation(frames,0.2)
 	local animate1 = cc.Animate:create(animation1)
-	local rep = cc.Repeat:create(animate1, 10)
+	local rep = cc.Repeat:create(animate1, 16)
 
 	local action = cc.Sequence:create(animate, callback, rep)
 
-	sprite1:runAction(action)	
+	sprite1:runAction(action)
+	
 end
 
 
 --英雄四技能一头上效果
 function Hero:s12_wing()
-	local frames = display.newFrames("s14_wing_%d.png",1,8)
+	local sprite = display.newSprite("#s14_wing_1.png")
+	:setPosition(75,140)
+	self:addChild(sprite)
+	local frames = display.newFrames("h04_focus_%d.png",1,4)
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
-	return(animate)
+	
+	local frames = display.newFrames("h04_focusPre_%d.png",1,2)
+	local animation = display.newAnimation(frames,0.2)
+	local animate1 = cc.Animate:create(animation)
+	local seq = cc.Sequence:create(animate, animate1)
+	local callback = cc.CallFunc:create(function()
+		local frames = display.newFrames("s14_wing_%d.png",1,8)
+		local animation = display.newAnimation(frames,0.2)
+		local animate2 = cc.Animate:create(animation)
+		sprite:runAction(animate2)
+	end)
+	local seq1 = cc.Sequence:create(seq,callback)
+	local callback1 = cc.CallFunc:create(function()
+		sprite:removeFromParent()
+		self:runAction(self:wait(4)) 
+	end)
+	local seq2 = cc.Sequence:create(seq1,callback1)
+	self:runAction(seq2)
+	
 end
 
 
@@ -367,7 +414,7 @@ end
 function Hero:bomb(posX, posY)
 	local node = display.newNode()
 	:setPosition(posX, posY)
-	self:addChild(node)
+	self:getParent():addChild(node)
 	local bomb = display.newSprite("#h04_bomb_1.png")
 	node:addChild(bomb)
 	local frames = display.newFrames("h04_bomb_%d.png",1,2)
@@ -375,10 +422,7 @@ function Hero:bomb(posX, posY)
 	local animate = cc.Animate:create(animation)
 	local rep = cc.RepeatForever:create(animate)
 	bomb:runAction(rep)
-	-- if conditions then
-	-- 	self:runAction(Hero:bombExplode())
-	-- 	node:removeFromParent()
-	-- end
+
 end
 --英雄四的炸弹爆炸效果
 function Hero:bombExplode()

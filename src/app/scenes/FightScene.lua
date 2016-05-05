@@ -133,26 +133,26 @@ function FightScene:fightUI() --战斗场景布局
 		end)
 		skill2:addTo(self.sprtieBG)
 	else
---英雄二三四的技能		
+--英雄二三四的技能	
+--**技能一**--	
 		local skill1 = self:buttonCreate(Tabel[GameState.GameData.HeroNumber]["skill1"],self.sizeofBG.width*.51 , self.sizeofBG.height *.1)
 		skill1:onButtonClicked(function (event)
-
+			self.heroSprite:stopAllActions()
 			if GameState.GameData.HeroNumber == 4 then
-				local magic1 = self.heroSprite:magic2(GameState.GameData.HeroNumber)
-				local callback = cc.CallFunc:create(function ()
-				self.heroSprite:s12(200,100)
-				self.heroSprite:runAction(self.heroSprite:wait(GameState.GameData.HeroNumber))
-				end)
-				local action = cc.Sequence:create(magic1, callback) 
-				self.heroSprite:runAction(action)
+				self.heroSprite:s12_wing()
 			elseif GameState.GameData.HeroNumber == 3 then
-				self.heroSprite:runAction(self.heroSprite:lightLine())
+				local magic2 = self.heroSprite:skill()
+				local callback = cc.CallFunc:create(function ()
+					self.heroSprite:runAction(self.heroSprite:wait(GameState.GameData.HeroNumber))
+				end)
+				local action = cc.Sequence:create(magic2, callback) 
+				self.heroSprite:runAction(action)	
 			elseif GameState.GameData.HeroNumber == 2 then
 				self.heroSprite:runAction(self.heroSprite:s02(GameState.GameData.HeroNumber))
 			end
 		end)
 		skill1:addTo(self.sprtieBG)
-
+--**技能二**--
 		local skill2 = display.newSprite(Tabel[GameState.GameData.HeroNumber]["skill2"],self.sizeofBG.width*.6 , self.sizeofBG.height *.1)
 		skill2:setPosition(self.sizeofBG.width*.6 , self.sizeofBG.height *.1)	
 		self.sprtieBG:addChild(skill2)
@@ -173,10 +173,12 @@ function FightScene:fightUI() --战斗场景布局
 					self.skillPic = nil
 					return
 				else
+--英雄二
 					if GameState.GameData.HeroNumber == 2 then
 						print("start")
 						self.heroSprite:s05Move(event.x, event.y)
 						print("end")
+--英雄三
 					elseif GameState.GameData.HeroNumber == 3 then
 						self.heroSprite:stopAllActions()
 						local posx, posy = self.heroSprite:getPosition()
@@ -201,9 +203,12 @@ function FightScene:fightUI() --战斗场景布局
 						local skillNow = self.heroSprite:lightLine(event.x, event.y, angle)
 						print(self.heroSprite.face)
 						self.heroSprite:runAction(skillNow)
-						else
-						self.heroSprite:runAction(self.heroSprite:bomb(event.x, event.y))
+--英雄四
+					else
+						self.heroSprite:bomb(event.x, event.y)
+
 					end
+					print("remove")
 					self.skillPic:removeFromParent()
 					self.skillPic = nil
 					
@@ -211,6 +216,7 @@ function FightScene:fightUI() --战斗场景布局
 			end		
 		end)
 	end
+--**技能三**--
 		local skill3 = self:buttonCreate(Tabel[GameState.GameData.HeroNumber]["skill3"],self.sizeofBG.width*.69 , self.sizeofBG.height *.1)
 		skill3:onButtonClicked(function (event)
 			self.heroSprite:stopAllActions()
@@ -222,8 +228,15 @@ function FightScene:fightUI() --战斗场景布局
 				local action = cc.Sequence:create(magic2, callback) 
 				self.heroSprite:runAction(action)				
 			elseif GameState.GameData.HeroNumber == 4 then
+				local magic1 = self.heroSprite:magic2(GameState.GameData.HeroNumber)
+				local callback = cc.CallFunc:create(function ()
+				self.heroSprite:s12(display.cx, display.cy)
 				self.heroSprite:runAction(self.heroSprite:wait(GameState.GameData.HeroNumber))
-				self.heroSprite:bomb(300, 100)
+				end)
+				local action = cc.Sequence:create(magic1, callback) 
+				self.heroSprite:runAction(action)
+				-- self.heroSprite:runAction(self.heroSprite:wait(GameState.GameData.HeroNumber))
+				-- self.heroSprite:bomb(300, 100)
 			elseif GameState.GameData.HeroNumber == 2 then
 				self.heroSprite:s01()
 			end

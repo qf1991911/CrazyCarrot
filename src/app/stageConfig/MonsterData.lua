@@ -1,5 +1,5 @@
 local monsterData = { 
-	E01 = {walk = 6,attack = 6,hp = 60000}, E02 = {walk = 8,attack = 8,hp = 500},E03 = {walk = 8,attack = 8,hp = 100},
+	E01 = {walk = 6,attack = 6,hp = 100}, E02 = {walk = 8,attack = 8,hp = 500},E03 = {walk = 8,attack = 8,hp = 100},
 	E04 = {walk = 4,attack = 4,hp = 100},
 	E05 = {walk = 6,attack = 6,hp = 100},E06 = {walk = 6,attack = 6,hp = 100},E07 = {walk = 6,attack = 6,hp = 100},
 	E08 = {walk = 8,hp = 100},

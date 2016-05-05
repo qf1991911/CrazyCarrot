@@ -13,6 +13,7 @@ local PassData = {
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 		wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
+	
 	L4 = {wave = 8, map = "map/Theme1/L1_4.tmx", pretower = "01",
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
@@ -28,7 +29,6 @@ local PassData = {
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 		wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
 		
-
 	L7 = {wave = 8, map = "map/Theme1/L1_7.tmx", pretower = "01",
 			wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 			wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
@@ -38,6 +38,7 @@ local PassData = {
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 		wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
+	
 	L9 = {wave = 8, map = "map/Theme1/L1_9.tmx", pretower = "01",
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
@@ -53,7 +54,6 @@ local PassData = {
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 		wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
 			
-
 	L12 = {wave = 8, map = "map/Theme2/L2_2.tmx", pretower = "01",
 			wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 			wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
@@ -63,6 +63,7 @@ local PassData = {
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 		wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
+	
 	L14 = {wave = 8, map = "map/Theme1/L1_1.tmx", pretower = "01",
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
@@ -111,6 +112,7 @@ local PassData = {
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 		wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
+	
 	L24 = {wave = 8, map = "map/Theme1/L1_1.tmx", pretower = "01",
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
@@ -125,11 +127,7 @@ local PassData = {
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 		wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
-			L1 = {wave = 8, map = "map/Theme1/L1_1.tmx", pretower = "01",
-			wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
-			wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
-			wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
-
+			
 	L27 = {wave = 8, map = "map/Theme1/L1_1.tmx", pretower = "01",
 			wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 			wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
@@ -139,6 +137,7 @@ local PassData = {
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 		wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
+	
 	L29 = {wave = 8, map = "map/Theme1/L1_1.tmx", pretower = "01",
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
@@ -163,6 +162,7 @@ local PassData = {
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 		wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
+	
 	L34 = {wave = 8, map = "map/Theme1/L1_1.tmx", pretower = "01",
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
@@ -187,6 +187,7 @@ local PassData = {
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 		wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245, wavetime8 = 285},
+	
 	L39 = {wave = 8, map = "map/Theme1/L1_1.tmx", pretower = "01",
 		wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 		wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,

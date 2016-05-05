@@ -15,6 +15,7 @@ local Hero = require(".app.monster.Hero")
 local Monster = require(".app.monster.Monster")
 local Tower = require(".app.tower.Tower")
 local PassData = require(".app.stageConfig.PassData")
+local Tabel = require(".app.stageConfig.stageLevelInformation")
 
 local FightScene = class("FightScene", function(passnum)
 	local scene = display.newScene("FightScene")
@@ -29,6 +30,7 @@ function FightScene:ctor()
 	self.heroSprite = nil
 	self:fightUI()
 	self:fightMap()
+	self:buildArea()
 	self:touch()
 
 end
@@ -285,10 +287,7 @@ function FightScene:fightMap() --地图
 	tower:pos(pretower.x, pretower.y)
 	tower:addTo(self.map,3)
 	table.insert(self.tower,tower)
-	local tower2 = Tower.new(PassData["L"..self.pass].pretower)
-	tower2:pos(200,300)
-	tower2:addTo(self.map,3)
-	table.insert(self.tower,tower2)
+
 
 	self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function (dt)
 		if wave<= PassData["L"..self.pass].wave and os.time()-time > PassData["L"..self.pass]["wavetime"..wave] and septum == 0 and num > 0 then
@@ -306,8 +305,40 @@ function FightScene:fightMap() --地图
 		septum = (septum + 1) % 60
 		for k,v in pairs(self.tower) do
 			local x,y = v:getPosition()
-			if v.num == "16" or v.num =="18" or v.num == "11" or v.num == "03" then 
-			else
+			if v.num == "16" or v.num =="18"  then 
+				if v.target then
+					local tx,ty = v.target:getPosition()
+					local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
+					if distance > v.attackArea then					
+						for a,b in pairs(v.target.target) do
+							if b == v then
+								table.remove(table, a)
+							end
+						end						
+						v.target = nil
+					else
+						v.firetime = v.firetime + 1
+						if v.firetime == 30 then
+							local bullet = v:fire()
+							v.firetime = v.firetime - 30
+							bullet:runAction(v:fireAnimation(bullet))
+							v.target.Hptag:show()
+							v.target.hpnow = v.target.hpnow -  v.power
+							v.target.Hptag.hptag:setPercent(v.target.hpnow / v.target.hp *100)							
+						end
+					end
+				else
+					for i,j in pairs(self.monster) do
+						local tx,ty = j:getPosition()
+						local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
+						if distance <= v.attackArea then 
+							v.target = j
+							table.insert(j.target,v)						
+							break
+						end
+					end
+				end
+			elseif v.num == "01" or v.num == "02" then
 				if v.target then
 					local tx,ty = v.target:getPosition()
 					local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
@@ -333,21 +364,7 @@ function FightScene:fightMap() --地图
 							bullet:runAction(v:fireAction(tx,ty+10,bullet))
 							v.target.Hptag:show()
 							v.target.hpnow = v.target.hpnow -  v.power
-							v.target.Hptag.hptag:setPercent(v.target.hpnow / v.target.hp *100)
-							if v.target.hpnow <= 0 then
-								for i,j in pairs(self.monster) do
-									if j == v.target then
-										for x,y in pairs(v.target.target) do
-											y.target = nil
-										end
-										table.remove(self.monster,i)
-										j:dead()
-										j:removeFromParent()
-										j = nil
-									end
-								end
-								
-							end
+							v.target.Hptag.hptag:setPercent(v.target.hpnow / v.target.hp *100)							
 						end
 					end
 				else
@@ -362,7 +379,24 @@ function FightScene:fightMap() --地图
 					end
 				end
 			end
+			for a,b in pairs(self.monster) do
+				if b.hpnow <= 0 then
+					for i,j in pairs(self.monster) do
+						if j == v.target then
+							for x,y in pairs(v.target.target) do
+								y.target = nil
+							end
+							table.remove(self.monster,i)
+							j:dead()
+							j:removeFromParent()
+							j = nil
+						end
+					end
+				end
+			end
+			
 		end
+		
 	end)
 	self:scheduleUpdate()
 	self:rabbit()
@@ -372,10 +406,76 @@ function FightScene:fightMap() --地图
 	flag:setAnchorPoint(0.5,0)
 	flag:addTo(self.map,1)
 
-	
-
 end
 
+function FightScene:buildArea() --炮塔建造区域
+	local things = self.map:getLayer("things")
+	local way = self.map:getLayer("content")
+	local blankAreaTable = {}
+	for i=1,11 do
+		for j=0,6 do
+			local tile = way:getTileAt(cc.p(i,j))
+			if tile == nil then
+				local blankArea = display.newSprite("#blankArea.png")
+				blankArea:pos(35 + i * 70 , 35 + (6 - j) * 70)
+				blankArea:addTo(self.map,2)
+				blankArea:setTouchEnabled(true)
+				table.insert(blankAreaTable,blankArea)
+				blankArea:setOpacity(50)
+				blankArea:addNodeEventListener(cc.NODE_TOUCH_EVENT, function (event)
+					blankArea:setOpacity(255)
+					if event.name == "began" then 
+						for k,v in pairs(blankAreaTable) do
+							local towericonlist = v:getChildren()
+							for a,b in pairs(towericonlist) do
+									b:removeFromParent()
+									v:setOpacity(50)
+							end
+						end		
+						for i=1,#Tabel["weapon"][self.pass] do
+							local towericon =  display.newSprite(Tabel["weapon"][self.pass][i])
+							towericon:pos(40 * (2 * (i % 3 == 0 and 3 or i % 3) - (#Tabel["weapon"][self.pass] > 2 and 3 or #Tabel["weapon"][self.pass])), 105 + math.floor(i / 4) * 80)
+							:addTo(blankArea)
+							local towericonsize = towericon:getContentSize()
+							towericon:setTouchEnabled(true)
+							towericon:setTouchSwallowEnabled(true)
+							towericon:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+								local tnum = string.sub(Tabel["weapon"][self.pass][i],11,11)
+								local tnum1 = string.sub(Tabel["weapon"][self.pass][i],12,12)
+								local str = (tnum1 == ".") and ("0" .. tnum) or (tnum .. tnum1)
+								local tower = Tower.new(str)
+								local blankAreaX,blankAreaY = blankArea:getPosition()
+								tower:pos(blankAreaX,blankAreaY)
+								tower:addTo(self.map,3)
+								table.insert(self.tower,tower)
+								local towericonlist = blankArea:getChildren()
+								for k,v in pairs(towericonlist) do
+									v:removeFromParent()
+								end
+							end)
+
+							local cost = display.newSprite("#fortMoneyBg.png")
+							cost:pos(towericonsize.width / 2, 0)
+							:addTo(towericon)
+							local costsize = cost:getContentSize()
+
+							local costLabel = cc.ui.UILabel.new({
+								UILabelType = 1,
+								text = 100,
+								font = "font/fontFortMoney.fnt"
+								})
+							:align(1, costsize.width *0.65,costsize.height * 0.35)
+							:addTo(cost)
+
+						end
+						return true 
+					end
+				end)
+			end
+
+		end
+	end
+end
 function FightScene:waveLabel1() --波数文字
 	local label = cc.ui.UILabel.new({
 		UILabelType = 1,
@@ -496,6 +596,7 @@ function FightScene:settingUI() --设置按钮界面
 	local restart = self:buttonCreate("#settingRestart.png", settingUIsize.width / 2 , settingUIsize.height * .5)
 	restart:addTo(settingBG)
 	restart:onButtonClicked(function(event)
+		local director = cc.Director:getInstance():resume()
 		local restart = self.new(self.pass)
 		display.replaceScene(restart,"flipX",1)
 	end)
@@ -503,6 +604,7 @@ function FightScene:settingUI() --设置按钮界面
 	local getback = self:buttonCreate("#settingReturn.png", settingUIsize.width / 2 , settingUIsize.height * .25)
 	getback:addTo(settingBG)
 	getback:onButtonClicked(function (event)
+		local director = cc.Director:getInstance():resume()
 		local UI = require(".app.scenes.UI")
 		local ui = UI.new()
 		display.replaceScene(ui,"splitRows",1)
@@ -540,20 +642,23 @@ function FightScene:rabbit() --兔子
 	self.rabbit:pos(self.way[#self.way].x, self.way[#self.way].y)
 	self.rabbit:setAnchorPoint(0.5,0)
 	self.rabbit:addTo(self.map,1)
+	self.rabbit.hp = 10
 	local sizeR = self.rabbit:getContentSize()
 
-	local rabbitHp = display.newSprite("#blood-1.png")
-	rabbitHp:pos(sizeR.width / 2, sizeR.height)
+	local rabbitHpBg = display.newSprite("#blood-1.png")
+	rabbitHpBg:pos(sizeR.width / 2, sizeR.height)
 	:addTo(self.rabbit)
-	local sizeHp = rabbitHp:getContentSize()
+	local sizeHp = rabbitHpBg:getContentSize()
+
+	print(self.RabbitHp)
 
 	self.rabbit.Rhplabel = cc.ui.UILabel.new({
 		UILabelType = 1,
-		text = 10,
+		text = self.rabbit.hp,
 		font = "font/fontBlood.fnt"
 		}) 
 	:align(1, sizeHp.width / 1.6, sizeHp.height /1.9)
-	:addTo(rabbitHp)
+	:addTo(rabbitHpBg)
 
 end
 

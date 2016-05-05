@@ -2,6 +2,7 @@ display.addSpriteFrames("monster/E41.plist","monster/E41.png")
 display.addSpriteFrames("monster/enemyCommon.plist","monster/enemyCommon.png")
 display.addSpriteFrames("fight/fight.plist","fight/fight.png")
 local MonsterData = require(".app.stageConfig.MonsterData")
+local PassData = require(".app.stageConfig.PassData")
 local Monster = class("Monster", function (num)
 	local path = "#E" .. num .. "_1.png"
 	local sprite = display.newSprite(path)
@@ -77,13 +78,12 @@ function Monster:move(posT, monsterTable,rabbit)--按路径移动
 				table.remove(monsterTable, k)
 				self:removeFromParent()
 				self = nil
+				rabbit.hp = rabbit.hp - 1
+				rabbit.Rhplabel:setString(rabbit.hp)
 			end
 		end
 	end)
-	local callfun2 = cc.CallFunc:create(function ()
-		rabbit.Rhplabel:setString(9)
-	end)
-	local sq = cc.Sequence:create(action,callfun,callfun2)
+	local sq = cc.Sequence:create(action,callfun)
 	self:runAction(sq) 
 end
 

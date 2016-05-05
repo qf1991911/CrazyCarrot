@@ -14,6 +14,7 @@ local Tower = class("Tower", function (num)
 	tower.target = nil
 	tower.firetime = 0
 	tower.power = TowerData["T" .. tower.num].power
+	tower.bulletAnimation = TowerData["T" .. tower.num].bulletAnimation
 	return tower
 end)
 
@@ -85,22 +86,24 @@ function Tower:towerAim(degree)
 		self:setRotation(degree)
 end
 
-function Tower:fire()
+function Tower:fire(num)
 	local parent = self:getParent()
 	local posx,posy = self:getPosition()
-	local bullet = display.newSprite("#B"..self.num.."_0.png")
+	local bullet = display.newSprite("#B"..self.num.."_"..num..".png")
 	:pos(posx, posy)
 	:addTo(parent,2)
 	return bullet
 end
-function Tower:fireAction(posx,posy,bullet)
+
+function Tower:fireAction(posx,posy,bullet,num1)
 	local move = cc.MoveTo:create(0.1,cc.p(posx,posy))
-	local boom = self:fireAnimation()
+	local boom = self:fireAnimation(bullet,num1)
 	local sq = cc.Sequence:create(move,boom)
 	return sq
 end
-function Tower:fireAnimation(bullet)
-	local frame = display.newFrames("B"..self.num.."_%01d.png",0,3)
+
+function Tower:fireAnimation(bullet,num1)
+	local frame = display.newFrames("B"..self.num.."_%01d.png",num1,self.bulletAnimation)
 	local animation = display.newAnimation(frame, 0.1)
 	local animate = cc.Animate:create(animation)
 	local callfun = cc.CallFunc:create(function (bullet)
@@ -111,9 +114,7 @@ function Tower:fireAnimation(bullet)
 	return sq
 end
 
-function Tower:bullet( ... )
-	-- body
-end
+
 
 
 function Tower:onEnter()

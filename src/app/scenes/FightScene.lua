@@ -235,7 +235,6 @@ function FightScene:fightUI() --战斗场景布局
 	off_pressed ="#ui_speed1x.png",
 	off_disabled ="#ui_speed1x.png",
 	}
-
 	local speed = cc.ui.UICheckBoxButton.new(imagespeed)
 	:pos(self.sizeofBG.width*.67,self.sizeofBG.height*.88)
 	:addTo(self.sprtieBG)
@@ -263,11 +262,11 @@ function FightScene:fightMap() --地图
 	enemyhome:runAction(self:enemyhomeAction())
 	enemyhome:setOpacity(0)
 
-	local tower = Tower.new(PassData["L"..self.pass].pretower)
-	local pretower = self.map:getObjectGroup("objs"):getObject("preTower")
-	tower:pos(pretower.x, pretower.y)
-	tower:addTo(self.map,3)
-	table.insert(self.tower,tower)
+	-- local tower = Tower.new(PassData["L"..self.pass].pretower)
+	-- local pretower = self.map:getObjectGroup("objs"):getObject("preTower")
+	-- tower:pos(pretower.x, pretower.y)
+	-- tower:addTo(self.map,3)
+	-- table.insert(self.tower,tower)
 
 
 	self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function (dt)
@@ -287,27 +286,48 @@ function FightScene:fightMap() --地图
 		for k,v in pairs(self.tower) do
 			local x,y = v:getPosition()
 			if v.num == "16" or v.num =="18"  then 
-				if v.target then
-					local tx,ty = v.target:getPosition()
-					local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
-					if distance > v.attackArea then					
-						for a,b in pairs(v.target.target) do
-							if b == v then
-								table.remove(table, a)
-							end
-						end						
-						v.target = nil
-					else
-						v.firetime = v.firetime + 1
-						if v.firetime == 30 then
-							local bullet = v:fire()
-							v.firetime = v.firetime - 30
-							bullet:runAction(v:fireAnimation(bullet))
-							v.target.Hptag:show()
-							v.target.hpnow = v.target.hpnow -  v.power
-							v.target.Hptag.hptag:setPercent(v.target.hpnow / v.target.hp *100)							
+				v.firetime = v.firetime + 1
+				if v.firetime >= 120 then
+					local num = 0
+					for i,j in pairs(self.monster) do
+						local tx,ty = j:getPosition()
+						local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
+						if distance <= v.attackArea then
+							j.Hptag:show()
+							j.hpnow = j.hpnow -  v.power
+							j.Hptag.hptag:setPercent(j.hpnow / j.hp *100)
+							num = num + 1							
 						end
 					end
+					if num > 0 then
+						v.firetime = 0
+						local bullet = v:fire(1)
+						bullet:runAction(v:fireAnimation(bullet,1))
+					end
+				end
+			-- elseif v.num == "03" then
+			-- 	if v.target then
+			-- 		local tx,ty = v.target:getPosition()
+			-- 		local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
+			-- 		if distance > v.attackArea then					
+			-- 			for a,b in pairs(v.target.target) do
+			-- 				if b == v then
+			-- 					table.remove(table, a)
+			-- 				end
+			-- 			end						
+			-- 			v.target = nil
+			-- 		else
+						
+			-- 			v.firetime = v.firetime + 1
+			-- 			if v.firetime == 30 then
+			-- 				local bullet = v:fire(0)
+			-- 				v.firetime = v.firetime - 30
+			-- 				bullet:runAction(v:fireAction(tx,ty+10,bullet,0))
+			-- 				v.target.Hptag:show()
+			-- 				v.target.hpnow = v.target.hpnow -  v.power
+			-- 				v.target.Hptag.hptag:setPercent(v.target.hpnow / v.target.hp *100)							
+			-- 			end
+			-- 		end
 				else
 					for i,j in pairs(self.monster) do
 						local tx,ty = j:getPosition()
@@ -340,9 +360,9 @@ function FightScene:fightMap() --地图
 						v:towerAim(90 - degree)
 						v.firetime = v.firetime + 1
 						if v.firetime == 30 then
-							local bullet = v:fire()
+							local bullet = v:fire(0)
 							v.firetime = v.firetime - 30
-							bullet:runAction(v:fireAction(tx,ty+10,bullet))
+							bullet:runAction(v:fireAction(tx,ty+10,bullet,0))
 							v.target.Hptag:show()
 							v.target.hpnow = v.target.hpnow -  v.power
 							v.target.Hptag.hptag:setPercent(v.target.hpnow / v.target.hp *100)							
@@ -359,25 +379,19 @@ function FightScene:fightMap() --地图
 						end
 					end
 				end
-			end
-			for a,b in pairs(self.monster) do
-				if b.hpnow <= 0 then
-					for i,j in pairs(self.monster) do
-						if j == v.target then
-							for x,y in pairs(v.target.target) do
-								y.target = nil
-							end
-							table.remove(self.monster,i)
-							j:dead()
-							j:removeFromParent()
-							j = nil
-						end
-					end
-				end
-			end
-			
+			end			
 		end
-		
+		for k,v in pairs(self.monster) do
+			if v.hpnow <= 0 then
+				for i,j in pairs(v.target) do
+					j.target = nil
+				end
+				table.remove(self.monster,k)
+				v:dead()
+				v:removeFromParent()
+				v = nil
+			end
+		end
 	end)
 	self:scheduleUpdate()
 	self:rabbit()

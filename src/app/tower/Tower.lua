@@ -6,6 +6,7 @@ display.addSpriteFrames("Tower/T11.plist","Tower/T11.png")
 display.addSpriteFrames("Tower/T16.plist","Tower/T16.png")
 display.addSpriteFrames("Tower/T18.plist","Tower/T18.png")
 display.addSpriteFrames("Tower/bullet.plist","Tower/bullet.png")
+display.addSpriteFrames("fight/fight.plist","fight/fight.png")
 local TowerData = require(".app.stageConfig.TowerData")
 local Tower = class("Tower", function (num)
 	local tower = display.newNode()
@@ -34,9 +35,17 @@ function Tower:ctor()
 		self.gun = display.newSprite("#T"..self.num.."_"..self.stage.."_1.png")   
 		:addTo(self)
 		self.gun:setAnchorPoint(cc.p(0.5, 0.15))
-		-- self.gun:runAction(self:stage1())
-		
+		-- self.gun:runAction(self:stage1())	
 	end
+	-- self:setTouchEnabled(true)
+	-- self:addNodeEventListener(cc.NODE_TOUCH_EVENT,function (event)
+	-- 	if event.name == "began" then
+	-- 		local attackAreashow = display.newSprite("#towerRange.png")
+	-- 		attackAreashow:pos(0,0)
+	-- 		attackAreashow:addTo(self)
+	-- 		return true
+	-- 	end
+	-- end)
 
 end
 function Tower:stage1() --炮塔状态
@@ -95,10 +104,30 @@ function Tower:fire(num)
 	return bullet
 end
 
+function Tower:fire2(num)
+	local parent = self:getParent()
+	local posx,posy = self:getPosition()
+	local bullet = display.newSprite("#B03_3_0.png")
+	:pos(posx, posy)
+	:addTo(parent,2)
+	return bullet
+end
 function Tower:fireAction(posx,posy,bullet,num1)
 	local move = cc.MoveTo:create(0.1,cc.p(posx,posy))
 	local boom = self:fireAnimation(bullet,num1)
 	local sq = cc.Sequence:create(move,boom)
+	return sq
+end
+function Tower:fireAction2(posx,posy,bullet,num1)
+	local bx,by = bullet:getPosition()
+	local distance = cc.pGetDistance(cc.p(bx,by),cc.p(posx,posy))
+	local newX = (posx - bx) / distance *1500
+	local newY = (posy - by) / distance *1500
+	local move = cc.MoveTo:create(5,cc.p(newX,newY))
+	local rotate = cc.RotateBy:create(5,1800)
+	local sp = cc.Spawn:create(move,rotate)
+	local boom = self:fireAnimation(bullet,num1)
+	local sq = cc.Sequence:create(sp,boom)
 	return sq
 end
 
@@ -114,7 +143,9 @@ function Tower:fireAnimation(bullet,num1)
 	return sq
 end
 
-
+function Tower:stageup()
+	
+end
 
 
 function Tower:onEnter()

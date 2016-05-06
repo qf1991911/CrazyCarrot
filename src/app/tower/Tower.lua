@@ -28,7 +28,7 @@ function Tower:ctor()
 	elseif self.num == "03" or self.num == "11" or self.num == "16" then
 		self.gun = display.newSprite("#T"..self.num.."_"..self.stage.."_1.png")
 		:addTo(self)
-		-- self.gun:runAction(self:stage1())
+		-- self.gun:runAction(self:stage1()) 
 	else		
 		self.base = display.newSprite("#T"..self.num.."_seat"..self.stage..".png")
 			:addTo(self)
@@ -37,15 +37,29 @@ function Tower:ctor()
 		self.gun:setAnchorPoint(cc.p(0.5, 0.15))
 		-- self.gun:runAction(self:stage1())	
 	end
-	-- self:setTouchEnabled(true)
-	-- self:addNodeEventListener(cc.NODE_TOUCH_EVENT,function (event)
-	-- 	if event.name == "began" then
-	-- 		local attackAreashow = display.newSprite("#towerRange.png")
-	-- 		attackAreashow:pos(0,0)
-	-- 		attackAreashow:addTo(self)
-	-- 		return true
-	-- 	end
-	-- end)
+	self:setTouchEnabled(true)
+	self:addNodeEventListener(cc.NODE_TOUCH_EVENT,function (event)
+		self:setTouchEnabled(false)
+		local sizeofTower = self.gun:getContentSize()
+		print(sizeofTower.width,sizeofTower.height)
+		local Tx,Ty = self:getPosition()
+		if event.name == "began" then
+			local attackAreashow = display.newSprite("#towerRange.png")
+			attackAreashow:pos(Tx,Ty)
+			attackAreashow:addTo(self:getParent())
+			local sizeofArea = attackAreashow:getContentSize()
+			local destroy = display.newSprite("#towerRemove.png")
+			destroy:pos(sizeofArea.width / 2+sizeofTower.width , sizeofArea.height / 2)
+			destroy:addTo(attackAreashow)
+
+			local up = display.newSprite("#towerUpgrade.png")
+			up:pos(sizeofArea.width / 2-sizeofTower.width , sizeofArea.height / 2)
+			up:addTo(attackAreashow)
+
+
+			return true
+		end
+	end)
 
 end
 function Tower:stage1() --炮塔状态

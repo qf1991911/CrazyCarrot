@@ -243,8 +243,8 @@ function UI:gamePrepare(num)
 				GameState.GameData.UItopData.bloodNow = GameState.GameData.UItopData.bloodNow - 1
 				topButton.bloodTable:setString(GameState.GameData.UItopData.bloodNow)
 				GameState.save(GameState.GameData)
-				local Fightscene = import("app.scenes.Fightscene").new(num)
-				display.replaceScene(Fightscene,"flipAngular",1)
+				local FightScene = import("app.scenes.FightScene").new(num)
+				display.replaceScene(FightScene,"flipAngular",1)
 			end
 			
 		end

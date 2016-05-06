@@ -11,6 +11,9 @@ local Hero = class("Hero", function (pic, posX, posY, parentNode)
 end)
 function Hero:ctor()
 	-- self:attack()
+	self.target = nil
+	self.attackCount = 0
+	self.state = "wait"
 	self.face = "left"
 	self:MoveTo()
 end
@@ -45,7 +48,7 @@ function Hero:MoveTo()
 				self.face = "left"
 	 
 	 		end
-			self:setPosition(event.x, event.y)
+			self:setPosition(event.x , event.y - 70)
 		end
 	end)
 end
@@ -311,15 +314,18 @@ function Hero:skill()
 	return(seq)
 end
 --英雄4的技能三（UFO技能）
-function Hero:s12(posX, posY)
+function Hero:s12(posX, posY, monsterTabel)
 	local node = display.newNode()
 	:setPosition(posX, posY)
+	:setLocalZOrder(2)
 	self:getParent():addChild(node)	
+--飞碟
 	local sprite1 = display.newSprite("#s12_dropout_1.png")
 	-- :setPosition(posX, posY)
+	:setTag(1)
 	:setLocalZOrder(2)
 	node:addChild(sprite1)
-
+--云朵
 	local sprite2 = display.newSprite("#s12_dropout_1.png")
 	:setPosition(0, 50)
 	:setLocalZOrder(2)
@@ -351,6 +357,7 @@ function Hero:s12(posX, posY)
 	local animate = cc.Animate:create(animation)
 
 	local callback = cc.CallFunc:create(function ()
+
 		local sprite3 = display.newSprite("#ufolight1.png")
 		:setPosition(0, - 120)
 		:setLocalZOrder(1)
@@ -360,6 +367,24 @@ function Hero:s12(posX, posY)
 		local animation2 = display.newAnimation(frames,0.2)
 		local animate2 = cc.Animate:create(animation2)
 		local rep1 = cc.Repeat:create(animate2, 48)
+
+		sprite3:schedule(function()
+			print("···")
+			for i,v in pairs(monsterTabel) do
+				local vx,vy = v:getPosition()
+				local x, y = sprite1:getPosition()
+				local distance = cc.pGetDistance(cc.p(x,y),cc.p(vx,vy))
+				if distance <= 100 and vy < y then 
+					print("开始")
+					self.heroSprite:runAction(self.heroSprite:attack(GameState.GameData.HeroNumber))
+					v.Hptag:show()
+					v.hpnow = v.hpnow -  50
+					v.Hptag.hptag:setPercent(v.hpnow / v.hp *100)
+					-- break
+					print("end")
+				end
+			end
+		end, 0.2)
 
 		local callback1 = cc.CallFunc:create(function()
 			node:removeFromParent()		
@@ -414,6 +439,7 @@ end
 function Hero:bomb(posX, posY)
 	local node = display.newNode()
 	:setPosition(posX, posY)
+	:setTag(2)
 	self:getParent():addChild(node)
 	local bomb = display.newSprite("#h04_bomb_1.png")
 	node:addChild(bomb)
@@ -422,14 +448,31 @@ function Hero:bomb(posX, posY)
 	local animate = cc.Animate:create(animation)
 	local rep = cc.RepeatForever:create(animate)
 	bomb:runAction(rep)
+	-- for k,v in pairs(self.monster) do
+	-- 	local vx,vy = v:getPosition()
+	-- 	local distance = cc.pGetDistance(cc.p(vx,vy), cc.p(posX - 20, posY - 70))
+	-- 	if 	distance <= 50 then
+	-- 		bomb:runAction(bomb:bombExplode())
+	-- 		bomb:removeFromParent()
+	-- 	end
+	-- end
 
 end
 --英雄四的炸弹爆炸效果
-function Hero:bombExplode()
+function Hero:bombExplode(posX, posY)
+	local node = display.newNode()
+	:setPosition(posX, posY)
+	self:getParent():addChild(node)
+	local bombExplode = display.newSprite("#h04_bombExplode_1.png")
+	node:addChild(bombExplode)
 	local frames = display.newFrames("h04_bombExplode_%d.png",1,7)
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
-	return(animate)
+	local callback = cc.CallFunc:create(function()
+		node:removeFromParent()
+	end)
+	local seq = cc.Sequence:create(animate, callback)
+	return(seq)
 end
 
 function Hero:onEnter()

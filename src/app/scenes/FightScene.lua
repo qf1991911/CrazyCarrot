@@ -41,7 +41,7 @@ function FightScene:fightUI() --战斗场景布局
 
 	local skillbg = self:spriteCreate("#skillBg.png",self.sizeofBG.width / 2,self.sizeofBG.height / 11)
 
-	local moneybg = self:spriteCreate("#ui_moneyBg.png",self.sizeofBG.width*.16,self.sizeofBG.height*.88)
+	local moneybg = self:spriteCreate("#ui_moneyBg.png",self.sizeofBG.width*.2,self.sizeofBG.height*.88)
 	local pausing = self:spriteCreate("#ui_waveSuspend.png",self.sizeofBG.width*.45,self.sizeofBG.height*.88)
 	pausing:hide()
 
@@ -428,17 +428,20 @@ function FightScene:buildArea() --炮塔建造区域
 				blankArea:setOpacity(50)
 				table.insert(blankAreaTable,blankArea)
 				blankArea:addNodeEventListener(cc.NODE_TOUCH_EVENT, function (event)
+					for k,v in pairs(self.tower) do
+						v:setTouchEnabled(true)
+						if v.attackAreashow then
+							v.attackAreashow:removeFromParent()
+							v.attackAreashow = nil
+						end
+					end
+
 					blankArea:setOpacity(255)
 					if event.name == "began" then 
 						if self.map:getChildByTag(999) then
 							self.map:getChildByTag(999):removeFromParent()
 							self.map:getChildByTag(1000):setOpacity(50)
 							self.map:getChildByTag(1000):setTag(1001)
-							-- for k,v in pairs(blankAreaTable) do
-							-- 	if v:getOpacity() == 255 then
-							-- 		v:setOpacity(50)
-							-- 	end
-							-- end
 						end
 						local buildlist = display.newNode()
 						buildlist:pos(35 + i * 70 , 35 + (6 - j) * 70)
@@ -460,6 +463,7 @@ function FightScene:buildArea() --炮塔建造区域
 							towericon:setTouchEnabled(true)
 							towericon:setTouchSwallowEnabled(true)
 							towericon:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+
 								local tnum = string.sub(Tabel["weapon"][self.pass][k],11,11)
 								local tnum1 = string.sub(Tabel["weapon"][self.pass][k],12,12)
 								local str = (tnum1 == ".") and ("0" .. tnum) or (tnum .. tnum1)
@@ -471,11 +475,6 @@ function FightScene:buildArea() --炮塔建造区域
 								blankArea:setTouchEnabled(false)
 								self.map:getChildByTag(999):removeFromParent()
 								blankArea:setOpacity(0)
-								-- for k,v in pairs(blankAreaTable) do
-								-- 	if v:getOpacity() == 255 then
-								-- 		v:setOpacity(50)
-								-- 	end
-								-- end
 							end)
 
 							local cost = display.newSprite("#fortMoneyBg.png")

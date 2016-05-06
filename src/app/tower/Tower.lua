@@ -40,28 +40,61 @@ function Tower:ctor()
 	self:setTouchEnabled(true)
 	self:addNodeEventListener(cc.NODE_TOUCH_EVENT,function (event)
 		self:setTouchEnabled(false)
-		local sizeofTower = self.gun:getContentSize()
-		print(sizeofTower.width,sizeofTower.height)
-		local Tx,Ty = self:getPosition()
+		self.sizeofTower = self.gun:getContentSize()
 		if event.name == "began" then
-			local attackAreashow = display.newSprite("#towerRange.png")
-			attackAreashow:pos(Tx,Ty)
-			attackAreashow:addTo(self:getParent())
-			local sizeofArea = attackAreashow:getContentSize()
-			local destroy = display.newSprite("#towerRemove.png")
-			destroy:pos(sizeofArea.width / 2+sizeofTower.width , sizeofArea.height / 2)
-			destroy:addTo(attackAreashow)
-
-			local up = display.newSprite("#towerUpgrade.png")
-			up:pos(sizeofArea.width / 2-sizeofTower.width , sizeofArea.height / 2)
-			up:addTo(attackAreashow)
-
-
-			return true
+			self:attackAreashowF()
 		end
+		return true
 	end)
 
 end
+function Tower:attackAreashowF()
+	local Tx,Ty = self:getPosition()
+	self.attackAreashow = display.newSprite("#towerRange.png")
+	self.attackAreashow:pos(Tx,Ty)
+	self.attackAreashow:addTo(self:getParent(),10)
+	self.sizeofArea = self.attackAreashow:getContentSize()
+	self.attackAreashow:setTouchEnabled(true)
+	self.attackAreashow:setTouchSwallowEnabled(true)
+	self.attackAreashow:addNodeEventListener(cc.NODE_TOUCH_EVENT,function ()
+	end)
+	self:destroy()
+	self:stageup()
+	
+end
+function Tower:destroy()
+	local image = {
+	normal = "#towerRemove.png",
+	pressed = "#towerRemove.png",
+	disabled = "#towerRemove.png"
+}
+	local button  = cc.ui.UIPushButton.new(image)
+	button:pos(self.sizeofArea.width / 2+self.sizeofTower.width , self.sizeofArea.height / 2)
+	button:addTo(self.attackAreashow)
+	button:onButtonClicked(function (event)
+		-- for k,v in pairs(TowerTable) do
+		-- 	table.remove(TowerTable,k)	
+		-- 	v:removeFromParent()
+		-- 	v = nil
+		-- end
+		-- self.attackAreashow:removeFromParent()
+		-- self.attackAreashow = nil
+	end)
+
+	
+end
+function Tower:stageup()
+	local image = {
+	normal = "#towerUpgrade.png",
+	pressed = "#towerUpgrade.png",
+	disabled = "#towerUpgrade.png"
+}
+	local button  = cc.ui.UIPushButton.new(image)
+	button:pos(self.sizeofArea.width / 2-self.sizeofTower.width , self.sizeofArea.height / 2)
+	button:addTo(self.attackAreashow)
+
+end
+
 function Tower:stage1() --炮塔状态
 	local frame = display.newFrames("T"..self.num.."_"..self.stage.."_%01d.png",1,TowerData["T"..self.num]["stage"..self.stage])
 	local animation = display.newAnimation(frame,0.2)
@@ -157,9 +190,7 @@ function Tower:fireAnimation(bullet,num1)
 	return sq
 end
 
-function Tower:stageup()
-	
-end
+
 
 
 function Tower:onEnter()

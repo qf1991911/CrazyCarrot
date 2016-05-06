@@ -299,7 +299,7 @@ function FightScene:fightMap() --地图
 						local tx,ty = j:getPosition()
 						local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
 						if distance <= v.attackArea then
-							j.Hptag:show()
+							
 							j.hpnow = j.hpnow -  v.power
 							j.Hptag.hptag:setPercent(j.hpnow / j.hp *100)
 							num = num + 1							
@@ -311,40 +311,49 @@ function FightScene:fightMap() --地图
 						bullet:runAction(v:fireAnimation(bullet,1))
 					end
 				end
-			-- elseif v.num == "03" then
-			-- 	if v.target then
-			-- 		local tx,ty = v.target:getPosition()
-			-- 		local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
-			-- 		if distance > v.attackArea then					
-			-- 			for a,b in pairs(v.target.target) do
-			-- 				if b == v then
-			-- 					table.remove(table, a)
-			-- 				end
-			-- 			end						
-			-- 			v.target = nil
-			-- 		else
-						
-			-- 			v.firetime = v.firetime + 1
-			-- 			if v.firetime == 30 then
-			-- 				local bullet = v:fire(0)
-			-- 				v.firetime = v.firetime - 30
-			-- 				bullet:runAction(v:fireAction(tx,ty+10,bullet,0))
-			-- 				v.target.Hptag:show()
-			-- 				v.target.hpnow = v.target.hpnow -  v.power
-			-- 				v.target.Hptag.hptag:setPercent(v.target.hpnow / v.target.hp *100)							
-			-- 			end
-			-- 		end
-				-- else
-				-- 	for i,j in pairs(self.monster) do
-				-- 		local tx,ty = j:getPosition()
-				-- 		local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
-				-- 		if distance <= v.attackArea then 
-				-- 			v.target = j
-				-- 			table.insert(j.target,v)						
-				-- 			break
-				-- 		end
-				-- 	end
-				-- end
+			elseif v.num == "03" then
+				if v.target then
+					local tx,ty = v.target:getPosition()
+					local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
+					if distance > v.attackArea then					
+						for a,b in pairs(v.target.target) do
+							if b == v then
+								table.remove(table, a)
+							end
+						end						
+						v.target = nil
+					else
+						v.firetime = v.firetime + 1
+						if v.firetime == 50 then
+							local bullet = v:fire2()
+							v.firetime = v.firetime - 50
+							bullet:runAction(v:fireAction2(tx,ty+10,bullet,1))
+							
+							for i,j in pairs(self.monster) do
+								local bx,by = bullet:getPosition()
+								local mx,my = j:getPosition()
+								local distance = cc.pGetDistance(cc.p(bx,by),cc.p(mx,my))
+								if distance < 60 then 
+									v.target.hpnow = v.target.hpnow -  v.power
+									v.target.Hptag.hptag:setPercent(v.target.hpnow / v.target.hp *100)
+								end
+							end
+							-- v.target.Hptag:show()
+							-- v.target.hpnow = v.target.hpnow -  v.power
+							-- v.target.Hptag.hptag:setPercent(v.target.hpnow / v.target.hp *100)							
+						end
+					end
+				else
+					for i,j in pairs(self.monster) do
+						local tx,ty = j:getPosition()
+						local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
+						if distance <= v.attackArea then 
+							v.target = j
+							table.insert(j.target,v)						
+							break
+						end
+					end
+				end
 			elseif v.num == "01" or v.num == "02" then
 				if v.target then
 					local tx,ty = v.target:getPosition()
@@ -388,6 +397,9 @@ function FightScene:fightMap() --地图
 			end			
 		end
 		for k,v in pairs(self.monster) do
+			if v.hpnow ~= v.hp then
+				v.Hptag:show()
+			end
 			if v.hpnow <= 0 then
 				for i,j in pairs(v.target) do
 					j.target = nil
@@ -607,8 +619,20 @@ function FightScene:HeroAttack()
 			local x, y = self.heroSprite:getPosition()
 			local distance = cc.pGetDistance(cc.p(mX, mY), cc.p(x, y))
 			if distance <= 50 then
-				print("get Target")
 				self.heroSprite.target = v
+				print("start")
+				local x, y = v:getPosition()
+				local posx, posy = self:getPosition()
+				if x > posx and self.face == "left" then
+					local FlipX = cc.FlipX:create(true)
+					self:runAction(FlipX)
+					self.face = "right"
+				elseif x < posx and self.face == "right" then
+					local FlipX = cc.FlipX:create(false)
+					self:runAction(FlipX)
+					self.face = "left"
+				end
+				print("end")
 				table.insert(v.target, self.heroSprite)
 				v:stopAllActions()
 				break
@@ -638,27 +662,38 @@ function FightScene:buildArea() --炮塔建造区域
 	for i=1,11 do
 		for j=0,6 do
 			local tile = way:getTileAt(cc.p(i,j))
-			if tile == nil then
+			if tile == nil then			
 				local blankArea = display.newSprite("#blankArea.png")
 				blankArea:pos(35 + i * 70 , 35 + (6 - j) * 70)
 				blankArea:addTo(self.map,2)
 				blankArea:setTouchEnabled(true)
-				table.insert(blankAreaTable,blankArea)
 				blankArea:setOpacity(50)
+				table.insert(blankAreaTable,blankArea)
 				blankArea:addNodeEventListener(cc.NODE_TOUCH_EVENT, function (event)
 					blankArea:setOpacity(255)
 					if event.name == "began" then 
-						for k,v in pairs(blankAreaTable) do
-							local towericonlist = v:getChildren()
-							for a,b in pairs(towericonlist) do
-									b:removeFromParent()
-									v:setOpacity(50)
-							end
-						end		
+						if self.map:getChildByTag(999) then
+							self.map:getChildByTag(999):removeFromParent()
+							self.map:getChildByTag(1000):setOpacity(50)
+							self.map:getChildByTag(1000):setTag(1001)
+							-- for k,v in pairs(blankAreaTable) do
+							-- 	if v:getOpacity() == 255 then
+							-- 		v:setOpacity(50)
+							-- 	end
+							-- end
+						end
+						local buildlist = display.newNode()
+						buildlist:pos(35 + i * 70 , 35 + (6 - j) * 70)
+						buildlist:addTo(self.map,2)
+						buildlist:setTag(999)
+						blankArea:setTag(1000)
+
+
+
 						for i=1,#Tabel["weapon"][self.pass] do
 							local towericon =  display.newSprite(Tabel["weapon"][self.pass][i])
-							towericon:pos(40 * (2 * (i % 3 == 0 and 3 or i % 3) - (#Tabel["weapon"][self.pass] > 2 and 3 or #Tabel["weapon"][self.pass])), 105 + math.floor(i / 4) * 80)
-							:addTo(blankArea)
+							towericon:pos(40 * (2 * ((i - 1) % 3 + 1) - (#Tabel["weapon"][self.pass] > 2 and 3 or #Tabel["weapon"][self.pass])), 105 + math.floor(i / 4) * 80)
+							:addTo(buildlist,2)
 							local towericonsize = towericon:getContentSize()
 							towericon:setTouchEnabled(true)
 							towericon:setTouchSwallowEnabled(true)
@@ -667,14 +702,18 @@ function FightScene:buildArea() --炮塔建造区域
 								local tnum1 = string.sub(Tabel["weapon"][self.pass][i],12,12)
 								local str = (tnum1 == ".") and ("0" .. tnum) or (tnum .. tnum1)
 								local tower = Tower.new(str)
-								local blankAreaX,blankAreaY = blankArea:getPosition()
-								tower:pos(blankAreaX,blankAreaY)
+								local bX,bY = buildlist:getPosition()
+								tower:pos(bX,bY)
 								tower:addTo(self.map,3)
 								table.insert(self.tower,tower)
-								local towericonlist = blankArea:getChildren()
-								for k,v in pairs(towericonlist) do
-									v:removeFromParent()
-								end
+								blankArea:setTouchEnabled(false)
+								self.map:getChildByTag(999):removeFromParent()
+								blankArea:setOpacity(0)
+								-- for k,v in pairs(blankAreaTable) do
+								-- 	if v:getOpacity() == 255 then
+								-- 		v:setOpacity(50)
+								-- 	end
+								-- end
 							end)
 
 							local cost = display.newSprite("#fortMoneyBg.png")
@@ -695,7 +734,6 @@ function FightScene:buildArea() --炮塔建造区域
 					end
 				end)
 			end
-
 		end
 	end
 end

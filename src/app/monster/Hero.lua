@@ -369,17 +369,18 @@ function Hero:s12(posX, posY, monsterTabel)
 		local rep1 = cc.Repeat:create(animate2, 48)
 
 		sprite3:schedule(function()
-			print("···")
+			
 			for i,v in pairs(monsterTabel) do
 				local vx,vy = v:getPosition()
-				local x, y = sprite1:getPosition()
+				local x, y = node:getPosition()
 				local distance = cc.pGetDistance(cc.p(x,y),cc.p(vx,vy))
-				if distance <= 100 and vy < y then 
+				print(x, y)
+				if distance <= 150 and vy < y then 
 					print("开始")
-					self.heroSprite:runAction(self.heroSprite:attack(GameState.GameData.HeroNumber))
-					v.Hptag:show()
-					v.hpnow = v.hpnow -  50
-					v.Hptag.hptag:setPercent(v.hpnow / v.hp *100)
+					self:runAction(self:attack(GameState.GameData.HeroNumber))
+					-- v.Hptag:show()
+					v.hpnow = v.hpnow -  5000
+					-- v.Hptag.hptag:setPercent(v.hpnow / v.hp *100)
 					-- break
 					print("end")
 				end

@@ -1,7 +1,7 @@
-local Hero = require(".app.monster.Hero")
-local LevelButton = require(".app.UIClass.LevelButton")
-local topButton = require(".app.UIClass.topButton")
-local Tabel = require(".app.stageConfig.stageLevelInformation")
+local Hero = require("app.monster.Hero")
+local LevelButton = require("app.UIClass.LevelButton")
+local topButton = require("app.UIClass.topButton")
+local Tabel = require("app.stageConfig.stageLevelInformation")
 display.addSpriteFrames("UI/ui_public1.plist","UI/ui_public1.png")
 display.addSpriteFrames("UI/ui_prepare.plist","UI/ui_prepare.png")
 display.addSpriteFrames("UI/ui_dailytask.plist","UI/ui_dailytask.png")
@@ -221,7 +221,7 @@ function UI:gamePrepare(num)
 				GameState.GameData.UItopData.bloodNow = GameState.GameData.UItopData.bloodNow - 1
 				topButton.bloodTable:setString(GameState.GameData.UItopData.bloodNow)
 				GameState.save(GameState.GameData)
-				local FightScene = import("app.scenes.FightScene").new(num)
+				local FightScene = import(".app.scenes.FightScene").new(num)
 				display.replaceScene(FightScene,"flipAngular",1)
 			end
 			

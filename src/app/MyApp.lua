@@ -7,7 +7,7 @@ local MyApp = class("MyApp", cc.mvc.AppBase)
 function MyApp:ctor()
     MyApp.super.ctor(self)
     
-    GameState = require(".app.GameData.GameData")
+    GameState = require("app.GameData.GameData")
     GameState.save(GameState.GameData)
 end
 

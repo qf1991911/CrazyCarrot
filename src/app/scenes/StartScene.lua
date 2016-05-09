@@ -1,5 +1,5 @@
 display.addSpriteFrames("StartScene/ui_settings.plist","StartScene/ui_settings.png")
-local UI = require(".app.scenes.UI")
+local UI = require("app.scenes.UI")
 
 local StartScene = class("StartScene", function()
     return display.newScene("StartScene")

@@ -426,29 +426,7 @@ function FightScene:HeroCreate()
 	self.heroSprite = Hero.new("#h01_move_"..GameState.GameData.HeroNumber..".png",200, 200, self.map)
 	self.heroSprite:setLocalZOrder(2)
 	self.heroSprite:runAction(self.heroSprite:wait(GameState.GameData.HeroNumber))
-	-- local scheduler = require(cc.PACKAGE_NAME..".scheduler")
-	-- 	local count = 0
-	-- 	local function onInterval(dt)
-	-- 		count = count + 1
-	-- 		if count == 30 then
-	-- 			for i,v in ipairs(self.monster) do
-	-- 				local vx,vy = v:getPosition()
-	-- 				-- print(i, vx, vy)
-	-- 				local x, y = self.heroSprite:getPosition()
-	-- 				local distance = cc.pGetDistance(cc.p(x,y),cc.p(vx,vy))
-	-- 				if distance <= 100 then 
-	-- 					-- self.heroSprite:runAction(self.heroSprite:move(GameState.GameData.HeroNumber, vx,vy))
-	-- 					self.heroSprite:runAction(self.heroSprite:attack(GameState.GameData.HeroNumber))
-	-- 					v.Hptag:show()
-	-- 					v.hpnow = v.hpnow -  20
-	-- 					v.Hptag.hptag:setPercent(v.hpnow / v.hp *100)
-	-- 					break
-	-- 				end
-	-- 			end
-	-- 			count = count - 10
-	-- 		end
-	-- 	end
-	-- 	
+	
 	--英雄技能创建
 		if GameState.GameData.HeroNumber == 1 then
 			
@@ -540,22 +518,14 @@ function FightScene:HeroCreate()
 							elseif event.x > posx then
 								angle = math.deg(math.asin(-Dy / distance))
 							end
-							local skillNow = self.heroSprite:lightLine(event.x, event.y, angle)
+							local skillNow = self.heroSprite:lightLine(event.x-20, event.y- 70, angle)
 							print(self.heroSprite.face)
 							self.heroSprite:runAction(skillNow)
 
 	--英雄四
 						else
 							self.heroSprite:bomb(event.x-20, event.y- 70)
-							-- for k,v in pairs(self.monster) do
-							-- 	local vx,vy = v:getPosition()
-							-- 	-- print(event.x-20, event.y- 70)
-							-- 	local distance = cc.pGetDistance(cc.p(vx,vy), cc.p(event.x-20, event.y- 70))
-							-- 	if 	distance <= 50 then
-							-- 		self.map:getChildByTag(2):getChild():runAction(self.heroSprite:bombExplode(event.x-20, event.y- 70))
-							-- 		self.map:getChildByTag(2):getChild():removeFromParent()
-							-- 	end
-							-- end
+						
 						end
 						self.skillPic:removeFromParent()
 						self.skillPic = nil					
@@ -569,39 +539,25 @@ function FightScene:HeroCreate()
 			skill3:onButtonClicked(function (event)
 				self.heroSprite:stopAllActions()
 				if GameState.GameData.HeroNumber == 3 then
-					local magic2 = self.heroSprite:skill()
+					self.heroSprite.state = "skill"
+					local magic2 = self.heroSprite:skill(self.monster)
 					local callback = cc.CallFunc:create(function ()
 						self.heroSprite:runAction(self.heroSprite:wait(GameState.GameData.HeroNumber))
 					end)
 					local action = cc.Sequence:create(magic2, callback) 
 					self.heroSprite:runAction(action)				
 				elseif GameState.GameData.HeroNumber == 4 then
+					self.heroSprite.state = "skill"
 					local magic1 = self.heroSprite:magic2(GameState.GameData.HeroNumber)
 					local callback = cc.CallFunc:create(function ()
-					self.heroSprite:s12(display.cx, display.cy, self.monster)
-					self.heroSprite:runAction(self.heroSprite:wait(GameState.GameData.HeroNumber))
+						self.heroSprite:s12(display.cx, display.cy, self.monster)
+
+						self.heroSprite:runAction(self.heroSprite:wait(GameState.GameData.HeroNumber))
+						
 					end)
 					local action = cc.Sequence:create(magic1, callback) 
 					self.heroSprite:runAction(action)
 
-					-- local function onInterval(dt)
-					-- 	print("............................")
-					-- 	for i,v in ipairs(self.monster) do
-					-- 		local vx,vy = v:getPosition()
-					-- 		local x, y = self:getChildByTag(3):getChildByTag(1):getPosition()
-					-- 		local distance = cc.pGetDistance(cc.p(x,y),cc.p(vx,vy))
-					-- 		if distance <= 100 and vy < y then 
-					-- 			print("开始")
-					-- 			self.heroSprite:runAction(self.heroSprite:attack(GameState.GameData.HeroNumber))
-					-- 			v.Hptag:show()
-					-- 			v.hpnow = v.hpnow -  50
-					-- 			v.Hptag.hptag:setPercent(v.hpnow / v.hp *100)
-					-- 			-- break
-					-- 			print("end")
-					-- 		end
-					-- 	end
-					-- end
-					-- scheduler.scheduleGlobal(onInterval, 0.2)
 
 				elseif GameState.GameData.HeroNumber == 2 then
 					self.heroSprite:s01()
@@ -619,23 +575,23 @@ function FightScene:HeroAttack()
 			local mX, mY = v:getPosition()
 			local x, y = self.heroSprite:getPosition()
 			local distance = cc.pGetDistance(cc.p(mX, mY), cc.p(x, y))
+			
+			
 			if distance <= 50 then
 				self.heroSprite.target = v
-				print("start")
-				local x, y = v:getPosition()
-				local posx, posy = self:getPosition()
-				if x > posx and self.face == "left" then
-					local FlipX = cc.FlipX:create(true)
-					self:runAction(FlipX)
-					self.face = "right"
-				elseif x < posx and self.face == "right" then
-					local FlipX = cc.FlipX:create(false)
-					self:runAction(FlipX)
-					self.face = "left"
-				end
-				print("end")
 				table.insert(v.target, self.heroSprite)
 				v:stopAllActions()
+				local x, y = v:getPosition()
+				local posx, posy = self.heroSprite:getPosition()
+				if x > posx and self.heroSprite.face == "left" then
+					local FlipX = cc.FlipX:create(true)
+					self.heroSprite:runAction(FlipX)
+					self.heroSprite.face = "right"
+				elseif x < posx and self.heroSprite.face == "right" then
+					local FlipX = cc.FlipX:create(false)
+					self.heroSprite:runAction(FlipX)
+					self.heroSprite.face = "left"
+				end
 				break
 			end
 		end
@@ -646,7 +602,7 @@ function FightScene:HeroAttack()
 		local callBack = cc.CallFunc:create(function()
 			if self.heroSprite.target then
 				-- print(self.heroSprite.state)
-				self.heroSprite.target.hpnow = self.heroSprite.target.hpnow - 100
+				self.heroSprite.target.hpnow = self.heroSprite.target.hpnow - 50
 				self.heroSprite.state = "wait"
 			end
 		end)

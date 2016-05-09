@@ -298,7 +298,7 @@ function Hero:lightLine(posx, posy, angle)
 	return seq2
 end
 
-function Hero:skill()
+function Hero:skill(monsterTabel)
 	local frames = display.newFrames("h03_skill09_pre%d.png",1,7)
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
@@ -307,10 +307,25 @@ function Hero:skill()
 	local animation = display.newAnimation(frames,0.2)
 	local animate1 = cc.Animate:create(animation)
 	
+	local callback = cc.CallFunc:create(function()
+		for k,v in pairs(monsterTabel) do
+			local vx,vy = v:getPosition()
+			local x,y = self:getPosition()
+			if vx > x - 60 and vx < x + 60 and vy > y - 60 and vy < y + 60 then
+				v.hpnow = v.hpnow -  150
+			end
+		end
+	end)
+
 	local frames = display.newFrames("h03_skill09_stop%d.png",1,12)
 	local animation = display.newAnimation(frames,0.2)
 	local animate2 = cc.Animate:create(animation)
-	local seq = cc.Sequence:create(animate, animate1, animate2)
+	
+	local callback1 = cc.CallFunc:create(function()
+		self.state = "wait"
+	end)
+	
+	local seq = cc.Sequence:create(animate, animate1,callback ,animate2, callback1)
 	return(seq)
 end
 --英雄4的技能三（UFO技能）
@@ -368,21 +383,14 @@ function Hero:s12(posX, posY, monsterTabel)
 		local animate2 = cc.Animate:create(animation2)
 		local rep1 = cc.Repeat:create(animate2, 48)
 
-		sprite3:schedule(function()
-			
+		sprite3:schedule(function()			
 			for i,v in pairs(monsterTabel) do
 				local vx,vy = v:getPosition()
 				local x, y = node:getPosition()
 				local distance = cc.pGetDistance(cc.p(x,y),cc.p(vx,vy))
-				print(x, y)
-				if distance <= 150 and vy < y then 
-					print("开始")
-					self:runAction(self:attack(GameState.GameData.HeroNumber))
-					-- v.Hptag:show()
-					v.hpnow = v.hpnow -  5000
-					-- v.Hptag.hptag:setPercent(v.hpnow / v.hp *100)
-					-- break
-					print("end")
+				print(x, y, vx,vy)
+				if x + 50 > vx and x - 50 < vx and vy > y - 200 and vy < y - 50 then 
+					v.hpnow = v.hpnow -  50
 				end
 			end
 		end, 0.2)
@@ -398,8 +406,11 @@ function Hero:s12(posX, posY, monsterTabel)
 	local animation1 = display.newAnimation(frames,0.2)
 	local animate1 = cc.Animate:create(animation1)
 	local rep = cc.Repeat:create(animate1, 16)
+	local callback1 = cc.CallFunc:create(function()
+		self.state = "wait"
+	end)
 
-	local action = cc.Sequence:create(animate, callback, rep)
+	local action = cc.Sequence:create(animate, callback, rep, callback1)
 
 	sprite1:runAction(action)
 	

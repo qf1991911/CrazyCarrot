@@ -16,6 +16,7 @@ function Hero:ctor()
 	self.state = "wait"
 	self.face = "left"
 	self:MoveTo()
+	self.HP = 500
 end
 --移动和英雄转向
 function Hero:MoveTo()
@@ -48,7 +49,7 @@ function Hero:MoveTo()
 				self.face = "left"
 	 
 	 		end
-			self:setPosition(event.x , event.y - 70)
+			self:setPosition(event.x , event.y - 120)
 		end
 	end)
 end
@@ -110,11 +111,18 @@ function Hero:move(heroNum)
 end
 
 --技能1
-function Hero:magic1(heroNum)
+function Hero:magic1(heroNum,monsterTable)
 	local frames = display.newFrames("h0"..heroNum.."_magic2_%d.png",1,Tabel[heroNum]["magic2"])
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
-	return animate
+	local callback = cc.CallFunc:create(function()
+		for k,v in pairs(monsterTable) do
+			v.hpnow = v.hpnow -  100
+		end
+		self.state = "wait"
+	end)
+	local seq = cc.Sequence:create(animate,callback)
+	return seq
 
 end
 function Hero:magic2(heroNum)
@@ -123,8 +131,8 @@ function Hero:magic2(heroNum)
 	local animate = cc.Animate:create(animation)
 	return(animate)
 end
---技能2 
-function Hero:magic12(heroNum,posx,posy)
+--英雄技能2 
+function Hero:magic12(heroNum,x,y, monsterTable)
 	local frames = display.newFrames("h0"..heroNum.."_magic_%d.png",1,Tabel[heroNum]["magic1"])
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
@@ -132,14 +140,34 @@ function Hero:magic12(heroNum,posx,posy)
 	local callback = cc.CallFunc:create(function()
 		self:runAction(Hero:wait(GameState.GameData.HeroNumber))
 		local sprite = display.newSprite("#tornado_1.png")
-		sprite:setPosition(posx, posy)
+		sprite:setPosition(x, y)
 		sprite:setTag(1)
 		self:getParent():addChild(sprite)
+		sprite:setTouchEnabled(true)
+		sprite:addNodeEventListener(cc.NODE_TOUCH_EVENT,function(event)
+			if event.name == "began" then
+				return true
+			elseif event.name == "moved" then
+				sprite:setPosition(event.x, event.y)
+			end
+		end)
 		local frames = display.newFrames("tornado_%d.png",1,6)
 		local animation = display.newAnimation(frames,0.2)
 		local animate1 = cc.Animate:create(animation)
-		local rep = cc.Repeat:create(animate1,7)
+		local rep = cc.Repeat:create(animate1,9)
+		
+		sprite:schedule(function()			
+			for k,v in pairs(monsterTable) do
+				local posx, posy = v:getPosition()
+				local sx,sy = sprite:getPosition()
+				local distance = cc.pGetDistance(cc.p(posx,posy),cc.p(sx,sy))
+				if distance < 100 then
+					v.hpnow = v.hpnow -  20
+				end
+			end
+		end, 0.2)
 		local callback1 = cc.CallFunc:create(function()	
+			self.state = "wait"
 			sprite:removeFromParent()	
 			 
 		end)
@@ -165,23 +193,31 @@ function Hero:focusPre(heroNum)
 	return(animate)
 end
 --英雄2的技能三
-function Hero:s01()
+function Hero:s01(monsterTable)
 	local sprite = display.newSprite("#h02_s01_1.png")
-	-- :setPosition(posx,posy)
 	:setAnchorPoint(0.5, 0.3)
 	self:getParent():addChild(sprite)
 	local posx, posy = self:getPosition()
 	if self.face == "left" then
-		sprite:setPosition(posx - 80, posy)
+		sprite:setPosition(posx - 80, posy + 50)
 	else
-		sprite:setPosition(posx + 80, posy)
+		sprite:setPosition(posx + 80, posy + 50)
 	end
 
 	local frames = display.newFrames("h02_s01_%d.png",1,6)
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
 	local callback = cc.CallFunc:create(function()
+		for i,v in pairs(monsterTable) do
+			local vx,vy = v:getPosition()
+			local distance = cc.pGetDistance(cc.p(posx, posy),cc.p(vx,vy))
+			if posx + 90 > vx and posx - 90 < vx and vy > posy - 100 and vy < posy + 20 then 
+				v.hpnow = v.hpnow -  200
+			end
+		end
+		self:runAction(Hero:wait(GameState.GameData.HeroNumber))
 		sprite:removeFromParent()
+		self.state = "wait"
 	end)
 	local seq = cc.Sequence:create(animate, callback)
 	sprite:runAction(seq)
@@ -192,7 +228,18 @@ function Hero:s02(heroNum)
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
 	local rep = cc.Repeat:create(animate,3)
-	return(rep)
+	local callback = cc.CallFunc:create(function()
+		self:runAction(self:wait(GameState.GameData.HeroNumber))
+		if self.HP <= 400 then
+			self.HP = self.HP + 100
+		else 
+			self.HP = 500
+		end
+		print(self.HP)
+		self.state = "wait"
+	end)
+	local seq = cc.Sequence:create(rep, callback)
+	return(seq)
 end
 --
 function Hero:s05()
@@ -203,13 +250,13 @@ function Hero:s05()
 
 	return(animate)
 end
---英雄2的第三个技能
-function Hero:s05Move(posX,posY)
+--英雄2的第二个技能
+function Hero:s05Move(posX,posY,monsterTable)
 	local table = {[1] = {45, 0}, [2] = {-45, 0},[3] = {30,30}, [4] = {0, 45}, [5] = {-30,30},[6] = {30,-30},[7] = {-30,-30},[8] = {0,-45}}
 	math.randomseed(os.time())
 	
 	local node = display.newNode()
-	:setPosition(posX, posY)
+	:setPosition(posX, posY - 110)
 	self:getParent():addChild(node)
 	local num = 1
 	node:schedule(function()
@@ -229,8 +276,17 @@ function Hero:s05Move(posX,posY)
 			local animation = display.newAnimation(frames,0.1)
 			local animate1 = cc.Animate:create(animation)
 			local callback1 = cc.CallFunc:create(function()
+				for i,v in pairs(monsterTable) do
+					local vx,vy = v:getPosition()
+					local distance = cc.pGetDistance(cc.p(posX, posY),cc.p(vx,vy))
+					if posX + 100 > vx and posX - 100 < vx and vy > posY - 100 and vy < posY + 100 then 
+						v.hpnow = v.hpnow -  30
+					end
+				end
+				self:runAction(Hero:wait(GameState.GameData.HeroNumber))
 				sprite:removeFromParent()
-				sprite = nil		
+				sprite = nil
+				self.state = "wait"		
 			end)
 			local seq1 = cc.Sequence:create(animate1, callback1)
 			sprite:runAction(seq1)	
@@ -251,7 +307,7 @@ function Hero:s06()
 	return(animate)
 end
 --英雄3的技能二
-function Hero:lightLine(posx, posy, angle)
+function Hero:lightLine(posx, posy, angle, monsterTable)
 	local frames = display.newFrames("h03_skill09_pre%d.png",1,7)
 	local animation = display.newAnimation(frames,0.1)
 	local animate1 = cc.Animate:create(animation)
@@ -288,7 +344,17 @@ function Hero:lightLine(posx, posy, angle)
 		local animation = display.newAnimation(frames,0.1)
 		local animate3 = cc.Animate:create(animation)
 		
-		local callback1 = cc.CallFunc:create(function()						
+		local callback1 = cc.CallFunc:create(function()
+			for k,v in pairs(monsterTable) do
+				local mx, my = v:getPosition()
+				local lx, ly = sprite:getPosition()
+				local distance1 = math.abs(((mx - sx) * (ly - sy) / (lx - sx) - my + sy) / math.sqrt(((ly - sy) / (lx - sx)) ^ 2 + 1))
+				print(k..":"..distance1)
+				if distance1 < 50 and mx > lx - math.abs(lx - sx) and mx < lx + math.abs(lx - sx) then
+					v.hpnow = v.hpnow -  500
+				end
+			end
+			self.state = "wait"						
 			self:runAction(self:wait(GameState.GameData.HeroNumber))
 		end)
 		local seq1 = cc.Sequence:create(animate3, callback1)
@@ -297,8 +363,8 @@ function Hero:lightLine(posx, posy, angle)
 	local seq2 = cc.Sequence:create(seq, callback)
 	return seq2
 end
-
-function Hero:skill(monsterTabel)
+--英雄三的技能一三
+function Hero:skill(monsterTable)
 	local frames = display.newFrames("h03_skill09_pre%d.png",1,7)
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
@@ -308,7 +374,7 @@ function Hero:skill(monsterTabel)
 	local animate1 = cc.Animate:create(animation)
 	
 	local callback = cc.CallFunc:create(function()
-		for k,v in pairs(monsterTabel) do
+		for k,v in pairs(monsterTable) do
 			local vx,vy = v:getPosition()
 			local x,y = self:getPosition()
 			if vx > x - 60 and vx < x + 60 and vy > y - 60 and vy < y + 60 then
@@ -329,7 +395,7 @@ function Hero:skill(monsterTabel)
 	return(seq)
 end
 --英雄4的技能三（UFO技能）
-function Hero:s12(posX, posY, monsterTabel)
+function Hero:s12(posX, posY, monsterTable)
 	local node = display.newNode()
 	:setPosition(posX, posY)
 	:setLocalZOrder(2)
@@ -356,7 +422,6 @@ function Hero:s12(posX, posY, monsterTabel)
 		sprite1:setTouchEnabled(true)
 		sprite1:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
 			if event.name == "began" then
-				print(event.x, event.y)
 				return true
 			elseif event.name == "moved" then
 				node:setPosition(event.x, event.y)
@@ -384,11 +449,10 @@ function Hero:s12(posX, posY, monsterTabel)
 		local rep1 = cc.Repeat:create(animate2, 48)
 
 		sprite3:schedule(function()			
-			for i,v in pairs(monsterTabel) do
+			for i,v in pairs(monsterTable) do
 				local vx,vy = v:getPosition()
 				local x, y = node:getPosition()
 				local distance = cc.pGetDistance(cc.p(x,y),cc.p(vx,vy))
-				print(x, y, vx,vy)
 				if x + 50 > vx and x - 50 < vx and vy > y - 200 and vy < y - 50 then 
 					v.hpnow = v.hpnow -  50
 				end
@@ -450,25 +514,18 @@ end
 --英雄四的技能二
 function Hero:bomb(posX, posY)
 	local node = display.newNode()
-	:setPosition(posX, posY)
-	:setTag(2)
+	node:setPosition(posX, posY)
+	node:setTag(2)
 	self:getParent():addChild(node)
 	local bomb = display.newSprite("#h04_bomb_1.png")
+	bomb:setTag(1)
 	node:addChild(bomb)
 	local frames = display.newFrames("h04_bomb_%d.png",1,2)
 	local animation = display.newAnimation(frames,0.2)
 	local animate = cc.Animate:create(animation)
 	local rep = cc.RepeatForever:create(animate)
 	bomb:runAction(rep)
-	-- for k,v in pairs(self.monster) do
-	-- 	local vx,vy = v:getPosition()
-	-- 	local distance = cc.pGetDistance(cc.p(vx,vy), cc.p(posX - 20, posY - 70))
-	-- 	if 	distance <= 50 then
-	-- 		bomb:runAction(bomb:bombExplode())
-	-- 		bomb:removeFromParent()
-	-- 	end
-	-- end
-
+	return node
 end
 --英雄四的炸弹爆炸效果
 function Hero:bombExplode(posX, posY)
@@ -484,7 +541,8 @@ function Hero:bombExplode(posX, posY)
 		node:removeFromParent()
 	end)
 	local seq = cc.Sequence:create(animate, callback)
-	return(seq)
+	-- return(seq)
+	bombExplode:runAction(seq)
 end
 
 function Hero:onEnter()

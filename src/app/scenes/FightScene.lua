@@ -10,12 +10,12 @@ display.addSpriteFrames("Tower/T11.plist","Tower/T11.png")
 display.addSpriteFrames("Tower/T16.plist","Tower/T16.png")
 display.addSpriteFrames("Tower/T18.plist","Tower/T18.png")
 display.addSpriteFrames("Tower/bullet.plist","Tower/bullet.png")
-local HeroData = require(".app.stageConfig.HeroData")
-local Hero = require(".app.monster.Hero")
-local Monster = require(".app.monster.Monster")
-local Tower = require(".app.tower.Tower")
-local PassData = require(".app.stageConfig.PassData")
-local Tabel = require(".app.stageConfig.stageLevelInformation")
+local HeroData = require("app.stageConfig.HeroData")
+local Hero = require("app.monster.Hero")
+local Monster = require("app.monster.Monster")
+local Tower = require("app.tower.Tower")
+local PassData = require("app.stageConfig.PassData")
+local Tabel = require("app.stageConfig.stageLevelInformation")
 
 local FightScene = class("FightScene", function(passnum)
 	local scene = display.newScene("FightScene")
@@ -263,16 +263,12 @@ function FightScene:fightMap() --地图
 	local time = os.time()
 	local septum = 0
 	local num = 15
-
+	self.windmill = {}
 	local enemyhome = self:enemyHomePos()
 	enemyhome:runAction(self:enemyhomeAction())
 	enemyhome:setOpacity(0)
 
-	-- local tower = Tower.new(PassData["L"..self.pass].pretower)
-	-- local pretower = self.map:getObjectGroup("objs"):getObject("preTower")
-	-- tower:pos(pretower.x, pretower.y)
-	-- tower:addTo(self.map,3)
-	-- table.insert(self.tower,tower)
+	
 
 
 	self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function (dt)
@@ -291,16 +287,17 @@ function FightScene:fightMap() --地图
 		septum = (septum + 1) % 60
 		for k,v in pairs(self.tower) do
 			local x,y = v:getPosition()
-			if v.num == "16" or v.num =="18"  then 
-				v.firetime = v.firetime + 1
+			if v.num == "11" then
+
+			elseif v.num == "16" or v.num =="18"  then 
+				v.firetime = v.firetime + v.stage 
 				if v.firetime >= 120 then
 					local num = 0
 					for i,j in pairs(self.monster) do
 						local tx,ty = j:getPosition()
 						local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
-						if distance <= v.attackArea then							
+						if distance <= v.attackArea then					
 							j.hpnow = j.hpnow -  v.power
-							-- j.Hptag.hptag:setPercent(j.hpnow / j.hp *100)
 							num = num + 1							
 						end
 					end
@@ -322,23 +319,22 @@ function FightScene:fightMap() --地图
 						end						
 						v.target = nil
 					else
-						v.firetime = v.firetime + 1
-						if v.firetime == 50 then
+						v.firetime = v.firetime + v.stage 
+						if v.firetime >= 50 then
 							local bullet = v:fire2()
+							table.insert(self.windmill,bullet)
+							bullet.power = v.power		
 							v.firetime = v.firetime - 50
-							bullet:runAction(v:fireAction2(tx,ty+10,bullet,1))
+							local callfun  = cc.CallFunc:create(function (event)
+								for q,w in pairs(self.windmill) do
+									table.remove(self.windmill,q)
+								end								
+							end)
+							local action = v:fireAction2(tx,ty+10,bullet,1)
+							local sq = cc.Sequence:create(action,callfun)
+							bullet:runAction(sq)
 							
-							for i,j in pairs(self.monster) do
-								local bx,by = bullet:getPosition()
-								local mx,my = j:getPosition()
-								local distance = cc.pGetDistance(cc.p(bx,by),cc.p(mx,my))
-								if distance < 60 then 
-									v.target.hpnow = v.target.hpnow -  v.power
-								end
-							end
-							-- v.target.Hptag:show()
-							-- v.target.hpnow = v.target.hpnow -  v.power
-							-- v.target.Hptag.hptag:setPercent(v.target.hpnow / v.target.hp *100)							
+										
 						end
 					end
 				else
@@ -371,8 +367,8 @@ function FightScene:fightMap() --地图
 							degree = -180 - degree
 						end
 						v:towerAim(90 - degree)
-						v.firetime = v.firetime + 1
-						if v.firetime == 30 then
+						v.firetime = v.firetime + v.stage 
+						if v.firetime >= 30 then
 							local bullet = v:fire(0)
 							v.firetime = v.firetime - 30
 							bullet:runAction(v:fireAction(tx,ty+10,bullet,0))
@@ -405,6 +401,14 @@ function FightScene:fightMap() --地图
 				v:dead()
 				v:removeFromParent()
 				v = nil
+			end
+			for a,b in pairs(self.windmill) do
+				local bx,by = b:getPosition()
+				local tx,ty = v:getPosition()
+				local distance = cc.pGetDistance(cc.p(bx,by),cc.p(tx,ty))
+				if distance < 60 then
+					v.hpnow = v.hpnow - b.power
+				end
 			end
 		end
 		self:HeroAttack()
@@ -653,6 +657,7 @@ end
 
 
 function FightScene:buildArea() --炮塔建造区域
+
 	local things = self.map:getLayer("things")
 	local way = self.map:getLayer("content")
 	local blankAreaTable = {}
@@ -663,6 +668,7 @@ function FightScene:buildArea() --炮塔建造区域
 				local blankArea = display.newSprite("#blankArea.png")
 				blankArea.j = j
 				blankArea:pos(35 + i * 70 , 35 + (6 - j) * 70)
+				blankArea.pos = cc.p(35 + i * 70 , 35 + (6 - j) * 70)
 				blankArea:addTo(self.map,2)
 				blankArea:setTouchEnabled(true)
 				blankArea:setOpacity(50)
@@ -675,7 +681,6 @@ function FightScene:buildArea() --炮塔建造区域
 							v.attackAreashow = nil
 						end
 					end
-
 					blankArea:setOpacity(255)
 					if event.name == "began" then 
 						if self.map:getChildByTag(999) then
@@ -685,7 +690,7 @@ function FightScene:buildArea() --炮塔建造区域
 						end
 						local buildlist = display.newNode()
 						buildlist:pos(35 + i * 70 , 35 + (6 - j) * 70)
-						buildlist:addTo(self.map,2)
+						buildlist:addTo(self.map,5)
 						buildlist:setTag(999)
 						blankArea:setTag(1000)
 
@@ -707,10 +712,10 @@ function FightScene:buildArea() --炮塔建造区域
 								local tnum = string.sub(Tabel["weapon"][self.pass][k],11,11)
 								local tnum1 = string.sub(Tabel["weapon"][self.pass][k],12,12)
 								local str = (tnum1 == ".") and ("0" .. tnum) or (tnum .. tnum1)
-								local tower = Tower.new(str)
+								local tower = Tower.new(str,self.tower,blankArea)
 								local bX,bY = buildlist:getPosition()
 								tower:pos(bX,bY)
-								tower:addTo(self.map,3)
+								tower:addTo(self.map,4)
 								table.insert(self.tower,tower)
 								blankArea:setTouchEnabled(false)
 								self.map:getChildByTag(999):removeFromParent()
@@ -737,6 +742,18 @@ function FightScene:buildArea() --炮塔建造区域
 			end
 		end
 	end
+	local pretower = self.map:getObjectGroup("objs"):getObject("preTower")
+	for k,v in pairs(blankAreaTable) do
+		local offsetX = math.abs(v.pos.x - pretower.x)
+		local offsetY = math.abs(v.pos.y - pretower.y)
+		if offsetX + offsetY < 70 then
+			local tower = Tower.new(PassData["L"..self.pass].pretower,self.tower,v)
+			tower:pos(pretower.x, pretower.y)
+			tower:addTo(self.map,4)
+			table.insert(self.tower,tower)
+		end
+	end
+	
 end
 function FightScene:waveLabel1() --波数文字
 	local label = cc.ui.UILabel.new({
@@ -867,7 +884,7 @@ function FightScene:settingUI() --设置按钮界面
 	getback:addTo(settingBG)
 	getback:onButtonClicked(function (event)
 		local director = cc.Director:getInstance():resume()
-		local UI = require(".app.scenes.UI")
+		local UI = require("app.scenes.UI")
 		local ui = UI.new()
 		display.replaceScene(ui,"splitRows",1)
 	end)
@@ -911,9 +928,6 @@ function FightScene:rabbit() --兔子
 	rabbitHpBg:pos(sizeR.width / 2, sizeR.height)
 	:addTo(self.rabbit)
 	local sizeHp = rabbitHpBg:getContentSize()
-
-	print(self.RabbitHp)
-
 	self.rabbit.Rhplabel = cc.ui.UILabel.new({
 		UILabelType = 1,
 		text = self.rabbit.hp,

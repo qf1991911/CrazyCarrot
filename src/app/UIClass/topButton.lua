@@ -70,7 +70,7 @@ function topButton:ctor()
 			local action = cc.Sequence:create(scale1, callback, scale2)
 			parentNode.pre_taskBg:runAction(action)			
 		else
-			display.replaceScene(require(".app.scenes." .. self.tScene):new())
+			display.replaceScene(require("app.scenes." .. self.tScene):new())
 		end	
 	end)
 end

@@ -1,8 +1,8 @@
 display.addSpriteFrames("monster/E41.plist","monster/E41.png")
 display.addSpriteFrames("monster/enemyCommon.plist","monster/enemyCommon.png")
 display.addSpriteFrames("fight/fight.plist","fight/fight.png")
-local MonsterData = require(".app.stageConfig.MonsterData")
-local PassData = require(".app.stageConfig.PassData")
+local MonsterData = require("app.stageConfig.MonsterData")
+local PassData = require("app.stageConfig.PassData")
 local Monster = class("Monster", function (num)
 	local path = "#E" .. num .. "_1.png"
 	local sprite = display.newSprite(path)

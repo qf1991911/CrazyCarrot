@@ -7,8 +7,8 @@ display.addSpriteFrames("Tower/T16.plist","Tower/T16.png")
 display.addSpriteFrames("Tower/T18.plist","Tower/T18.png")
 display.addSpriteFrames("Tower/bullet.plist","Tower/bullet.png")
 display.addSpriteFrames("fight/fight.plist","fight/fight.png")
-local TowerData = require(".app.stageConfig.TowerData")
-local Tower = class("Tower", function (num)
+local TowerData = require("app.stageConfig.TowerData")
+local Tower = class("Tower", function (num,TowerTable,blankArea)
 	local tower = display.newNode()
 	tower.num = num
 	tower.attackArea = TowerData["T" .. tower.num].attackArea
@@ -19,10 +19,9 @@ local Tower = class("Tower", function (num)
 	return tower
 end)
 
-function Tower:ctor()
+function Tower:ctor(num, TowerTable,blankArea)
 	self.rotate = false
-
-	self.stage = 3
+	self.stage = 1
 	if self.num == "18" then
 		self:t18create()
 	elseif self.num == "03" or self.num == "11" or self.num == "16" then
@@ -37,18 +36,19 @@ function Tower:ctor()
 		self.gun:setAnchorPoint(cc.p(0.5, 0.15))
 		-- self.gun:runAction(self:stage1())	
 	end
+	
 	self:setTouchEnabled(true)
 	self:addNodeEventListener(cc.NODE_TOUCH_EVENT,function (event)
 		self:setTouchEnabled(false)
 		self.sizeofTower = self.gun:getContentSize()
 		if event.name == "began" then
-			self:attackAreashowF()
+			self:attackAreashowF(TowerTable,blankArea)
 		end
 		return true
 	end)
 
 end
-function Tower:attackAreashowF()
+function Tower:attackAreashowF(TowerTable,blankArea)
 	local Tx,Ty = self:getPosition()
 	self.attackAreashow = display.newSprite("#towerRange.png")
 	self.attackAreashow:pos(Tx,Ty)
@@ -58,27 +58,32 @@ function Tower:attackAreashowF()
 	self.attackAreashow:setTouchSwallowEnabled(true)
 	self.attackAreashow:addNodeEventListener(cc.NODE_TOUCH_EVENT,function ()
 	end)
-	self:destroy()
+	self:destroy(TowerTable,blankArea)
 	self:stageup()
 	
 end
-function Tower:destroy()
+function Tower:destroy(TowerTable,blankArea)
 	local image = {
-	normal = "#towerRemove.png",
-	pressed = "#towerRemove.png",
-	disabled = "#towerRemove.png"
-}
+		normal = "#towerRemove.png",
+		pressed = "#towerRemove.png",
+		disabled = "#towerRemove.png"
+	}
+	self.sizeofTower = self.gun:getContentSize()
 	local button  = cc.ui.UIPushButton.new(image)
-	button:pos(self.sizeofArea.width / 2+self.sizeofTower.width , self.sizeofArea.height / 2)
+	button:pos(self.sizeofArea.width / 2+50 , self.sizeofArea.height / 2)
 	button:addTo(self.attackAreashow)
 	button:onButtonClicked(function (event)
-		-- for k,v in pairs(TowerTable) do
-		-- 	table.remove(TowerTable,k)	
-		-- 	v:removeFromParent()
-		-- 	v = nil
-		-- end
-		-- self.attackAreashow:removeFromParent()
-		-- self.attackAreashow = nil
+		self.attackAreashow:removeFromParent()
+		self.attackAreashow = nil
+		for k,v in pairs(TowerTable) do
+			if self == v then
+				table.remove(TowerTable,k)	
+				v:removeFromParent()
+				v = nil
+				blankArea:setTouchEnabled(true)
+
+			end
+		end
 	end)
 
 	
@@ -90,8 +95,29 @@ function Tower:stageup()
 	disabled = "#towerUpgrade.png"
 }
 	local button  = cc.ui.UIPushButton.new(image)
-	button:pos(self.sizeofArea.width / 2-self.sizeofTower.width , self.sizeofArea.height / 2)
+	button:pos(self.sizeofArea.width / 2-50 , self.sizeofArea.height / 2)
 	button:addTo(self.attackAreashow)
+	button:onButtonClicked(function (event)
+		self.stage = self.stage + 1 
+		if self.num == "18" then
+			local frame3 =  display.newSpriteFrame("T18_"..self.stage..".png")
+			self.gun:setSpriteFrame(frame3)
+			local frame4 = display.newSpriteFrame("T18_seat"..self.stage..".png")
+			self.base:setSpriteFrame(frame4)
+		elseif self.num == "03" or self.num == "11" or self.num == "16" then
+			local frame5 = display.newSpriteFrame("T"..self.num.."_"..self.stage.."_1.png")
+			self.gun:setSpriteFrame(frame5)
+		else
+			local frame1 = display.newSpriteFrame("T"..self.num.."_"..self.stage.."_1.png")
+			self.gun:setSpriteFrame(frame1)
+			local frame2 = display.newSpriteFrame("T"..self.num.."_seat"..self.stage..".png")
+			self.base:setSpriteFrame(frame2)
+		end
+		self:setTouchEnabled(true)
+		self.attackAreashow:removeFromParent()
+		self.attackAreashow = nil
+	end)
+
 
 end
 

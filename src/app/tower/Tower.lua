@@ -39,10 +39,24 @@ function Tower:ctor(num, TowerTable,blankArea)
 	
 	self:setTouchEnabled(true)
 	self:addNodeEventListener(cc.NODE_TOUCH_EVENT,function (event)
-		self:setTouchEnabled(false)
 		self.sizeofTower = self.gun:getContentSize()
 		if event.name == "began" then
-			self:attackAreashowF(TowerTable,blankArea)
+			if self:getParent():getChildByTag(999) ~= nil then
+				self:getParent():getChildByTag(999):removeFromParent()
+				self:getParent():getChildByTag(1000):setOpacity(50)
+			end
+			if self:getParent():getChildByTag(666) ~= nil then
+				local ATCArea = self:getParent():getChildByTag(666)
+				for k,v in pairs(TowerTable) do
+					if v.attackAreashow == ATCArea then
+						v.attackAreashow = nil
+					end
+				end
+				ATCArea:removeFromParent()
+				ATCArea = nil
+			else
+				self:attackAreashowF(TowerTable,blankArea)
+			end
 		end
 		return true
 	end)
@@ -58,6 +72,7 @@ function Tower:attackAreashowF(TowerTable,blankArea)
 	self.attackAreashow:setTouchSwallowEnabled(true)
 	self.attackAreashow:addNodeEventListener(cc.NODE_TOUCH_EVENT,function ()
 	end)
+	self.attackAreashow:setTag(666)
 	self:destroy(TowerTable,blankArea)
 	self:stageup()
 	
@@ -92,30 +107,34 @@ function Tower:stageup()
 	local image = {
 	normal = "#towerUpgrade.png",
 	pressed = "#towerUpgrade.png",
-	disabled = "#towerUpgrade.png"
+	disabled = "#towerTopGrade.png"
 }
 	local button  = cc.ui.UIPushButton.new(image)
 	button:pos(self.sizeofArea.width / 2-50 , self.sizeofArea.height / 2)
 	button:addTo(self.attackAreashow)
 	button:onButtonClicked(function (event)
 		self.stage = self.stage + 1 
-		if self.num == "18" then
-			local frame3 =  display.newSpriteFrame("T18_"..self.stage..".png")
-			self.gun:setSpriteFrame(frame3)
-			local frame4 = display.newSpriteFrame("T18_seat"..self.stage..".png")
-			self.base:setSpriteFrame(frame4)
-		elseif self.num == "03" or self.num == "11" or self.num == "16" then
-			local frame5 = display.newSpriteFrame("T"..self.num.."_"..self.stage.."_1.png")
-			self.gun:setSpriteFrame(frame5)
+		if self.stage > 3 then
+			button:setButtonEnabled(false)
 		else
-			local frame1 = display.newSpriteFrame("T"..self.num.."_"..self.stage.."_1.png")
-			self.gun:setSpriteFrame(frame1)
-			local frame2 = display.newSpriteFrame("T"..self.num.."_seat"..self.stage..".png")
-			self.base:setSpriteFrame(frame2)
+			if self.num == "18" then
+				local frame3 =  display.newSpriteFrame("T18_"..self.stage..".png")
+				self.gun:setSpriteFrame(frame3)
+				local frame4 = display.newSpriteFrame("T18_seat"..self.stage..".png")
+				self.base:setSpriteFrame(frame4)
+			elseif self.num == "03" or self.num == "11" or self.num == "16" then
+				local frame5 = display.newSpriteFrame("T"..self.num.."_"..self.stage.."_1.png")
+				self.gun:setSpriteFrame(frame5)
+			else
+				local frame1 = display.newSpriteFrame("T"..self.num.."_"..self.stage.."_1.png")
+				self.gun:setSpriteFrame(frame1)
+				local frame2 = display.newSpriteFrame("T"..self.num.."_seat"..self.stage..".png")
+				self.base:setSpriteFrame(frame2)
+			end
+			self:setTouchEnabled(true)
+			self.attackAreashow:removeFromParent()
+			self.attackAreashow = nil
 		end
-		self:setTouchEnabled(true)
-		self.attackAreashow:removeFromParent()
-		self.attackAreashow = nil
 	end)
 
 
@@ -180,7 +199,7 @@ end
 function Tower:fire2(num)
 	local parent = self:getParent()
 	local posx,posy = self:getPosition()
-	local bullet = display.newSprite("#B03_3_0.png")
+	local bullet = display.newSprite("#B03_"..self.stage.."_0.png")
 	:pos(posx, posy)
 	:addTo(parent,2)
 	return bullet

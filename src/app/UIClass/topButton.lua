@@ -96,13 +96,52 @@ function topButton:CreateBuyScene()
 	local shopEnergyTitle = self:createShopSprite("#shopEnergyTitle.png",0.5,0.72, shopTitleBg)
 	local shop_energy1 = self:createShopSprite("#shop_energy.png",0.35,0.8, shopBg1)
 	local energyNum1 = self:createShopSprite("#energyNum1.png",0.6,0.8, shopBg1)
-	local shop_energy1 = self:createShopSprite("#shop_energy1.png",0.5,0.55, shopBg1)
+	local shop_energy_pic1 = self:createShopSprite("#shop_energy1.png",0.5,0.55, shopBg1)
+	local price1 = self:createShopSprite("#energyNeedMoney1.png",0.5,0.25, shopBg1)
+	local buyButton1 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,0.01,0.9,shopBg1)
+	:onButtonClicked(function()
+		GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond - 10
+		GameState.GameData.UItopData.bloodNow = GameState.GameData.UItopData.bloodNow + 1
+		self.bloodTable:setString(GameState.GameData.UItopData.bloodNow)
+		self.diamondTabel:setString(GameState.GameData.UItopData.diamond)
+		GameState.save(GameState.GameData)
+	end)
 	local shop_energy2 = self:createShopSprite("#shop_energy.png",0.35,0.8, shopBg2)
 	local energyNum2 = self:createShopSprite("#energyNum2.png",0.6,0.8, shopBg2)
+	local shop_energy_pic2 = self:createShopSprite("#shop_energy2.png",0.5,0.55, shopBg2)
+	local price2 = self:createShopSprite("#energyNeedMoney2.png",0.5,0.25, shopBg2)
+	local buyButton2 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,0.01,0.9,shopBg2)
+	:onButtonClicked(function()
+		GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond - 40
+		GameState.GameData.UItopData.bloodNow = GameState.GameData.UItopData.bloodNow + 5
+		self.bloodTable:setString(GameState.GameData.UItopData.bloodNow)
+		self.diamondTabel:setString(GameState.GameData.UItopData.diamond)
+		GameState.save(GameState.GameData)
+	end)
 	local shop_energy3 = self:createShopSprite("#shop_energy.png",0.35,0.8, shopBg3)
 	local energyNum2 = self:createShopSprite("#energyNum3.png",0.6,0.8, shopBg3)
+	local shop_energy_pic3 = self:createShopSprite("#shop_energy3.png",0.5,0.55, shopBg3)
+	local price3 = self:createShopSprite("#energyNeedMoney3.png",0.5,0.25, shopBg3)
+	local buyButton3 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,0.01,0.9,shopBg3)
+	:onButtonClicked(function()
+		GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond - 60
+		GameState.GameData.UItopData.bloodNow = GameState.GameData.UItopData.bloodNow + 10
+		self.bloodTable:setString(GameState.GameData.UItopData.bloodNow)
+		self.diamondTabel:setString(GameState.GameData.UItopData.diamond)
+		GameState.save(GameState.GameData)
+	end)
 	local shop_energy4 = self:createShopSprite("#energyNum4.png",0.5,0.8, shopBg4)
-
+	local shop_energy_pic4 = self:createShopSprite("#shop_energy4.png",0.5,0.55, shopBg4)
+	local price4 = self:createShopSprite("#energyNeedMoney4.png",0.5,0.25, shopBg4)
+	local buyButton4 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,0.01,0.9,shopBg4)
+	:onButtonClicked(function()
+		GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond - 560
+------**************需要修改
+		-- GameState.GameData.UItopData.bloodNow = GameState.GameData.UItopData.bloodNow.state
+		self.bloodTable:setString(GameState.GameData.UItopData.bloodNow)
+		self.diamondTabel:setString(GameState.GameData.UItopData.diamond)
+		GameState.save(GameState.GameData)
+	end)
 end
 function topButton:createButton(path, posX, posY,time, scale)
 	local images = {
@@ -121,6 +160,25 @@ function topButton:createButton(path, posX, posY,time, scale)
 	self:addChild(button)
 	return button
 end
+
+function topButton:createBuyButton(path, posX, posY,time, scale, parentNode)
+	local images = {
+	normal = path,
+	pressed = path
+	}
+	local button = cc.ui.UIPushButton.new(images)
+	button:setPosition(parentNode:getContentSize().width * posX, parentNode:getContentSize().height * posY)
+	:scaleTo(time, scale)
+	:onButtonPressed(function(event)
+		button:scaleTo(0.1, 1.1)
+		end)
+	:onButtonRelease(function(event)
+		button:scaleTo(0.1, scale)
+		end)	
+	parentNode:addChild(button)
+	return button
+end
+
 function topButton:createSprite(pic,posX,posY,parentNode)
 	local sprite = display.newSprite(pic)
 	:setPosition(display.width * posX, display.height * posY)

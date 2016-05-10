@@ -68,7 +68,7 @@ function achievementScenes:listView()
 		progressbar:setAnchorPoint(cc.p(0, 0.5))
 		progressbar:setPosition(cc.p(234.5, 57))
 		content:addChild(progressbar)
-		local achieveDiamond = self:createSprite("#running.png",0.7, 0.1,content)
+		local achieveDiamond = self:createSprite("#running.png",0.73, 0.1,content)
 	end
 	listView:reload()
 end

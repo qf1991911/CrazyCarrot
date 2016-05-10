@@ -31,5 +31,8 @@ HeroData[4] =	{
 					["skill3"] = "#skillIcon12.png",
 					["skillPic"] = "#skillIcon13.png"
 				}
+HeroData["Heroname"] = {	[1] = "盖伦",	[2] = "安妮",	[3] = "希维尔", [4] = "提莫"}
 
+HeroData["HeroIntroduce"] = {	[1] = "拥有德玛西亚之\n力的英勇勇士",	[2] = "她就像孩子的\n玩偶",
+								[3] = "希维尔无愧战争\n女神的称号",		[4] = "他有一张全球\n嘲讽脸"}
 return HeroData

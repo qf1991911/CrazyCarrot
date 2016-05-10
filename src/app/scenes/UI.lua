@@ -12,11 +12,13 @@ local UI = class("UI", function()
 end)
 
 function UI:ctor()
+	-- bloodNow.state = "false"
 	self.tabel = {}
 	self:createBackGround()
     self:BottomButton()
     self:RightButton()
  	self:TopButton()
+ 	
  	-- self:hero()
  	
 
@@ -29,21 +31,25 @@ function UI:createBackGround()
 	local backGround1 = display.newSprite("map/LevelTheme/themeMap1.png")
 	local backGround1Size = backGround1:getContentSize()
 	backGround1:setPosition(display.cx, display.cy)
+	backGround1:setTag(1)
 	node:addChild(backGround1)
 
 	local backGround2 = display.newSprite("map/LevelTheme/themeMap2.png")
 	local backGround2Size = backGround2:getContentSize()
 	backGround2:setPosition(display.cx + (backGround1Size.width + backGround2Size.width) / 2, display.cy)
+	backGround2:setTag(2)
 	node:addChild(backGround2)
 
 	local backGround3 = display.newSprite("map/LevelTheme/themeMap3.png")
 	local backGround3Size = backGround3:getContentSize()
 	backGround3:setPosition(display.cx + backGround1Size.width + (backGround2Size.width + backGround3Size.width) / 2 , display.cy)
+	backGround3:setTag(3)
 	node:addChild(backGround3)
 
 	local backGround4 = display.newSprite("map/LevelTheme/themeMap4.png")
 	local backGround4Size = backGround4:getContentSize()
 	backGround4:setPosition(display.cx + backGround1Size.width + backGround2Size.width + (backGround3Size.width + backGround4Size.width) / 2, display.cy)
+	backGround4:setTag(4)
 	node:addChild(backGround4)
 
 	for i,v in pairs(Tabel["levelButtonPosition"]) do
@@ -107,9 +113,10 @@ function UI:BottomButton()
 		display.replaceScene(achievementScene,"flipAngular",0.5)	
 	end)	
 	
-	local MenuHero1 = self:createButton("#MenuHero1.png", 0.55, 0.115,0.01, 0.9,node1)
-	:onButtonClicked(function(event)
-		
+	local MenuHero1 = self:createButton("#MenuHero"..GameState.GameData.HeroNumber..".png", 0.55, 0.115,0.01, 0.9,node1)
+	MenuHero1:onButtonClicked(function()
+		local HeroHouseUI = import("app.scenes.HeroHouseUI"):new()
+		display.replaceScene(HeroHouseUI,"flipAngular",0.5)
 	end)	
 	
 	local MenuHandbook = self:createButton("#MenuHandbook.png", 0.7, 0.1,0.01, 0.9,node1)
@@ -217,12 +224,14 @@ function UI:gamePrepare(num)
 			prepareLayer.pre_taskBg:runAction(action)
 			prepareLayer.trun = false
 		else
-			if GameState.GameData.UItopData.bloodNow >= 1 then
-				GameState.GameData.UItopData.bloodNow = GameState.GameData.UItopData.bloodNow - 1
-				topButton.bloodTable:setString(GameState.GameData.UItopData.bloodNow)
-				GameState.save(GameState.GameData)
+			if GameState.GameData.bloodNowState == "true" then
 				local FightScene = import(".app.scenes.FightScene").new(num)
-				display.replaceScene(FightScene,"flipAngular",1)
+				display.replaceScene(FightScene,"flipAngular",0.5)
+			elseif GameState.GameData.UItopData.bloodNow >= 1 then
+				GameState.GameData.UItopData.bloodNow = GameState.GameData.UItopData.bloodNow - 1
+				topButton.bloodLabel:setString(GameState.GameData.UItopData.bloodNow)
+				GameState.save(GameState.GameData)
+				
 			end
 			
 		end
@@ -298,10 +307,6 @@ function UI:createButton(path, posX, posY,time, scale, parentNode)
 end
 --上面的button
 function UI:TopButton()
-	
-	-- self:createLabel(self, GameState.GameData.UItopData.bloodNow, 28, 0.29, 0.9,cc.c3b(255, 215, 0))
-	-- self.coinTabel = self:createLabel(self, GameState.GameData.UItopData.coin, 28, 0.54, 0.9,cc.c3b(255, 204, 0))
-	-- self.diamondTabel = self:createLabel(self, GameState.GameData.UItopData.diamond, 28, 0.79, 0.9,cc.c3b(255, 204, 0))
 	self.topButton = topButton.new(self, "StartScene")
 	self.topButton:setTag(1)
 end

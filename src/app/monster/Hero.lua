@@ -283,16 +283,14 @@ function Hero:s05Move(posX,posY,monsterTable)
 						v.hpnow = v.hpnow -  30
 					end
 				end
-				self:runAction(Hero:wait(GameState.GameData.HeroNumber))
 				sprite:removeFromParent()
 				sprite = nil
-				self.state = "wait"		
+				-- self.state = "wait"		
 			end)
 			local seq1 = cc.Sequence:create(animate1, callback1)
 			sprite:runAction(seq1)	
 		end)
 		local seq = cc.Sequence:create(animate, callback) 
-		-- local rep = cc.Repeat:create(seq,9)
 		sprite:runAction(seq)
 		num = num + 1
 	end, 0.25)

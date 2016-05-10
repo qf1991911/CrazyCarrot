@@ -370,8 +370,10 @@ function FightScene:HeroCreate()
 					else
 	--英雄二
 						if GameState.GameData.HeroNumber == 2 then
-						self.heroSprite.state = "skill"							
-							self.heroSprite:s05Move(event.x, event.y,self.monster)
+						self.heroSprite.state = "skill"
+						-- self.heroSprite:stopAllActions()
+						-- self.heroSprite:runAction(self.heroSprite:wait(GameState.GameData.HeroNumber))					
+						self.heroSprite:s05Move(event.x, event.y,self.monster)
 						
 	--英雄三
 						elseif GameState.GameData.HeroNumber == 3 then
@@ -461,7 +463,6 @@ function FightScene:HeroAttack()
 			local mX, mY = v:getPosition()
 			local x, y = self.heroSprite:getPosition()
 			local distance = cc.pGetDistance(cc.p(mX, mY), cc.p(x, y))
-			-- print(mX, mY,x,y)
 			if distance <= 80 then
 				self.heroSprite:setPosition(mX, mY)
 				self.heroSprite.target = v

@@ -10,6 +10,7 @@ display.addSpriteFrames("Tower/T11.plist","Tower/T11.png")
 display.addSpriteFrames("Tower/T16.plist","Tower/T16.png")
 display.addSpriteFrames("Tower/T18.plist","Tower/T18.png")
 display.addSpriteFrames("Tower/bullet.plist","Tower/bullet.png")
+display.addSpriteFrames("UI/ui_result.plist","UI/ui_result.png")
 local HeroData = require("app.stageConfig.HeroData")
 local Hero = require("app.monster.Hero")
 local Monster = require("app.monster.Monster")
@@ -27,11 +28,13 @@ function FightScene:ctor()
 	self.monster = {}
 	self.way = {}
 	self.tower = {}
+	self.gameover = false
 	self.heroSprite = nil
 	self:fightUI()
 	self:fightMap()
 	self:buildArea()
 	self:HeroCreate()
+
 end
 
 function FightScene:fightUI() --战斗场景布局
@@ -41,12 +44,15 @@ function FightScene:fightUI() --战斗场景布局
 	self.sizeofBG = self.sprtieBG:getContentSize()
 
 	local skillbg = self:spriteCreate("#skillBg.png",self.sizeofBG.width / 2,self.sizeofBG.height / 11)
-
+	skillbg:addTo(self.sprtieBG)
 	local moneybg = self:spriteCreate("#ui_moneyBg.png",self.sizeofBG.width*.2,self.sizeofBG.height*.88)
+	moneybg:addTo(self.sprtieBG)
 	local pausing = self:spriteCreate("#ui_waveSuspend.png",self.sizeofBG.width*.45,self.sizeofBG.height*.88)
+	pausing:addTo(self.sprtieBG)
 	pausing:hide()
 
 	local wavebg = self:spriteCreate("#ui_waveBg.png",self.sizeofBG.width*.45,self.sizeofBG.height*.88)
+	wavebg:addTo(self.sprtieBG)
 	local wbgsize = wavebg:getContentSize() 
 	local wavelb = self:waveLabel1()
 	wavelb:pos(wbgsize.width*.38, wbgsize.height*.45)
@@ -57,12 +63,13 @@ function FightScene:fightUI() --战斗场景布局
 	self.wavelbnow:addTo(wavebg)
 
 	local hero = self:spriteCreate("#taskHeroIcon1.png",self.sizeofBG.width*.78 , self.sizeofBG.height *.11)
+	hero:addTo(self.sprtieBG)
 
 	self.mission1 = self:misButtonCreate("#littleTaskIcon4.png",self.sizeofBG.width*.2 , self.sizeofBG.height *.1)
 	self.mission2 = self:misButtonCreate("#littleTaskIcon2.png",self.sizeofBG.width*.26 , self.sizeofBG.height *.1)
 	self.mission3 = self:misButtonCreate("#littleTaskIcon1.png",self.sizeofBG.width*.32 , self.sizeofBG.height *.1)
 	local mission4 = self:spriteCreate("#littleTaskIcon5.png",self.sizeofBG.width*.38 , self.sizeofBG.height *.1)
-
+	mission4:addTo(self.sprtieBG)
 -- 	self.heroSprite = Hero.new("#h01_move_"..GameState.GameData.HeroNumber..".png",200, 200, self.map)
 -- 	self.heroSprite:runAction(self.heroSprite:wait(GameState.GameData.HeroNumber))
 -- 	for i,v in ipairs(self.monster) do
@@ -93,14 +100,14 @@ function FightScene:fightUI() --战斗场景布局
 		end
 		state = not state
 	end)
-	pause:addTo(self.sprtieBG)
+	pause:addTo(self.sprtieBG,3)
 
 	local setting = self:buttonCreate("#ui_setting.png",self.sizeofBG.width*.86,self.sizeofBG.height*.88)
 	setting:onButtonClicked(function (event)
 		self:settingUI()
 		local director = cc.Director:getInstance():pause()
 	end)
-	setting:addTo(self.sprtieBG)
+	setting:addTo(self.sprtieBG,3)
 
 
 	local imagespeed = {
@@ -137,9 +144,33 @@ function FightScene:fightMap() --地图
 	local enemyhome = self:enemyHomePos()
 	enemyhome:runAction(self:enemyhomeAction())
 	enemyhome:setOpacity(0)
-
-	
-
+	self.map:setTouchEnabled(true)
+	self.map:addNodeEventListener(cc.NODE_TOUCH_EVENT,function (event)
+		
+		if event.name == "began" then
+			self.forbidden = display.newSprite("#forbid.png")
+			self.forbidden:setPosition(event.x,event.y)
+			self.forbidden:addTo(self)
+			if self.map:getChildByTag(999) then
+				self.map:getChildByTag(999):removeFromParent()
+				self.map:getChildByTag(1000):setOpacity(50)
+				self.map:getChildByTag(1000):setTag(1001)
+			elseif self.map:getChildByTag(666) then 
+				local attackArea = self.map:getChildByTag(666)
+				for k,v in pairs(self.tower) do
+					if v.attackAreashow == attackArea then
+						v.attackAreashow = nil
+					end
+				end
+				attackArea:removeFromParent()
+				attackArea = nil
+			end
+			return true
+		elseif event.name == "ended" then
+		 	self.forbidden:removeFromParent()
+		 	self.forbidden = nil
+		end 
+	end)
 
 	self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function (dt)
 		if wave<= PassData["L"..self.pass].wave and os.time()-time > PassData["L"..self.pass]["wavetime"..wave] and septum == 0 and num > 0 then
@@ -189,11 +220,12 @@ function FightScene:fightMap() --地图
 						end						
 						v.target = nil
 					else
-						v.firetime = v.firetime + v.stage 
+						v.firetime = v.firetime + 1 
 						if v.firetime >= 50 then
 							local bullet = v:fire2()
 							table.insert(self.windmill,bullet)
-							bullet.power = v.power		
+							bullet.power = (v.power + v.stage)*.1
+							bullet.attack = false		
 							v.firetime = v.firetime - 50
 							local callfun  = cc.CallFunc:create(function (event)
 								for q,w in pairs(self.windmill) do
@@ -272,7 +304,10 @@ function FightScene:fightMap() --地图
 				v:removeFromParent()
 				v = nil
 			end
-			for a,b in pairs(self.windmill) do
+			
+		end
+		for a,b in pairs(self.windmill) do
+			for k,v in pairs(self.monster) do
 				local bx,by = b:getPosition()
 				local tx,ty = v:getPosition()
 				local distance = cc.pGetDistance(cc.p(bx,by),cc.p(tx,ty))
@@ -281,6 +316,10 @@ function FightScene:fightMap() --地图
 				end
 			end
 		end
+		if self.rabbit.hp <= 0 and self.gameover == false then
+			self:result()
+			self.gameover = true
+		end 
 		self:HeroAttack()
 	end)
 	self:scheduleUpdate()
@@ -519,7 +558,8 @@ function FightScene:buildArea() --炮塔建造区域
 				blankArea:addNodeEventListener(cc.NODE_TOUCH_EVENT, function (event)
 					for k,v in pairs(self.tower) do
 						v:setTouchEnabled(true)
-						if v.attackAreashow then
+						if v.attackAreashow ~= nil then
+							print(v.attackAreashow)
 							v.attackAreashow:removeFromParent()
 							v.attackAreashow = nil
 						end
@@ -631,7 +671,6 @@ end
 function FightScene:spriteCreate(way,posx,posy) --精灵创建
 	local sprite = display.newSprite(way)
 	:pos(posx, posy)
-	:addTo(self.sprtieBG)
 	return sprite 
 end
 
@@ -778,9 +817,114 @@ function FightScene:rabbit() --兔子
 		}) 
 	:align(1, sizeHp.width / 1.6, sizeHp.height /1.9)
 	:addTo(rabbitHpBg)
+end
+function FightScene:result() -- 2元复活
+	local director = cc.Director:getInstance():pause()
+	local BGlayer = display.newColorLayer(cc.c4b(0, 0, 0, 80))
+	BGlayer:pos(0,0)
+	BGlayer:addTo(self)
+	BGlayer:setTouchEnabled(true)
+	BGlayer:setTouchSwallowEnabled(true)
+	BGlayer:addNodeEventListener(cc.NODE_TOUCH_EVENT,function (event)
+		if event.name == "began" then
+			return true
+		end
+	end)
+	local sizeoflayer = BGlayer:getContentSize()
+
+	local revive = display.newSprite("#rebornLayerBG.png")
+	revive:pos(sizeoflayer.width / 2, sizeoflayer.height / 2)
+	revive:addTo(BGlayer)
+	local sizeofRevive = revive:getContentSize()
+
+	local surebutton = self:buttonCreate("#buttonSure.png",sizeofRevive.width / 2, sizeofRevive.height / 3.5)
+	surebutton:addTo(revive)
+	surebutton:onButtonClicked(function (event)
+		local director = cc.Director:getInstance():resume()
+		BGlayer:removeFromParent()
+		BGlayer = nil
+		self.rabbit.hp = 10
+		self.rabbit.Rhplabel:setString(self.rabbit.hp)
+		self.gameover = false
+	end)
+
+	local canclebutton = self:buttonCreate("#buttonCancel.png",sizeofRevive.width*.9, sizeofRevive.height*.9)
+	canclebutton:addTo(revive)
+	canclebutton:onButtonClicked(function (event)
+		local director = cc.Director:getInstance():resume()
+		BGlayer:removeFromParent()
+		BGlayer = nil
+		self:fail()
+	end)
+end
+function FightScene:fail() --失败界面
+	local director = cc.Director:getInstance():pause()
+	local BGlayer = display.newColorLayer(cc.c4b(0, 0, 0, 80))
+	BGlayer:pos(0,0)
+	BGlayer:addTo(self)
+	BGlayer:setTouchEnabled(true)
+	BGlayer:setTouchSwallowEnabled(true)
+	BGlayer:addNodeEventListener(cc.NODE_TOUCH_EVENT,function (event)
+		if event.name == "began" then
+			return true
+		end
+	end)
+	local sizeoflayer = BGlayer:getContentSize()
+
+	local heroFail = self:spriteCreate("#resultFailHero4.png",sizeoflayer.width / 2, sizeoflayer.height / 1.38)
+	heroFail:addTo(BGlayer,10)
+	local failPic = self:spriteCreate("#resultFailPic.png",sizeoflayer.width / 2,sizeoflayer.height /2.4)
+	failPic:addTo(BGlayer,11)
+	local sizeofPic = failPic:getContentSize()
+	local zai1 = self:spriteCreate("#failTitle1.png",sizeofPic.width / 4,sizeofPic.height /1.3)
+	zai1:addTo(failPic,12)
+	local jie = self:spriteCreate("#failTitle2.png",sizeofPic.width / 2.3,sizeofPic.height /1.1)
+	jie:addTo(failPic,12)
+	local zai2 = self:spriteCreate("#failTitle3.png",sizeofPic.width / 1.6,sizeofPic.height /1.1)
+	zai2:addTo(failPic,12)
+	local li = self:spriteCreate("#failTitle4.png",sizeofPic.width / 1.25,sizeofPic.height /1.3)
+	li:addTo(failPic,12)
+
+	local label = cc.ui.UILabel.new({
+		text = "第 "..self.pass.." 关",
+		size = 20
+		}) 
+	label:align(1, sizeofPic.width / 2, sizeofPic.height/1.4)
+	label:addTo(failPic)
+
+	local backButton = self:buttonCreate("#resultAgain.png",sizeofPic.width*0.2,0)
+	backButton:addTo(failPic)
+	backButton:onButtonClicked(function (event)
+		local director = cc.Director:getInstance():resume()
+		local restart = self.new(self.pass)
+		display.replaceScene(restart,"flipX",1)
+	end)
+
+	local continueButton = self:buttonCreate("#resultContinue.png",sizeofPic.width*0.8,0)
+	continueButton:addTo(failPic)
+	continueButton:onButtonClicked(function (event)
+		local director = cc.Director:getInstance():resume()
+		local UI = require("app.scenes.UI")
+		local ui = UI.new()
+		display.replaceScene(ui,"splitRows",1)
+	end)
+
+	local tips = self:spriteCreate("#failTipBg.png",sizeofPic.width / 2,sizeofPic.height /2.5)
+	tips:setScaleX(4)
+	tips:setScaleY(2)
+	tips:addTo(failPic)
+	local light = self:spriteCreate("#failLight.png",sizeofPic.width / 3,sizeofPic.height /2)
+	light:addTo(failPic,1)
+
+	local label2 = cc.ui.UILabel.new({
+		text = "提示:升级英雄可\n以使英雄变得更强大！",
+		size = 20,
+		align = cc.TEXT_ALIGNMENT_CENTER
+		})
+	label2:align(1, sizeofPic.width / 1.95,sizeofPic.height /2.3)
+	label2:addTo(failPic,1)
 
 end
-
 function FightScene:onEnter()
 
 end

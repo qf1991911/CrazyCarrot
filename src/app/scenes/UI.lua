@@ -6,6 +6,7 @@ display.addSpriteFrames("UI/ui_public1.plist","UI/ui_public1.png")
 display.addSpriteFrames("UI/ui_prepare.plist","UI/ui_prepare.png")
 display.addSpriteFrames("UI/ui_dailytask.plist","UI/ui_dailytask.png")
 display.addSpriteFrames("UI/ui_achievement.plist","UI/ui_achievement.png")
+display.addSpriteFrames("UI/ui_giftbag.plist","UI/ui_giftbag.png")
 display.addSpriteFrames("map/LevelTheme/levelThemeElements.plist","map/LevelTheme/levelThemeElements.png")
 local UI = class("UI", function()
     return display.newScene("UI")
@@ -231,6 +232,8 @@ function UI:gamePrepare(num)
 				GameState.GameData.UItopData.bloodNow = GameState.GameData.UItopData.bloodNow - 1
 				topButton.bloodLabel:setString(GameState.GameData.UItopData.bloodNow)
 				GameState.save(GameState.GameData)
+				local FightScene = import(".app.scenes.FightScene").new(num)
+				display.replaceScene(FightScene,"flipAngular",0.5)
 				
 			end
 			
@@ -314,7 +317,10 @@ end
 function UI:RightButton()
 	local newBag = self:createButton("#newBag.png", 0.93, 0.67,0.01, 0.9,self)
 	:onButtonClicked(function(event)
-		print("···")
+		-- local layer = display.newColorLayer(cc.c4b(100, 100, 100, 100))
+		-- self:addChild(layer)
+		-- local newBagBG = self:createSprite("#newBagBG.png", 0.5, 0.5, self)
+		-- local buyButton = self:createButton("#buttonGet.png", 0.5, 0.1, newBagBG)
 	end)
 	self:scaleAction(newBag)
 

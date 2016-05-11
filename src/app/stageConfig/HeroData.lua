@@ -34,5 +34,32 @@ HeroData[4] =	{
 HeroData["Heroname"] = {	[1] = "盖伦",	[2] = "安妮",	[3] = "希维尔", [4] = "提莫"}
 
 HeroData["HeroIntroduce"] = {	[1] = "拥有德玛西亚之\n力的英勇勇士",	[2] = "她就像孩子的\n玩偶",
-								[3] = "希维尔无愧战争\n女神的称号",		[4] = "他有一张全球\n嘲讽脸"}
+								[3] = "希维尔无愧战争\n女神的称号",		[4] = "他有一张全球\n嘲讽脸"
+							}
+
+HeroData["skill"] = {
+					[1] = {"审判", "大地震颤" },		[2] = {"雷神之怒", "火雨", "回复"},
+					[3] = {"剑刃风暴","影斩","激励"},	[4] = {"召唤飞碟","埋布地雷","脉冲波"}	
+					}
+
+HeroData["talent"] = 	{ 
+						[1] = "狂战之怒", 	[2] = "魅惑",	[3] = "点金术",	 [4] = "机械达人"
+						}
+
+HeroData["information"] = 	{
+							[1] = {[1] = 1057, [2] = 260, [3] = 138},
+							[2] = {[1] = 1726, [2] = 355, [3] = 186},
+							[3] = {[1] = 2115, [2] = 518, [3] = 232},
+							[4] = {[1] = 3025, [2] = 899, [3] = 305}
+							}
+
+HeroData["skillPic"] =	{
+						[1] = {"#heroskill1.png","#heroskill2.png","#heroskill3.png"},
+						[2] = {"#heroskill4.png","#heroskill5.png","#heroskill6.png","#heroskill7.png"},
+						[3] = {"#heroskill8.png","#heroskill9.png","#heroskill10.png","#heroskill11.png"},
+						[4] = {"#heroskill12.png","#heroskill13.png","#heroskill14.png","#heroskill14.png"},
+						}
+
+
+		
 return HeroData

@@ -38,7 +38,7 @@ function FightScene:ctor()
 end
 
 function FightScene:fightUI() --战斗场景布局
-	self.sprtieBG = display.newSprite("map/Theme1/theme1Map.png")
+	self.sprtieBG = display.newSprite("map/Theme"..math.ceil(self.pass/ 10).."/theme"..math.ceil(self.pass/ 10).."Map.png")
 	:pos(display.cx, display.cy)
 	:addTo(self)
 	self.sizeofBG = self.sprtieBG:getContentSize()
@@ -70,19 +70,19 @@ function FightScene:fightUI() --战斗场景布局
 	self.mission3 = self:misButtonCreate("#littleTaskIcon1.png",self.sizeofBG.width*.32 , self.sizeofBG.height *.1)
 	local mission4 = self:spriteCreate("#littleTaskIcon5.png",self.sizeofBG.width*.38 , self.sizeofBG.height *.1)
 	mission4:addTo(self.sprtieBG)
--- 	self.heroSprite = Hero.new("#h01_move_"..GameState.GameData.HeroNumber..".png",200, 200, self.map)
--- 	self.heroSprite:runAction(self.heroSprite:wait(GameState.GameData.HeroNumber))
--- 	for i,v in ipairs(self.monster) do
--- 		local tx,ty = v:getPosition()
--- 		local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
--- 		if distance <= 200 then 
--- 			self.heroSprite:runAction(self.heroSprite:move(GameState.GameData.HeroNumber, tx, ty))
--- 			self.heroSprite:runAction(self.heroSprite:attack(GameState.GameData.HeroNumber))
--- 			j.Hptag:show()
--- 			j.hpnow = j.hpnow -  200
--- 			j.Hptag.hptag:setPercent(j.hpnow / j.hp *100)
--- 		end
--- 	end
+	-- 	self.heroSprite = Hero.new("#h01_move_"..GameState.GameData.HeroNumber..".png",200, 200, self.map)
+	-- 	self.heroSprite:runAction(self.heroSprite:wait(GameState.GameData.HeroNumber))
+	-- 	for i,v in ipairs(self.monster) do
+	-- 		local tx,ty = v:getPosition()
+	-- 		local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
+	-- 		if distance <= 200 then 
+	-- 			self.heroSprite:runAction(self.heroSprite:move(GameState.GameData.HeroNumber, tx, ty))
+	-- 			self.heroSprite:runAction(self.heroSprite:attack(GameState.GameData.HeroNumber))
+	-- 			j.Hptag:show()
+	-- 			j.hpnow = j.hpnow -  200
+	-- 			j.Hptag.hptag:setPercent(j.hpnow / j.hp *100)
+	-- 		end
+	-- 	end
 	
 	local pause = self:buttonCreate("#ui_stop.png",self.sizeofBG.width*.79,self.sizeofBG.height*.88)
 	local state = true
@@ -136,7 +136,7 @@ function FightScene:fightMap() --地图
 		table.insert(self.way,objPoint)
 	end
 
-	local wave = 1
+	self.wave = 1
 	local time = os.time()
 	local septum = 0
 	local num = 15
@@ -173,24 +173,22 @@ function FightScene:fightMap() --地图
 	end)
 
 	self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function (dt)
-		if wave<= PassData["L"..self.pass].wave and os.time()-time > PassData["L"..self.pass]["wavetime"..wave] and septum == 0 and num > 0 then
-			local monster = self:monsterCreate(PassData["L"..self.pass]["wave"..wave])
+		if self.wave <= PassData["L"..self.pass].wave and os.time()-time > PassData["L"..self.pass]["wavetime"..self.wave] and septum == 0 and num > 0 then
+			local monster = self:monsterCreate(PassData["L"..self.pass]["wave"..self.wave])
 			table.insert(self.monster,monster)
 			num = num - 1
 			enemyhome:setOpacity(255)
-			self.wavelbnow:setString(wave)
+			self.wavelbnow:setString(self.wave)
 		end
 		if num == 0 then
 			enemyhome:setOpacity(0)
-			wave = wave + 1
+			self.wave = self.wave + 1
 			num = 15
 		end
 		septum = (septum + 1) % 60
 		for k,v in pairs(self.tower) do
 			local x,y = v:getPosition()
-			if v.num == "11" then
-
-			elseif v.num == "16" or v.num =="18"  then 
+			if v.num == "16" or v.num =="18"  then 
 				v.firetime = v.firetime + v.stage 
 				if v.firetime >= 120 then
 					local num = 0
@@ -320,6 +318,13 @@ function FightScene:fightMap() --地图
 			self:result()
 			self.gameover = true
 		end 
+
+		if os.time() - time > (PassData["L"..self.pass]["wavetime"..PassData["L"..self.pass].wave] + 15) and #self.monster == 0 then
+			time = os.time()
+			self:success()
+			self:unscheduleUpdate()
+		end
+
 		self:HeroAttack()
 	end)
 	self:scheduleUpdate()
@@ -625,14 +630,16 @@ function FightScene:buildArea() --炮塔建造区域
 		end
 	end
 	local pretower = self.map:getObjectGroup("objs"):getObject("preTower")
-	for k,v in pairs(blankAreaTable) do
-		local offsetX = math.abs(v.pos.x - pretower.x)
-		local offsetY = math.abs(v.pos.y - pretower.y)
-		if offsetX + offsetY < 70 then
-			local tower = Tower.new(PassData["L"..self.pass].pretower,self.tower,v)
-			tower:pos(pretower.x, pretower.y)
-			tower:addTo(self.map,4)
-			table.insert(self.tower,tower)
+	if #pretower ~= 0 then
+		for k,v in pairs(blankAreaTable) do
+			local offsetX = math.abs(v.pos.x - pretower.x)
+			local offsetY = math.abs(v.pos.y - pretower.y)
+			if offsetX + offsetY < 70 then
+				local tower = Tower.new(PassData["L"..self.pass].pretower,self.tower,v)
+				tower:pos(pretower.x, pretower.y)
+				tower:addTo(self.map,4)
+				table.insert(self.tower,tower)
+			end
 		end
 	end
 	
@@ -907,7 +914,8 @@ function FightScene:fail() --失败界面
 		local ui = UI.new()
 		display.replaceScene(ui,"splitRows",1)
 	end)
-
+	-- local scaleSprite = ccui.Scale9Sprite
+	-- local tips = scaleSprite:createWithSpriteFrameName("failTipBg.png",cc.rect(0,0,200,50))
 	local tips = self:spriteCreate("#failTipBg.png",sizeofPic.width / 2,sizeofPic.height /2.5)
 	tips:setScaleX(4)
 	tips:setScaleY(2)
@@ -922,6 +930,109 @@ function FightScene:fail() --失败界面
 		})
 	label2:align(1, sizeofPic.width / 1.95,sizeofPic.height /2.3)
 	label2:addTo(failPic,1)
+
+end
+function FightScene:success() --过关界面
+	local BGlayer = display.newColorLayer(cc.c4b(0, 0, 0, 80))
+	BGlayer:pos(0,0)
+	BGlayer:addTo(self)
+	BGlayer:setTouchEnabled(true)
+	BGlayer:setTouchSwallowEnabled(true)
+	BGlayer:addNodeEventListener(cc.NODE_TOUCH_EVENT,function (event)
+		if event.name == "began" then
+			return true
+		end
+	end)
+	local sizeoflayer = BGlayer:getContentSize()
+	local herosuccess = self:spriteCreate("#resultWinHero4.png",sizeoflayer.width / 2, sizeoflayer.height / 1.38)
+	herosuccess:addTo(BGlayer,10)
+
+	local successPic = self:spriteCreate("#resultBgPic.png",sizeoflayer.width / 2,sizeoflayer.height /2.4)
+	successPic:addTo(BGlayer,11)
+	local sizeofPic = successPic:getContentSize()
+
+	local label = cc.ui.UILabel.new({
+		text = "第 "..self.pass.." 关",
+		size = 20
+		}) 
+	label:align(1, sizeofPic.width / 2, sizeofPic.height/1.75)
+	label:addTo(successPic)
+
+	local backButton = self:buttonCreate("#resultAgain.png",sizeofPic.width*0.2,0)
+	backButton:addTo(successPic)
+	backButton:onButtonClicked(function (event)
+		local restart = self.new(self.pass)
+		display.replaceScene(restart,"flipX",1)
+	end)
+
+	local continueButton = self:buttonCreate("#resultContinue.png",sizeofPic.width*0.8,0)
+	continueButton:addTo(successPic)
+	continueButton:onButtonClicked(function (event)
+		local UI = require("app.scenes.UI")
+		local ui = UI.new()
+		display.replaceScene(ui,"splitRows",1)
+	end)
+
+	local lightRound = self:spriteCreate("#resultroundLight.png", sizeoflayer.width / 2, sizeoflayer.height / 1.85)
+	lightRound:setScale(2.5)
+	lightRound:addTo(BGlayer,8)
+	local rotate = cc.RotateBy:create(0.5,30)
+	local rep = cc.RepeatForever:create(rotate)
+	lightRound:runAction(rep)
+
+	local particle = cc.ParticleSystemQuad:create("particle/particlestar.plist")
+	local batch = cc.ParticleBatchNode:createWithTexture(particle:getTexture())
+	particle:addTo(batch)
+	batch:addTo(BGlayer,9)
+	particle:pos(sizeoflayer.width / 2, sizeoflayer.height / 1.2)
+	particle:setTotalParticles(30)
+
+	local purpleLight = self:spriteCreate("#resultpurpleLight.png",sizeoflayer.width / 2, sizeoflayer.height / 1.85)
+	purpleLight:setScale(2.5)
+	purpleLight:addTo(BGlayer,7)
+
+	local moneyget = self:spriteCreate("#resultMoneyBg.png",sizeofPic.width*0.48,sizeofPic.height *0.18)
+	moneyget:addTo(successPic)
+	local sizeofM = moneyget:getContentSize()
+
+	local label2 = cc.ui.UILabel.new({
+		text = "本关获得金币 132",
+		size = 20,
+		})
+	label2:align(1, sizeofM.width / 1.6, sizeofM.height / 2)
+	label2:addTo(moneyget)
+	 
+	local starright = self:spriteCreate("#starRight.png", sizeofPic.width*0.68,sizeofPic.height *0.68)
+	starright:addTo(successPic)
+	starright:hide()
+	local starmid = self:spriteCreate("#starMid.png", sizeofPic.width*0.5,sizeofPic.height *0.71)
+	starmid:addTo(successPic)
+	starmid:hide()
+	local starleft = self:spriteCreate("#starLeft.png", sizeofPic.width*0.31,sizeofPic.height *0.68)
+	starleft:addTo(successPic)
+	starleft:hide()
+	if self.rabbit.hp < 3 then
+		starleft:show()
+	elseif self.rabbit.hp >= 3 and self.rabbit.hp < 10 then
+		starleft:show()
+		starmid:show()
+	else 
+		starleft:show()
+		starmid:show()
+		starright:show()
+	end
+	local taskPic = self:spriteCreate(Tabel["taskItempic"][self.pass][1], sizeofPic.width*0.35,sizeofPic.height *0.35)
+	taskPic:setScale(0.55)
+	taskPic:addTo(successPic)
+	local taskPic2 = self:spriteCreate(Tabel["taskItempic"][self.pass][2], sizeofPic.width*0.45,sizeofPic.height *0.35)
+	taskPic2:setScale(0.55)
+	taskPic2:addTo(successPic)
+	local taskPic3 = self:spriteCreate(Tabel["taskItempic"][self.pass][3], sizeofPic.width*0.55,sizeofPic.height *0.35)
+	taskPic3:setScale(0.55)
+	taskPic3:addTo(successPic)
+	local taskPic4 = self:spriteCreate("#taskThingIcon.png", sizeofPic.width*0.65,sizeofPic.height *0.35)
+	taskPic4:setScale(0.55)
+	taskPic4:addTo(successPic)
 
 end
 function FightScene:onEnter()

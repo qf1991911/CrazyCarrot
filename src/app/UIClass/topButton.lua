@@ -9,61 +9,67 @@ local topButton = class("topButton", function(parentNode, sceneName)
 end)
 
 function topButton:ctor()
-	local buttonbg1 = self:createSprite("#buttonBg.png", 0.28, 0.9)
-	:setScaleX(2.2)
+	local buttonbg1 = self:createSprite("#buttonBg.png", 0.308, 0.9)
+	:setScaleX(3)
 	:setScaleY(0.9)
 	if GameState.GameData.bloodNowState == "false" then
-		self.bloodLabel = self:createLabel(buttonbg1, GameState.GameData.UItopData.bloodNow, 25, 0.54, 0.5,cc.c3b(255, 255, 255))
+		self.bloodLabel = self:createLabel(buttonbg1, GameState.GameData.UItopData.bloodNow, 22, 0.54, 0.5,cc.c3b(255, 204, 0))
 		:setScaleX(0.45)
 		:setScaleY(1.1)		
 	elseif GameState.GameData.bloodNowState == "true" then
-		self.bloodLabel = self:createLabel(buttonbg1, "无限体力", 25, 0.54, 0.5,cc.c3b(255, 255, 255))
+		self.bloodLabel = self:createLabel(buttonbg1, "无限体力", 22, 0.54, 0.5,cc.c3b(255, 204, 0))
 		:setScaleX(0.45)
 		:setScaleY(1.1)
 	end
 	local bloodNow = self:createSprite("#bloodNew.png", 0.22, 0.9)
-	local addNew1 = self:createButton("#addNew.png", 0.35, 0.9, 0.01, 0.9)
-	:onButtonClicked(function(event)
-		self:CreateBuyScene()
-		if self:getParent():getChildByTag(3) then
-			self:getParent():getChildByTag(3):removeFromParent()
-		elseif self:getParent():getChildByTag(4) then
-			self:getParent():getChildByTag(4):removeFromParent()
-		end		
-	end)
-
-	local buttonbg2 = self:createSprite("#buttonBg.png", 0.53, 0.9)
-	:setScaleX(2.2)
-	:setScaleY(0.9)
-	self.coinLabel = self:createLabel(buttonbg2, GameState.GameData.UItopData.coin, 25, 0.54, 0.5,cc.c3b(255, 204, 0))
-	:setScaleX(0.45)
-	:setScaleY(1.1)	
-	local  coinNew = self:createSprite("#coinNew.png", 0.47, 0.9)
-	local addNew2 = self:createButton("#addNew.png", 0.6, 0.9, 0.01, 0.9)
-	:onButtonClicked(function(event)
-		self:CreateCoinBuyScene()
+	local addNew1 = self:createButton("#addNew.png", 0.4, 0.9, 0.01, 0.9)
+	:onButtonClicked(function(event)	
 		if self:getParent():getChildByTag(2) then
-			self:getParent():getChildByTag(2):removeFromParent()
+			self:getParent():getChildByTag(2):removeFromParent()	
+		elseif self:getParent():getChildByTag(3) then
+			self:getParent():getChildByTag(3):removeFromParent()
 		elseif self:getParent():getChildByTag(4) then
 			self:getParent():getChildByTag(4):removeFromParent()
 		end	
+		self:CreateBuyScene()
+	end)
+
+	local buttonbg2 = self:createSprite("#buttonBg.png", 0.56, 0.9)
+	:setScaleX(3)
+	:setScaleY(0.9)
+	self.coinLabel = self:createLabel(buttonbg2, GameState.GameData.UItopData.coin, 22, 0.54, 0.5,cc.c3b(255, 204, 0))
+	:setScaleX(0.45)
+	:setScaleY(1.1)	
+	local  coinNew = self:createSprite("#coinNew.png", 0.47, 0.9)
+	local addNew2 = self:createButton("#addNew.png", 0.655, 0.9, 0.01, 0.9)
+	:onButtonClicked(function(event)
+		if self:getParent():getChildByTag(2) then
+			self:getParent():getChildByTag(2):removeFromParent()	
+		elseif self:getParent():getChildByTag(3) then
+			self:getParent():getChildByTag(3):removeFromParent()
+		elseif self:getParent():getChildByTag(4) then
+			self:getParent():getChildByTag(4):removeFromParent()
+		end	
+		self:CreateCoinBuyScene()
 	end)	
 
-	local buttonbg2 = self:createSprite("#buttonBg.png", 0.78, 0.9)
-	:setScaleX(2.2)
+	local buttonbg2 = self:createSprite("#buttonBg.png", 0.805, 0.9)
+	:setScaleX(3)
 	:setScaleY(0.9)
-	self.diamondLabel = self:createLabel(buttonbg2, GameState.GameData.UItopData.diamond, 25, 0.54, 0.5,cc.c3b(255, 204, 0))
+	self.diamondLabel = self:createLabel(buttonbg2, GameState.GameData.UItopData.diamond, 22, 0.54, 0.5,cc.c3b(255, 204, 0))
 	:setScaleX(0.45)
 	:setScaleY(1.1)	
 	local diamondNew = self:createSprite("#diamondNew.png", 0.72, 0.9)
-	local addNew3 = self:createButton("#addNew.png", 0.85, 0.9, 0.01, 0.9)
+	local addNew3 = self:createButton("#addNew.png", 0.9, 0.9, 0.01, 0.9)
 	:onButtonClicked(function(event)
-		self:CreateDiamondBuyScene()
 		if self:getParent():getChildByTag(2) then
-			self:getParent():getChildByTag(2):removeFromParent()
+			self:getParent():getChildByTag(2):removeFromParent()	
 		elseif self:getParent():getChildByTag(3) then
 			self:getParent():getChildByTag(3):removeFromParent()
-		end
+		elseif self:getParent():getChildByTag(4) then
+			self:getParent():getChildByTag(4):removeFromParent()
+		end	
+		self:CreateDiamondBuyScene()
 	end)	
 
 	local returnButton = self:createButton("#returnNew.png", 0.15, 0.9,0.01, 0.9)
@@ -113,18 +119,18 @@ function topButton:CreateBuyScene()
 	dailytaskLayer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function ()			
 	end)
 
-	local shop_bg = self:createShopSprite("#shop_bg.png",0.35,0.5, dailytaskLayer)
+	local shop_bg = self:createShopSprite("#shop_bg.png",0.4,0.5, dailytaskLayer)
 	local shopBg1 = self:createShopSprite("#shopBg.png",0.19,0.5, shop_bg)
 	local shopBg2 = self:createShopSprite("#shopBg.png",0.4,0.5, shop_bg)
 	local shopBg3 = self:createShopSprite("#shopBg.png",0.61,0.5, shop_bg)
 	local shopBg4 = self:createShopSprite("#shopBg.png",0.82,0.5, shop_bg)
-	local shopTitleBg = self:createShopSprite("#shopTitleBg.png",0.35,0.85, dailytaskLayer)
+	local shopTitleBg = self:createShopSprite("#shopTitleBg.png",0.4,0.85, dailytaskLayer)
 	local shopEnergyTitle = self:createShopSprite("#shopEnergyTitle.png",0.5,0.72, shopTitleBg)
 	local shop_energy1 = self:createShopSprite("#shop_energy.png",0.35,0.8, shopBg1)
 	local energyNum1 = self:createShopSprite("#energyNum1.png",0.6,0.8, shopBg1)
 	local shop_energy_pic1 = self:createShopSprite("#shop_energy1.png",0.5,0.55, shopBg1)
 	local price1 = self:createShopSprite("#energyNeedMoney1.png",0.5,0.25, shopBg1)
-	local buyButton1 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,0.01,0.9,shopBg1)
+	local buyButton1 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,shopBg1,0.9)
 	:onButtonClicked(function()
 		if GameState.GameData.bloodNowState == "false" then
 			GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond - 10
@@ -138,7 +144,7 @@ function topButton:CreateBuyScene()
 	local energyNum2 = self:createShopSprite("#energyNum2.png",0.6,0.8, shopBg2)
 	local shop_energy_pic2 = self:createShopSprite("#shop_energy2.png",0.5,0.55, shopBg2)
 	local price2 = self:createShopSprite("#energyNeedMoney2.png",0.5,0.25, shopBg2)
-	local buyButton2 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,0.01,0.9,shopBg2)
+	local buyButton2 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,shopBg2,0.9)
 	:onButtonClicked(function()
 		if GameState.GameData.bloodNowState == "false" then
 			GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond - 40
@@ -152,7 +158,7 @@ function topButton:CreateBuyScene()
 	local energyNum2 = self:createShopSprite("#energyNum3.png",0.6,0.8, shopBg3)
 	local shop_energy_pic3 = self:createShopSprite("#shop_energy3.png",0.5,0.55, shopBg3)
 	local price3 = self:createShopSprite("#energyNeedMoney3.png",0.5,0.25, shopBg3)
-	local buyButton3 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,0.01,0.9,shopBg3)
+	local buyButton3 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,shopBg3,0.9)
 	:onButtonClicked(function()
 		if GameState.GameData.bloodNowState == "false" then
 			GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond - 60
@@ -165,7 +171,7 @@ function topButton:CreateBuyScene()
 	local shop_energy4 = self:createShopSprite("#energyNum4.png",0.5,0.8, shopBg4)
 	local shop_energy_pic4 = self:createShopSprite("#shop_energy4.png",0.5,0.55, shopBg4)
 	local price4 = self:createShopSprite("#energyNeedMoney4.png",0.5,0.25, shopBg4)
-	local buyButton4 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,0.01,0.9,shopBg4)
+	local buyButton4 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,shopBg4,0.9)
 	:onButtonClicked(function()
 		if GameState.GameData.bloodNowState == "false" then
 			GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond - 560
@@ -187,18 +193,18 @@ function topButton:CreateCoinBuyScene()
 	dailytaskLayer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function ()			
 	end)
 
-	local shop_bg = self:createShopSprite("#shop_bg.png",0.35,0.5, dailytaskLayer)
+	local shop_bg = self:createShopSprite("#shop_bg.png",0.4,0.5, dailytaskLayer)
 	local shopBg1 = self:createShopSprite("#shopBg.png",0.19,0.5, shop_bg)
 	local shopBg2 = self:createShopSprite("#shopBg.png",0.4,0.5, shop_bg)
 	local shopBg3 = self:createShopSprite("#shopBg.png",0.61,0.5, shop_bg)
 	local shopBg4 = self:createShopSprite("#shopBg.png",0.82,0.5, shop_bg)
-	local shopTitleBg = self:createShopSprite("#shopTitleBg.png",0.35,0.85, dailytaskLayer)
+	local shopTitleBg = self:createShopSprite("#shopTitleBg.png",0.4,0.85, dailytaskLayer)
 	local shopCoinTitle = self:createShopSprite("#shopCoinTitle.png",0.5,0.72, shopTitleBg)
 	
 	local coinNum1 = self:createShopSprite("#coinNum1.png",0.5,0.8, shopBg1)
 	local shop_coin1 = self:createShopSprite("#shop_coin1.png",0.5,0.55, shopBg1)
 	local price1 = self:createShopSprite("#coinNeedMoney1.png",0.5,0.25, shopBg1)
-	local buyButton1 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,0.01,0.9,shopBg1)
+	local buyButton1 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,shopBg1,0.9)
 	:onButtonClicked(function()
 		GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond - 30
 		GameState.GameData.UItopData.coin = GameState.GameData.UItopData.coin + 300
@@ -209,7 +215,7 @@ function topButton:CreateCoinBuyScene()
 	local coinNum2 = self:createShopSprite("#coinNum2.png",0.5,0.8, shopBg2)
 	local shop_coin2 = self:createShopSprite("#shop_coin2.png",0.5,0.55, shopBg2)
 	local price2 = self:createShopSprite("#coinNeedMoney2.png",0.5,0.25, shopBg2)
-	local buyButton2 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,0.01,0.9,shopBg2)
+	local buyButton2 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,shopBg2,0.9)
 	:onButtonClicked(function()
 		GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond - 50
 		GameState.GameData.UItopData.coin = GameState.GameData.UItopData.coin + 600
@@ -221,7 +227,7 @@ function topButton:CreateCoinBuyScene()
 	local coinNum3 = self:createShopSprite("#coinNum3.png",0.5,0.8, shopBg3)
 	local shop_coin3 = self:createShopSprite("#shop_coin3.png",0.5,0.55, shopBg3)
 	local price3 = self:createShopSprite("#coinNeedMoney3.png",0.5,0.25, shopBg3)
-	local buyButton3 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,0.01,0.9,shopBg3)
+	local buyButton3 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,shopBg3,0.9)
 	:onButtonClicked(function()
 		GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond - 100
 		GameState.GameData.UItopData.coin = GameState.GameData.UItopData.coin + 1500
@@ -232,7 +238,7 @@ function topButton:CreateCoinBuyScene()
 	local coinNum4 = self:createShopSprite("#coinNum4.png",0.5,0.8, shopBg4)
 	local shop_coin4 = self:createShopSprite("#shop_coin4.png",0.5,0.55, shopBg4)
 	local price4 = self:createShopSprite("#coinNeedMoney4.png",0.5,0.25, shopBg4)
-	local buyButton4 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,0.01,0.9,shopBg4)
+	local buyButton4 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,shopBg4,0.9)
 	:onButtonClicked(function()
 		GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond - 200
 		GameState.GameData.UItopData.coin = GameState.GameData.UItopData.coin + 4000
@@ -252,18 +258,18 @@ function topButton:CreateDiamondBuyScene()
 	dailytaskLayer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function ()			
 	end)
 
-	local shop_bg = self:createShopSprite("#shop_bg.png",0.35,0.5, dailytaskLayer)
+	local shop_bg = self:createShopSprite("#shop_bg.png",0.4,0.5, dailytaskLayer)
 	local shopBg1 = self:createShopSprite("#shopBg.png",0.19,0.5, shop_bg)
 	local shopBg2 = self:createShopSprite("#shopBg.png",0.4,0.5, shop_bg)
 	local shopBg3 = self:createShopSprite("#shopBg.png",0.61,0.5, shop_bg)
 	local shopBg4 = self:createShopSprite("#shopBg.png",0.82,0.5, shop_bg)
-	local shopTitleBg = self:createShopSprite("#shopTitleBg.png",0.35,0.85, dailytaskLayer)
+	local shopTitleBg = self:createShopSprite("#shopTitleBg.png",0.4,0.85, dailytaskLayer)
 	local shopDiamondTitle = self:createShopSprite("#shopDiamondTitle.png",0.5,0.72, shopTitleBg)
 	
 	local diamondNum1 = self:createShopSprite("#diamondNum1.png",0.5,0.8, shopBg1)
 	local shop_diamond1 = self:createShopSprite("#shop_diamond1.png",0.5,0.55, shopBg1)
 	local price1 = self:createShopSprite("#diamondNeedMoney1.png",0.5,0.25, shopBg1)
-	local buyButton1 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,0.01,0.9,shopBg1)
+	local buyButton1 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,shopBg1,0.9)
 	:onButtonClicked(function()
 		GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond + 30
 		self.diamondLabel:setString(GameState.GameData.UItopData.diamond)
@@ -272,7 +278,7 @@ function topButton:CreateDiamondBuyScene()
 	local diamondNum2 = self:createShopSprite("#diamondNum2.png",0.5,0.8, shopBg2)
 	local shop_diamond2 = self:createShopSprite("#shop_diamond2.png",0.5,0.55, shopBg2)
 	local price2 = self:createShopSprite("#diamondNeedMoney2.png",0.5,0.25, shopBg2)
-	local buyButton2 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,0.01,0.9,shopBg2)
+	local buyButton2 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,shopBg2,0.9)
 	:onButtonClicked(function()
 		GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond + 66
 		self.diamondLabel:setString(GameState.GameData.UItopData.diamond)
@@ -282,7 +288,7 @@ function topButton:CreateDiamondBuyScene()
 	local diamondNum3 = self:createShopSprite("#diamondNum3.png",0.5,0.8, shopBg3)
 	local shop_diamond3 = self:createShopSprite("#shop_diamond3.png",0.5,0.55, shopBg3)
 	local price3 = self:createShopSprite("#diamondNeedMoney3.png",0.5,0.25, shopBg3)
-	local buyButton3 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,0.01,0.9,shopBg3)
+	local buyButton3 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,shopBg3,0.9)
 	:onButtonClicked(function()
 		GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond +144
 		self.diamondLabel:setString(GameState.GameData.UItopData.diamond)
@@ -291,7 +297,7 @@ function topButton:CreateDiamondBuyScene()
 	local diamondNum4 = self:createShopSprite("#diamondNum4.png",0.5,0.8, shopBg4)
 	local shop_diamond4 = self:createShopSprite("#shop_diamond4.png",0.5,0.55, shopBg4)
 	local price4 = self:createShopSprite("#diamondNeedMoney4.png",0.5,0.25, shopBg4)
-	local buyButton4 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,0.01,0.9,shopBg4)
+	local buyButton4 = self:createBuyButton("#shopCommomBuy.png",0.5,0.14,shopBg4,0.9)
 	:onButtonClicked(function()
 		GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond + 280
 		self.diamondLabel:setString(GameState.GameData.UItopData.diamond)
@@ -315,16 +321,17 @@ function topButton:createButton(path, posX, posY,time, scale)
 		end)	
 	self:addChild(button)
 	return button
+
 end
 
-function topButton:createBuyButton(path, posX, posY,time, scale, parentNode)
+function topButton:createBuyButton(path, posX, posY, parentNode,scale)
 	local images = {
 	normal = path,
 	pressed = path
 	}
 	local button = cc.ui.UIPushButton.new(images)
 	button:setPosition(parentNode:getContentSize().width * posX, parentNode:getContentSize().height * posY)
-	:scaleTo(time, scale)
+	:setScale(0.9)
 	:onButtonPressed(function(event)
 		button:scaleTo(0.1, 1.1)
 		end)

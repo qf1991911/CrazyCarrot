@@ -25,11 +25,13 @@ local initTable = {
         mp = 200
     },
     UItopData = {
-        bloodNow = 99999999999,
+        bloodNow = 5,
         coin = 500,
         diamond = 200
     },
-    HeroNumber = 2
+    HeroNumber = 1,
+    bloodNowState = "false",
+    HeroScanNumber = 1
 }
 
 GameState.GameData = GameState.load() or initTable

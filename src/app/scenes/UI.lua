@@ -315,20 +315,49 @@ function UI:TopButton()
 end
 
 function UI:RightButton()
-	local newBag = self:createButton("#newBag.png", 0.93, 0.67,0.01, 0.9,self)
-	:onButtonClicked(function(event)
-		-- local layer = display.newColorLayer(cc.c4b(100, 100, 100, 100))
-		-- self:addChild(layer)
-		-- local newBagBG = self:createSprite("#newBagBG.png", 0.5, 0.5, self)
-		-- local buyButton = self:createButton("#buttonGet.png", 0.5, 0.1, newBagBG)
-	end)
-	self:scaleAction(newBag)
+	if GameState.GameData.newBagState == "true" then
+		local newBag = self:createButton("#newBag.png", 0.93, 0.67,0.01, 0.9,self)
+		newBag:onButtonClicked(function(event)
+			local layer = display.newColorLayer(cc.c4b(100, 100, 100, 100))
+			self:addChild(layer)
+			local newBagBG = self:createSprite("#newBagBG.png", 0.5, 0.5, layer)
+			local buyButton = self:createButton("#buttonGet.png", 0.5, 0.15,0.01,0.9, newBagBG)
+			buyButton:onButtonClicked(function ()
+				newBag:removeFromParent()
+				layer:removeFromParent()
+			end)
+			local returnButton = self:createButton("#dailytaskreturn.png", 0.92, 0.82,0.01, 0.9, newBagBG)
+			returnButton:onButtonClicked(function()
+				-- newBag:removeFromParent()
+				layer:removeFromParent()
+			end)
+		end)
+		self:scaleAction(newBag)
+	else
+		return
+	end
 
-	local giftBag = self:createButton("#giftBag.png", 0.93, 0.48,0.01, 0.9,self)
-	:onButtonClicked(function(event)
-		print("···")
-	end)
-	self:scaleAction(giftBag)
+	if GameState.GameData.giftBagState == "true" then
+		local giftBag = self:createButton("#giftBag.png", 0.93, 0.48,0.01, 0.9,self)
+		giftBag:onButtonClicked(function(event)
+			local layer1 = display.newColorLayer(cc.c4b(100, 100, 100, 100))
+			self:addChild(layer1)
+			local giftBagBG = self:createSprite("#giftBagBG.png", 0.5, 0.5, layer1)
+			local buyButton1 = self:createButton("#buttonGet.png", 0.5, 0.15,0.01,0.9, giftBagBG)
+			buyButton1:onButtonClicked(function ()
+				giftBag:removeFromParent()
+				layer1:removeFromParent()
+			end)
+			local returnButton1 = self:createButton("#dailytaskreturn.png", 0.92, 0.82,0.01, 0.9, giftBagBG)
+			returnButton1:onButtonClicked(function()
+				-- giftBag:removeFromParent()
+				layer1:removeFromParent()
+			end)
+		end)
+		self:scaleAction(giftBag)
+	else
+		return
+	end
 end
 --缩放动作
 function UI:scaleAction(parentNode)

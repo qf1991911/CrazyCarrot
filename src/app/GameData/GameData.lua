@@ -31,7 +31,9 @@ local initTable = {
     },
     HeroNumber = 1,
     bloodNowState = "false",
-    HeroScanNumber = 1
+    HeroScanNumber = 1,
+    newBagState = "true",
+    giftBagState = "true"
 }
 
 GameState.GameData = GameState.load() or initTable

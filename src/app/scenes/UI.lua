@@ -323,6 +323,13 @@ function UI:RightButton()
 			local newBagBG = self:createSprite("#newBagBG.png", 0.5, 0.5, layer)
 			local buyButton = self:createButton("#buttonGet.png", 0.5, 0.15,0.01,0.9, newBagBG)
 			buyButton:onButtonClicked(function ()
+				GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond + 20
+				self.topButton.diamondLabel:setString(GameState.GameData.UItopData.diamond)
+				GameState.GameData.UItopData.coin = GameState.GameData.UItopData.coin + 100
+				self.topButton.coinLabel:setString(GameState.GameData.UItopData.coin)
+				GameState.GameData.bloodNowState = "true"
+				GameState.GameData.newBagState = "false"
+				GameState.save(GameState.GameData)
 				newBag:removeFromParent()
 				layer:removeFromParent()
 			end)
@@ -345,6 +352,13 @@ function UI:RightButton()
 			local giftBagBG = self:createSprite("#giftBagBG.png", 0.5, 0.5, layer1)
 			local buyButton1 = self:createButton("#buttonGet.png", 0.5, 0.15,0.01,0.9, giftBagBG)
 			buyButton1:onButtonClicked(function ()
+				GameState.GameData.UItopData.diamond = GameState.GameData.UItopData.diamond + 100
+				self.topButton.diamondLabel:setString(GameState.GameData.UItopData.diamond)
+				GameState.GameData.UItopData.coin = GameState.GameData.UItopData.coin + 100
+				self.topButton.coinLabel:setString(GameState.GameData.UItopData.coin)
+				self.topButton.bloodLabel:setString("无限体力")
+				GameState.GameData.giftBagState = "false"
+				GameState.save(GameState.GameData)
 				giftBag:removeFromParent()
 				layer1:removeFromParent()
 			end)

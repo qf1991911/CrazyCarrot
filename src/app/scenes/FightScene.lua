@@ -1018,15 +1018,27 @@ function FightScene:success() --过关界面
 	if self.rabbit.hp < 3 then
 		starleft:show()
 		self.starnum = 1
+		GameState.GameData.LevelStarNum[self.pass] = 1
+		GameState.GameData.LevelPass[self.pass + 1] = true
+		GameState.save(GameState.GameData)
+		-- print(GameState.GameData.LevelPass[self.pass + 1])
 	elseif self.rabbit.hp >= 3 and self.rabbit.hp < 10 then
 		starleft:show()
 		starmid:show()
 		self.starnum = 2
+		GameState.GameData.LevelStarNum[self.pass] = 2
+		GameState.GameData.LevelPass[self.pass + 1] = true
+		GameState.save(GameState.GameData)
+		-- print(GameState.GameData.Levelpass[self.pass + 1])
 	else 
 		starleft:show()
 		starmid:show()
 		starright:show()
 		self.starnum = 3
+		GameState.GameData.LevelStarNum[self.pass] = 3
+		GameState.GameData.LevelPass[self.pass + 1] = true
+		GameState.save(GameState.GameData)
+		-- print(GameState.GameData.LevelPass[self.pass + 1])
 	end
 	local taskPic = self:spriteCreate(Tabel["taskItempic"][self.pass][1], sizeofPic.width*0.35,sizeofPic.height *0.35)
 	taskPic:setScale(0.55)

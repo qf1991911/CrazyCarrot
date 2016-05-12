@@ -19,7 +19,7 @@ function UI:ctor()
     self:BottomButton()
     self:RightButton()
  	self:TopButton()
- 	
+ 	self:CreateCloud()
  	-- self:hero()
  	
 
@@ -27,6 +27,7 @@ end
 --背景
 function UI:createBackGround()
 	local node = display.newNode()
+	:setTag(2)
 	:setPosition(50,0)
 
 	local backGround1 = display.newSprite("map/LevelTheme/themeMap1.png")
@@ -40,6 +41,7 @@ function UI:createBackGround()
 	backGround2:setPosition(display.cx + (backGround1Size.width + backGround2Size.width) / 2, display.cy)
 	backGround2:setTag(2)
 	node:addChild(backGround2)
+	
 
 	local backGround3 = display.newSprite("map/LevelTheme/themeMap3.png")
 	local backGround3Size = backGround3:getContentSize()
@@ -54,11 +56,26 @@ function UI:createBackGround()
 	node:addChild(backGround4)
 
 	for i,v in pairs(Tabel["levelButtonPosition"]) do
-		self.tabel[i] = LevelButton.new(v[1], v[2], i, node)
-		:onButtonClicked(function(event)
-			self:gamePrepare(i)
+		if GameState.GameData.LevelPass[i] then
+			self.tabel[i] = LevelButton.new(v[1], v[2], i, node)
+			self.tabel[i]:setButtonEnabled(true)
+			self.tabel[i]:setColor(cc.c4b(255, 255, 255, 0))
+		else
+			self.tabel[i] = LevelButton.new(v[1], v[2], i, node)
+			self.tabel[i]:setButtonEnabled(false)
+		-- self.tabel[i].pass = GameState.GameData.LevelPass[i]
+		end
+		self.tabel[i]:onButtonClicked(function(event)
+			if GameState.GameData.LevelPass[i] then
+				self:gamePrepare(i)
+			else
+				return
+			end
+
 		end)
+
 	end
+
 	cc.ui.UIScrollView.new({
 		direction = cc.ui.UIScrollView.DIRECTION_BOTH,
 		viewRect = {x = 0, y = 0, width = display.width, height = display.height}
@@ -66,6 +83,7 @@ function UI:createBackGround()
 	:addScrollNode(node)
 	:setDirection(cc.ui.UIScrollView.DIRECTION_HORIZONTAL)
 	:pos(0, 0)
+	:setTag(8)
 	:addTo(self)
 	:setBounceable(false)	
 end
@@ -127,7 +145,14 @@ function UI:BottomButton()
 
 	local helpButton = self:createButton("#helpButton.png", 0.85, 0.1,0.01, 0.9,self)
 	:onButtonClicked(function(event)
-		print("···")
+		local layer = display.newColorLayer(cc.c4b(100, 100, 100, 100))
+		self:addChild(layer)
+		local Service1 = self:createSprite("pic/Service1.png", 0.5, 0.5, layer)
+		local returnButton = self:createButton("#dailytaskreturn.png", 0.92, 0.82,0.01, 0.9, Service1)
+		returnButton:onButtonClicked(function()
+			-- newBag:removeFromParent()
+			layer:removeFromParent()
+		end)
 
 	end)
 end
@@ -143,7 +168,6 @@ function UI:gamePrepare(num)
 	local pre_previewBg = self:createSprite("#pre_previewBg.png",0.5, 0.5 ,prepareLayer)
 	pre_previewBg:setAnchorPoint(0, 0.5)
 	:setScale(0.8, 0.9)
-	print(num)
 	local pre_previewBgLabel = self:createSprite("map/LevelTheme/levelPreview/L"..num..".png",0.5, 0.46 ,pre_previewBg)
 	self:createLabel(pre_previewBg,"第"..num.."关" , 20, 0.5, 0.73,cc.c3b(47, 79, 79))
 	self:setweapon(num, pre_previewBgLabel)
@@ -162,14 +186,16 @@ function UI:gamePrepare(num)
 		})
 		prepareLayer.pre_taskBg:addChild(prepareLayer.listView)
 
+		local Tabel1 = require("app.stageConfig.stageLevelInformation")
 		for i=1,3 do
 			local item = prepareLayer.listView:newItem()
 			local content = display.newSprite("#pre_taskSingleBg.png")			
 			item:addContent(content)
 			item:setItemSize(content:getContentSize().width * 1, content:getContentSize().height * 1)
 			prepareLayer.listView:addItem(item)	
-			self:createLabel(content, Tabel["taskItem"][num][i], 20, 0.35, 0.5,cc.c3b(47, 79, 79))
+			self:createLabel(content, Tabel["taskItem"][num][i], 20, 0.45, 0.5,cc.c3b(47, 79, 79))
 			local taskPic = self:createSprite(Tabel["taskItempic"][num][i],0.14,0.5 ,content)
+			print(GameState.GameData.HeroNumber)
 			taskPic:setScale(0.9, 0.8)
 			self:createSprite("#pre_taskGifted.png",0.83,0.5 ,content)
 			self:createLabel(content, "x"..(28 + 4 * num), 18, 0.85,0.38,cc.c3b(255, 255, 255))
@@ -381,6 +407,56 @@ function UI:scaleAction(parentNode)
 	local seq1 = cc.Sequence:create(action1, actionA)
 	local rep = cc.RepeatForever:create(seq1)
 	parentNode:runAction(rep)
+end
+
+--添加云朵
+function UI:CreateCloud()
+	GameState.GameData.sumStarNum = 0
+	for k,v in pairs(GameState.GameData.LevelStarNum) do
+		GameState.GameData.sumStarNum = GameState.GameData.sumStarNum + v
+		GameState.save(GameState.GameData)
+	end
+	local cloud1 = display.newSprite("pic/whiteCloud.png")
+	cloud1:setScale(2.3)
+	cloud1:setPosition(self:getChildByTag(8):getChildByTag(2):getChildByTag(2):getContentSize().width / 2 - 50,self:getChildByTag(8):getChildByTag(2):getChildByTag(1):getContentSize().height / 2)
+	self:getChildByTag(8):getChildByTag(2):getChildByTag(2):addChild(cloud1)
+	local starCount_bg1 = display.newSprite("pic/starCount_bg1.png")
+	starCount_bg1:setPosition(self:getChildByTag(8):getChildByTag(2):getChildByTag(2):getContentSize().width / 2 - 50,self:getChildByTag(8):getChildByTag(2):getChildByTag(1):getContentSize().height / 2)
+	self:getChildByTag(8):getChildByTag(2):getChildByTag(2):addChild(starCount_bg1)
+
+	local cloud2 = display.newSprite("pic/whiteCloud.png")
+	cloud2:setScale(2.3)
+	cloud2:setPosition(self:getChildByTag(8):getChildByTag(2):getChildByTag(3):getContentSize().width / 2 - 80,self:getChildByTag(8):getChildByTag(2):getChildByTag(1):getContentSize().height / 2)
+	self:getChildByTag(8):getChildByTag(2):getChildByTag(3):addChild(cloud2)
+	local starCount_bg2 = display.newSprite("pic/starCount_bg2.png")
+	starCount_bg2:setPosition(self:getChildByTag(8):getChildByTag(2):getChildByTag(3):getContentSize().width / 2 - 50,self:getChildByTag(8):getChildByTag(2):getChildByTag(1):getContentSize().height / 2)
+	self:getChildByTag(8):getChildByTag(2):getChildByTag(3):addChild(starCount_bg2)
+
+	local cloud3 = display.newSprite("pic/whiteCloud.png")
+	cloud3:setScale(2.3)
+	cloud3:setPosition(self:getChildByTag(8):getChildByTag(2):getChildByTag(4):getContentSize().width / 2 - 100,self:getChildByTag(8):getChildByTag(2):getChildByTag(1):getContentSize().height / 2)
+	self:getChildByTag(8):getChildByTag(2):getChildByTag(4):addChild(cloud3)
+	local starCount_bg3 = display.newSprite("pic/starCount_bg3.png")
+	starCount_bg3:setPosition(self:getChildByTag(8):getChildByTag(2):getChildByTag(4):getContentSize().width / 2 - 50,self:getChildByTag(8):getChildByTag(2):getChildByTag(1):getContentSize().height / 2)
+	self:getChildByTag(8):getChildByTag(2):getChildByTag(4):addChild(starCount_bg3)
+
+	if GameState.GameData.sumStarNum >= 25 then
+		cloud1:removeFromParent()
+		starCount_bg1:removeFromParent()
+	elseif GameState.GameData.sumStarNum >= 50 then
+		cloud1:removeFromParent()
+		starCount_bg1:removeFromParent()
+		cloud2:removeFromParent()
+		starCount_bg2:removeFromParent()
+	elseif GameState.GameData.sumStarNum >= 75 then
+		cloud1:removeFromParent()
+		starCount_bg1:removeFromParent()
+		cloud2:removeFromParent()
+		starCount_bg2:removeFromParent()
+		cloud3:removeFromParent()
+		starCount_bg3:removeFromParent()
+
+	end
 end
 
 function UI:onEnter()

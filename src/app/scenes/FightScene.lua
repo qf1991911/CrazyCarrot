@@ -28,12 +28,14 @@ function FightScene:ctor()
 	self.monster = {}
 	self.way = {}
 	self.tower = {}
+	self.starnum = 0
 	self.gameover = false
 	self.heroSprite = nil
 	self:fightUI()
 	self:fightMap()
 	self:buildArea()
 	self:HeroCreate()
+
 
 end
 
@@ -631,7 +633,8 @@ function FightScene:buildArea() --炮塔建造区域
 		end
 	end
 	local pretower = self.map:getObjectGroup("objs"):getObject("preTower")
-	if #pretower ~= 0 then
+	table.nums(pretower)
+	if table.nums(pretower) ~= 0 then
 		for k,v in pairs(blankAreaTable) do
 			local offsetX = math.abs(v.pos.x - pretower.x)
 			local offsetY = math.abs(v.pos.y - pretower.y)
@@ -1014,13 +1017,16 @@ function FightScene:success() --过关界面
 	starleft:hide()
 	if self.rabbit.hp < 3 then
 		starleft:show()
+		self.starnum = 1
 	elseif self.rabbit.hp >= 3 and self.rabbit.hp < 10 then
 		starleft:show()
 		starmid:show()
+		self.starnum = 2
 	else 
 		starleft:show()
 		starmid:show()
 		starright:show()
+		self.starnum = 3
 	end
 	local taskPic = self:spriteCreate(Tabel["taskItempic"][self.pass][1], sizeofPic.width*0.35,sizeofPic.height *0.35)
 	taskPic:setScale(0.55)

@@ -33,7 +33,23 @@ local initTable = {
     bloodNowState = "false",
     HeroScanNumber = 1,
     newBagState = "true",
-    giftBagState = "true"
+    giftBagState = "true",
+    LevelStarNum = {
+    				3, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    				0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+					},
+    sumStarNum = 0,
+    LevelPass = {	true,	false,	false,	false,	false,
+    				false,	false,	false,	false,	false,
+    				false,	false,	false,	false,	false,
+    				false,	false,	false,	false,	false,
+    				false,	false,	false,	false,	false,
+    				false,	false,	false,	false,	false,
+    				false,	false,	false,	false,	false,
+    				false,	false,	false,	false,	false,
+				}
 }
 
 GameState.GameData = GameState.load() or initTable

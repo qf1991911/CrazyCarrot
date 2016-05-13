@@ -4,6 +4,19 @@ local PassData = {
 			wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,
 			wavetime3 = 85, wavetime4 = 125, wavetime5 = 165, wavetime6 = 205, wavetime7 = 245},
 
+	-- L4_ = {
+	-- 	cc.p(3.5, 0.5),
+	-- 	cc.p(6.5, 0),
+	-- 	cc.p(1, 1.5),
+	-- 	cc.p(8.5, 1),
+	-- 	cc.p(1, 3.5),
+	-- 	cc.p(1.5, 5),
+	-- 	cc.p(11, 2.5),
+	-- 	cc.p(6.5, 0),
+	-- 	cc.p(6.5, 0),
+	-- 	cc.p(6.5, 0)
+	-- },
+	
 	L2= {wave = 8, map = "map/Theme1/L1_2.tmx", pretower = "01",
 			wave1 = "01", wave2 = "02", wave3 = "03", wave4 = "04", wave5 = "05",
 			wave6 = "06", wave7 = "07", wave8 = "08",wavetime1 = 5, wavetime2 = 45,

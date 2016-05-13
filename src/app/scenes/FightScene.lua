@@ -25,6 +25,7 @@ local FightScene = class("FightScene", function(passnum)
 end)
 
 function FightScene:ctor()
+	self.BarrierMark = {}	
 	self.monster = {}
 	self.way = {}
 	self.tower = {}
@@ -35,6 +36,7 @@ function FightScene:ctor()
 	self:fightMap()
 	self:buildArea()
 	self:HeroCreate()
+	self:barrier()
 
 
 end
@@ -273,18 +275,45 @@ function FightScene:fightMap() --地图
 						if v.firetime >= 30 then
 							local bullet = v:fire(0)
 							v.firetime = v.firetime - 30
-							bullet:runAction(v:fireAction(tx,ty+10,bullet,0))
+							if v.target.type == "layer" then
+								local size = v.target:getContentSize()
+								bullet:runAction(v:fireAction(tx,ty+10,bullet,0))
+							else
+								bullet:runAction(v:fireAction(tx,ty+10,bullet,0))
+							end
 							v.target.hpnow = v.target.hpnow -  v.power						
 						end
 					end
 				else
-					for i,j in pairs(self.monster) do
-						local tx,ty = j:getPosition()
-						local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
-						if distance <= v.attackArea then 
-							v.target = j
-							table.insert(j.target,v)						
-							break
+					if #self.BarrierMark == 0 then
+						for i,j in pairs(self.monster) do
+							local tx,ty = j:getPosition()
+							local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
+							if distance <= v.attackArea then 
+								v.target = j
+								table.insert(j.target,v)						
+								break
+							end
+						end
+					else
+						for i,j in pairs(self.BarrierMark) do
+							local tx,ty = j:getPosition()
+							local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
+							if distance <= v.attackArea then 
+								v.target = j
+								table.insert(j.target,v)														
+								break
+							else
+								for a,b in pairs(self.monster) do
+									local tx,ty = b:getPosition()
+									local distance = cc.pGetDistance(cc.p(x,y),cc.p(tx,ty))
+									if distance <= v.attackArea then 
+										v.target = b
+										table.insert(b.target,v)						
+										break
+									end
+								end
+							end
 						end
 					end
 				end
@@ -303,9 +332,9 @@ function FightScene:fightMap() --地图
 				v:dead()
 				v:removeFromParent()
 				v = nil
-			end
-			
+			end		
 		end
+
 		for a,b in pairs(self.windmill) do
 			for k,v in pairs(self.monster) do
 				local bx,by = b:getPosition()
@@ -314,6 +343,20 @@ function FightScene:fightMap() --地图
 				if distance < 60 then
 					v.hpnow = v.hpnow - b.power
 				end
+			end
+		end
+
+		for g,h in pairs(self.BarrierMark) do              
+			h.hptag.hptag:setPercent(h.hpnow / h.hp *100)
+			if h.hpnow <= 0 then
+				for k,v in pairs(h.target) do
+					v.target = nil
+				end
+				local layer = self.map:getLayer("things")
+				layer:removeTileAt(cc.p(h.i,h.j))
+				h:removeFromParent()
+				table.remove(self.BarrierMark,g)
+				h = nil
 			end
 		end
 		if self.rabbit.hp <= 0 and self.gameover == false then
@@ -326,7 +369,6 @@ function FightScene:fightMap() --地图
 			self:success()
 			self:unscheduleUpdate()
 		end
-
 		self:HeroAttack()
 	end)
 	self:scheduleUpdate()
@@ -338,6 +380,162 @@ function FightScene:fightMap() --地图
 	flag:addTo(self.map,1)
 
 end
+function FightScene:barrier()
+	local things = self.map:getLayer("things")
+	for i=0,12 do
+		for j=0,6 do
+			local thing = things:getTileAt(cc.p(i,j))			
+			if thing ~= nil then
+				local Barrier = display.newSprite("#blankArea.png")
+				Barrier:setOpacity(0)
+				Barrier:pos( 35 + i * 70 ,35 + (6 - j) * 70)
+				Barrier:addTo(self.map,4)
+				local point = self:spriteCreate("#point.png", 35, 60)
+				point:hide()
+				point:addTo(Barrier)
+				Barrier.point = point
+				Barrier.gid = things:getTileGIDAt(cc.p(i,j))
+				dump(self.map:getPropertiesForGID(Barrier.gid))
+				Barrier.i = i
+				Barrier.j = j
+				Barrier.target = {}
+				Barrier.hptag = self:thingsBlood(Barrier)
+				Barrier.hp = 1000
+				Barrier.hpnow = 1000
+				Barrier.type = "layer"
+				Barrier:setTouchEnabled(true)
+				Barrier:setTouchSwallowEnabled(true)
+				Barrier:addNodeEventListener(cc.NODE_TOUCH_EVENT, function ()
+					Barrier:setTouchEnabled(false)
+					if #self.BarrierMark ~= 0  then
+						for k,v in pairs(self.BarrierMark) do
+							if v == Barrier then 	
+								for i,j in pairs(v.target) do
+									j.target = nil 
+								end
+								v.point:hide()
+								v = nil
+								self.BarrierMark = {}
+							else	
+								for i,j in pairs(v.target) do
+									j.target = nil 
+								end
+								v.point:hide()
+								v = nil
+								Barrier.point:show()								
+								self.BarrierMark = {}																	
+								table.insert(self.BarrierMark,Barrier)	
+							end					
+						end
+					else
+						Barrier.point:show()
+						table.insert(self.BarrierMark,Barrier)
+					end
+					print(i,j)
+					Barrier:setTouchEnabled(true)
+				end)
+			end
+		end
+	end
+end
+function FightScene:thingsBlood(Barrier)
+	local sprite = display.newSprite("#hpBar_bg.png")
+	:pos(35	,70)
+	:addTo(Barrier)
+	sprite.hptag = cc.ui.UILoadingBar.new({
+		scale9 = true,
+		capInsets = cc.rect(0, 0, 50, 10),
+		image = "#hpBar_front.png",
+		viewRect = cc.rect(0, 0, 50, 10),
+		percent = 100,
+		direction = DIRECTION_RIGHT_TO_LEFT
+		})
+	:addTo(sprite)
+	-- sprite:hide()
+	return sprite
+end
+function FightScene:judge()
+	if Barrier.gid == 1 then 
+		Barrier.hp = 3000
+		Barrier.hptag:setPosition(70,70)
+		local Barrier2 = things:getTileAt(cc.p(Barrier.i+1,j))
+		Barrier2.point:hide()
+		Barrier2.hatag:hide()
+		local Barrier3 = things:getTileAt(cc.p(Barrier.i+1,j+1))
+		Barrier3.point:hide()
+		Barrier3.hatag:hide()
+		local Barrier4 = things:getTileAt(cc.p(Barrier.i,j+1))
+		Barrier4.point:hide()
+		Barrier4.hatag:hide()
+	elseif Barrier.gid == 2 then
+		Barrier.hp = 3000
+		Barrier.hptag:setPosition(0,70)
+		local Barrier2 = things:getTileAt(cc.p(Barrier.i-1,j))
+		Barrier2.point:hide()
+		Barrier2.hatag:hide()
+		local Barrier3 = things:getTileAt(cc.p(Barrier.i-1,j+1))
+		Barrier3.point:hide()
+		Barrier3.hatag:hide()
+		local Barrier4 = things:getTileAt(cc.p(Barrier.i,j+1))
+		Barrier4.point:hide()
+		Barrier4.hatag:hide()
+	elseif Barrier.gid == 8 then
+		Barrier.hp = 3000
+		Barrier.hptag:setPosition(70,140)
+		local Barrier2 = things:getTileAt(cc.p(Barrier.i,j-1))
+		Barrier2.point:hide()
+		Barrier2.hatag:hide()
+		local Barrier3 = things:getTileAt(cc.p(Barrier.i+1,j-1))
+		Barrier3.point:hide()
+		Barrier3.hatag:hide()
+		local Barrier4 = things:getTileAt(cc.p(Barrier.i+1,j))
+		Barrier4.point:hide()
+		Barrier4.hatag:hide()
+	elseif Barrier.gid == 9 then
+		Barrier.hp = 3000
+		Barrier.hptag:setPosition(0,140)
+		local Barrier2 = things:getTileAt(cc.p(Barrier.i-1,j-1))
+		Barrier2.point:hide()
+		Barrier2.hatag:hide()
+		local Barrier3 = things:getTileAt(cc.p(Barrier.i,j-1))
+		Barrier3.point:hide()
+		Barrier3.hatag:hide()
+		local Barrier4 = things:getTileAt(cc.p(Barrier.i-1,j))
+		Barrier4.point:hide()
+		Barrier4.hatag:hide()
+	end
+end
+function FightScene:jugde2()
+	if Barrier.gid == 3 or Barrier.gid == 4 then
+		Barrier.hp = 2000
+		local Barrier2 = things:getTileAt(cc.p(Barrier.i,j+1))
+		Barrier2.point:hide()
+		Barrier2.hatag:hide()
+	elseif Barrier.gid == 10 or Barrier.gid == 11 then
+		Barrier.hp = 2000
+		Barrier.hptag:setPosition(35,140)
+		local Barrier2 = things:getTileAt(cc.p(Barrier.i,j-1))
+		Barrier2.point:hide()
+		Barrier2.hatag:hide()
+	end
+end
+
+function FightScene:judge3()
+	if Barrier.gid == 5 or Barrier.gid == 12 then
+		Barrier.hp = 2000
+		Barrier.hptag:setPosition(70,70)
+		local Barrier2 = things:getTileAt(cc.p(Barrier.i+1,j))
+		Barrier2.point:hide()
+		Barrier2.hatag:hide()
+	elseif Barrier.gid == 6 or Barrier.gid == 13 then
+		Barrier.hp = 2000
+		Barrier.hptag:setPosition(0,70)
+		local Barrier2 = things:getTileAt(cc.p(Barrier.i-1,j))
+		Barrier2.point:hide()
+		Barrier2.hatag:hide()
+	end
+end
+
 function FightScene:HeroCreate()
 	self.heroSprite = Hero.new("#h01_move_"..GameState.GameData.HeroNumber..".png",200, 200, self.map)
 	self.heroSprite:setLocalZOrder(2)
@@ -547,11 +745,10 @@ end
 
 function FightScene:buildArea() --炮塔建造区域
 
-	local things = self.map:getLayer("things")
 	local way = self.map:getLayer("content")
 	local blankAreaTable = {}
 	for i=1,11 do
-		for j=0,6 do
+		for j=0,6 do 
 			local tile = way:getTileAt(cc.p(i,j))
 			if tile == nil then			
 				local blankArea = display.newSprite("#blankArea.png")

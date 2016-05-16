@@ -35,7 +35,7 @@ local initTable = {
     newBagState = "true",
     giftBagState = "true",
     LevelStarNum = {
-    				3, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     				0, 0, 0, 0, 0, 0, 0, 0, 0, 0

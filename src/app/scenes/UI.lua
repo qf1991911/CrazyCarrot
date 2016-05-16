@@ -269,7 +269,10 @@ function UI:gamePrepare(num)
 			self:createLabel(content, Tabel["tackleIntroduction"][i], 15, 0.4, 0.38,cc.c3b(47, 79, 79))
 			local taskPic = self:createSprite(Tabel["tackle"][i],0.14,0.5 ,content)
 			taskPic:setScale(0.9, 0.8)
-			self:createButton("#pre_itemPurchase.png",0.83,0.5 ,0.01, 1,content)
+			local button = {}
+
+			button[i] = self:createButton("#pre_itemPurchase.png",0.83,0.5 ,0.01, 1,content)
+			
 			local listCoin = self:createSprite("#coinNew.png",0.29, 0.67, content)
 			:setScale(0.43)
 			self:createLabel(content, Tabel["tacklePrice"][i], 18, 0.37,0.67,cc.c3b(255, 255, 255))

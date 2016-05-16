@@ -353,7 +353,11 @@ function FightScene:fightMap() --地图
 					v.target = nil
 				end
 				local layer = self.map:getLayer("things")
-				layer:removeTileAt(cc.p(h.i,h.j))
+				dump(h.thing)
+				for a,b in pairs(h.thing) do
+					print(b.i, b.j)
+					layer:removeTileAt(cc.p(b.i, b.j))
+				end
 				h:removeFromParent()
 				table.remove(self.BarrierMark,g)
 				h = nil
@@ -384,64 +388,195 @@ function FightScene:barrier()
 	local things = self.map:getLayer("things")
 	for i=0,12 do
 		for j=0,6 do
-			local thing = things:getTileAt(cc.p(i,j))			
+			local thing = things:getTileAt(cc.p(i,j))
+			-- local gid = things:getTileGIDAt(cc.p(i,j))	
+			-- local idx = self.map:getPropertiesForGID(gid)
+			-- print(idx)		
 			if thing ~= nil then
-				local Barrier = display.newSprite("#blankArea.png")
-				Barrier:setOpacity(0)
-				Barrier:pos( 35 + i * 70 ,35 + (6 - j) * 70)
-				Barrier:addTo(self.map,4)
-				local point = self:spriteCreate("#point.png", 35, 60)
-				point:hide()
-				point:addTo(Barrier)
-				Barrier.point = point
-				Barrier.gid = things:getTileGIDAt(cc.p(i,j))
-				dump(self.map:getPropertiesForGID(Barrier.gid))
-				Barrier.i = i
-				Barrier.j = j
-				Barrier.target = {}
-				Barrier.hptag = self:thingsBlood(Barrier)
-				Barrier.hp = 1000
-				Barrier.hpnow = 1000
-				Barrier.type = "layer"
-				Barrier:setTouchEnabled(true)
-				Barrier:setTouchSwallowEnabled(true)
-				Barrier:addNodeEventListener(cc.NODE_TOUCH_EVENT, function ()
-					Barrier:setTouchEnabled(false)
-					if #self.BarrierMark ~= 0  then
-						for k,v in pairs(self.BarrierMark) do
-							if v == Barrier then 	
-								for i,j in pairs(v.target) do
-									j.target = nil 
-								end
-								v.point:hide()
-								v = nil
-								self.BarrierMark = {}
-							else	
-								for i,j in pairs(v.target) do
-									j.target = nil 
-								end
-								v.point:hide()
-								v = nil
-								Barrier.point:show()								
-								self.BarrierMark = {}																	
-								table.insert(self.BarrierMark,Barrier)	
-							end					
-						end
-					else
-						Barrier.point:show()
-						table.insert(self.BarrierMark,Barrier)
-					end
-					print(i,j)
-					Barrier:setTouchEnabled(true)
-				end)
+				thing.number, thing.Barrier = self:checkBarrier(things, i, j)
+				thing.i = i
+				thing.j = j
+				table.insert(thing.Barrier.thing, thing)
+				if thing.Barrier.touch ~= true then
+					self:barrierTouch(thing)
+				end
+				-- self:barrierTouch(thing)
+				
+				-- thing.gid = things:getTileGIDAt(cc.p(i,j))
+				-- local idx = self.map:getPropertiesForGID(thing.gid)
+				-- if type(idx) == "number" then
+				-- 	--left
+
+
+
+				-- elseif type(idx) == "table" then
+				-- 	local number = math.floor(idx.thingIdx / 100)
+				-- end
+				-- idx.thingIdx
+
+			-- 	thing.Barrier = display.newSprite("#blankArea.png")
+			-- 	thing.Barrier:setOpacity(0)
+			-- 	thing.Barrier:pos( 35 + i * 70 ,35 + (6 - j) * 70)
+			-- 	thing.Barrier:addTo(self.map,4)
+			-- 	local point = self:spriteCreate("#point.png", 35, 60)
+			-- 	point:hide()
+			-- 	point:addTo(Barrier)
+			-- 	thing.Barrier.point = point
+			-- 	thing.Barrier.gid = things:getTileGIDAt(cc.p(i,j))
+			-- 	local idx = self.map:getPropertiesForGID(Barrier.gid)
+			-- 	for k,v in pairs(idx) do
+			-- 		thing.Barrier.idx = math.floor(v/100)
+			-- 	end
+			-- 	thing.Barrier.i = i
+			-- 	thing.Barrier.j = j
+			-- 	thing.Barrier.target = {}
+				
+			-- 	thing.Barrier.type = "layer"
+			-- 	thing.Barrier:setTouchEnabled(true)
+			-- 	thing.Barrier:setTouchSwallowEnabled(true)
+			-- 	thing.Barrier:addNodeEventListener(cc.NODE_TOUCH_EVENT, function ()
+			-- 		thing.Barrier:setTouchEnabled(false)
+			-- 		if thing.Barrier.idx == 0  then
+			-- 			local thing2 = things:getTileAt(cc.p(Barrier.i-1,j))
+			-- 			local thing3 = things:getTileAt(cc.p(Barrier.i,j+1))
+			-- 			local thing4 = things:getTileAt(cc.p(Barrier.i-1,j+1))
+			-- 			if thing2.Barrier.idx == 3 then
+			-- 				thing.Barrier.hptag = self:thingsBlood(thing.Barrier)
+			-- 				thing.Barrier.hp = 2000
+			-- 				thing.Barrier.hpnow = 2000
+			-- 			end
+			-- 			if thing3.Barrier.idx == 2 then
+			-- 				thing.Barrier.hptag = self:thingsBlood(thing.Barrier)
+			-- 				thing.Barrier.hp = 2000
+			-- 				thing.Barrier.hpnow = 2000
+			-- 			end
+			-- 			if thing2.Barrier.idx == 4 or thing3.Barrier.idx == 4 or thing4.Barrier.idx == 4 then
+			-- 				thing.Barrier.hptag = self:thingsBlood(thing.Barrier)
+			-- 				thing.Barrier.hp = 3000
+			-- 				thing.Barrier.hpnow = 3000
+			-- 			end
+
+
+			-- 		if #self.BarrierMark ~= 0  then
+			-- 			for k,v in pairs(self.BarrierMark) do
+			-- 				if v == Barrier then 	
+			-- 					for i,j in pairs(v.target) do
+			-- 						j.target = nil 
+			-- 					end
+			-- 					v.point:hide()
+			-- 					v = nil
+			-- 					self.BarrierMark = {}
+			-- 				else	
+			-- 					for i,j in pairs(v.target) do
+			-- 						j.target = nil 
+			-- 					end
+			-- 					v.point:hide()
+			-- 					v = nil
+			-- 					Barrier.point:show()								
+			-- 					self.BarrierMark = {}																	
+			-- 					table.insert(self.BarrierMark,thing.Barrier)	
+			-- 				end					
+			-- 			end
+			-- 		else
+			-- 			Barrier.point:show()
+			-- 			table.insert(self.BarrierMark,thing.Barrier)
+			-- 		end
+			-- 		print(i,j)
+			-- 		Barrier:setTouchEnabled(true)
+			-- 	end)
 			end
 		end
 	end
 end
-function FightScene:thingsBlood(Barrier)
+
+function FightScene:checkBarrier(things, i, j)
+	local thing = things:getTileAt(cc.p(i,j))
+	if nil == thing then
+		return 0
+	end
+	thing.gid = things:getTileGIDAt(cc.p(i,j))
+	local idx = self.map:getPropertiesForGID(thing.gid)
+	local number = 0
+	-- thing.Barrier = nil
+	if type(idx) == "number" then	
+		--left
+		if number == 0 and (i - 1) >= 0 then
+			number, thing.Barrier = self:checkBarrier(things, i - 1, j)
+		end
+		--down
+		if number == 0 and (j + 1) <= 6 then
+			number, thing.Barrier = self:checkBarrier(things, i, j + 1)
+		end
+		--leftdown
+		if number == 0 and (j + 1) <= 6 and (i - 1) >= 0 then
+			number, thing.Barrier = self:checkBarrier(things, i - 1, j + 1)
+		end
+	elseif type(idx) == "table" then
+		number = math.floor(idx.thingIdx / 100)
+		if nil == thing.Barrier then
+			thing.Barrier = display.newSprite("#blankArea.png")
+			thing.Barrier:setScaleX(math.ceil(number / 2))
+			thing.Barrier:setScaleY(2 - number % 2)
+			thing.Barrier:setOpacity(0)
+			thing.Barrier:pos( 35 + (i + math.ceil(number / 2) / 2 - 0.5) * 70 ,35 + ((6 - j) + (2 - number % 2) / 2 - 0.5) * 70)
+			thing.Barrier:addTo(self.map,4)
+			thing.Barrier.hp = number*1000
+			thing.Barrier.hpnow = number*1000
+			thing.Barrier.target = {}
+			thing.Barrier.i = i
+			thing.Barrier.j = j
+			thing.Barrier.thing = {}
+		end
+	end
+
+	return number, thing.Barrier
+end
+
+function FightScene:barrierTouch(thing)
+	-- print(thing.number, thing.Barrier)
+	thing.Barrier.touch = true
+	thing.Barrier.hptag = self:thingsBlood(thing)
+	thing.Barrier.hptag:hide()
+	thing.Barrier:setTouchEnabled(true)
+	thing.Barrier:setTouchSwallowEnabled(true)
+	thing.Barrier:addNodeEventListener(cc.NODE_TOUCH_EVENT, function ()
+		thing.Barrier.hptag:show()
+		print("chumo")
+		-- thing.Barrier:setTouchEnabled(false)
+		if #self.BarrierMark ~= 0  then
+			for k,v in pairs(self.BarrierMark) do
+				if v == thing.Barrier then 	
+					for i,j in pairs(v.target) do
+						j.target = nil 
+					end
+					-- v.point:hide()
+					v = nil
+					self.BarrierMark = {}
+					
+				else	
+					for i,j in pairs(v.target) do
+						j.target = nil 
+					end
+					-- v.point:hide()
+					v = nil
+					-- Barrier.point:show()								
+					self.BarrierMark = {}																	
+					table.insert(self.BarrierMark,thing.Barrier)	
+				end					
+			end
+		else
+			table.insert(self.BarrierMark,thing.Barrier)
+		end
+		-- thing.Barrier:setTouchEnabled(true)
+	end)
+end
+
+function FightScene:thingsBlood(thing)
 	local sprite = display.newSprite("#hpBar_bg.png")
 	:pos(35	,70)
-	:addTo(Barrier)
+	:addTo(thing.Barrier)
+	sprite:setScaleX(1 / math.ceil(thing.number / 2))
+	sprite:setScaleY(1 / (2 - thing.number % 2))
 	sprite.hptag = cc.ui.UILoadingBar.new({
 		scale9 = true,
 		capInsets = cc.rect(0, 0, 50, 10),
@@ -454,87 +589,87 @@ function FightScene:thingsBlood(Barrier)
 	-- sprite:hide()
 	return sprite
 end
-function FightScene:judge()
-	if Barrier.gid == 1 then 
-		Barrier.hp = 3000
-		Barrier.hptag:setPosition(70,70)
-		local Barrier2 = things:getTileAt(cc.p(Barrier.i+1,j))
-		Barrier2.point:hide()
-		Barrier2.hatag:hide()
-		local Barrier3 = things:getTileAt(cc.p(Barrier.i+1,j+1))
-		Barrier3.point:hide()
-		Barrier3.hatag:hide()
-		local Barrier4 = things:getTileAt(cc.p(Barrier.i,j+1))
-		Barrier4.point:hide()
-		Barrier4.hatag:hide()
-	elseif Barrier.gid == 2 then
-		Barrier.hp = 3000
-		Barrier.hptag:setPosition(0,70)
-		local Barrier2 = things:getTileAt(cc.p(Barrier.i-1,j))
-		Barrier2.point:hide()
-		Barrier2.hatag:hide()
-		local Barrier3 = things:getTileAt(cc.p(Barrier.i-1,j+1))
-		Barrier3.point:hide()
-		Barrier3.hatag:hide()
-		local Barrier4 = things:getTileAt(cc.p(Barrier.i,j+1))
-		Barrier4.point:hide()
-		Barrier4.hatag:hide()
-	elseif Barrier.gid == 8 then
-		Barrier.hp = 3000
-		Barrier.hptag:setPosition(70,140)
-		local Barrier2 = things:getTileAt(cc.p(Barrier.i,j-1))
-		Barrier2.point:hide()
-		Barrier2.hatag:hide()
-		local Barrier3 = things:getTileAt(cc.p(Barrier.i+1,j-1))
-		Barrier3.point:hide()
-		Barrier3.hatag:hide()
-		local Barrier4 = things:getTileAt(cc.p(Barrier.i+1,j))
-		Barrier4.point:hide()
-		Barrier4.hatag:hide()
-	elseif Barrier.gid == 9 then
-		Barrier.hp = 3000
-		Barrier.hptag:setPosition(0,140)
-		local Barrier2 = things:getTileAt(cc.p(Barrier.i-1,j-1))
-		Barrier2.point:hide()
-		Barrier2.hatag:hide()
-		local Barrier3 = things:getTileAt(cc.p(Barrier.i,j-1))
-		Barrier3.point:hide()
-		Barrier3.hatag:hide()
-		local Barrier4 = things:getTileAt(cc.p(Barrier.i-1,j))
-		Barrier4.point:hide()
-		Barrier4.hatag:hide()
-	end
-end
-function FightScene:jugde2()
-	if Barrier.gid == 3 or Barrier.gid == 4 then
-		Barrier.hp = 2000
-		local Barrier2 = things:getTileAt(cc.p(Barrier.i,j+1))
-		Barrier2.point:hide()
-		Barrier2.hatag:hide()
-	elseif Barrier.gid == 10 or Barrier.gid == 11 then
-		Barrier.hp = 2000
-		Barrier.hptag:setPosition(35,140)
-		local Barrier2 = things:getTileAt(cc.p(Barrier.i,j-1))
-		Barrier2.point:hide()
-		Barrier2.hatag:hide()
-	end
-end
+-- function FightScene:judge()
+-- 	if Barrier.gid == 1 then 
+-- 		Barrier.hp = 3000
+-- 		Barrier.hptag:setPosition(70,70)
+-- 		local Barrier2 = things:getTileAt(cc.p(Barrier.i+1,j))
+-- 		Barrier2.point:hide()
+-- 		Barrier2.hatag:hide()
+-- 		local Barrier3 = things:getTileAt(cc.p(Barrier.i+1,j+1))
+-- 		Barrier3.point:hide()
+-- 		Barrier3.hatag:hide()
+-- 		local Barrier4 = things:getTileAt(cc.p(Barrier.i,j+1))
+-- 		Barrier4.point:hide()
+-- 		Barrier4.hatag:hide()
+-- 	elseif Barrier.gid == 2 then
+-- 		Barrier.hp = 3000
+-- 		Barrier.hptag:setPosition(0,70)
+-- 		local Barrier2 = things:getTileAt(cc.p(Barrier.i-1,j))
+-- 		Barrier2.point:hide()
+-- 		Barrier2.hatag:hide()
+-- 		local Barrier3 = things:getTileAt(cc.p(Barrier.i-1,j+1))
+-- 		Barrier3.point:hide()
+-- 		Barrier3.hatag:hide()
+-- 		local Barrier4 = things:getTileAt(cc.p(Barrier.i,j+1))
+-- 		Barrier4.point:hide()
+-- 		Barrier4.hatag:hide()
+-- 	elseif Barrier.gid == 8 then
+-- 		Barrier.hp = 3000
+-- 		Barrier.hptag:setPosition(70,140)
+-- 		local Barrier2 = things:getTileAt(cc.p(Barrier.i,j-1))
+-- 		Barrier2.point:hide()
+-- 		Barrier2.hatag:hide()
+-- 		local Barrier3 = things:getTileAt(cc.p(Barrier.i+1,j-1))
+-- 		Barrier3.point:hide()
+-- 		Barrier3.hatag:hide()
+-- 		local Barrier4 = things:getTileAt(cc.p(Barrier.i+1,j))
+-- 		Barrier4.point:hide()
+-- 		Barrier4.hatag:hide()
+-- 	elseif Barrier.gid == 9 then
+-- 		Barrier.hp = 3000
+-- 		Barrier.hptag:setPosition(0,140)
+-- 		local Barrier2 = things:getTileAt(cc.p(Barrier.i-1,j-1))
+-- 		Barrier2.point:hide()
+-- 		Barrier2.hatag:hide()
+-- 		local Barrier3 = things:getTileAt(cc.p(Barrier.i,j-1))
+-- 		Barrier3.point:hide()
+-- 		Barrier3.hatag:hide()
+-- 		local Barrier4 = things:getTileAt(cc.p(Barrier.i-1,j))
+-- 		Barrier4.point:hide()
+-- 		Barrier4.hatag:hide()
+-- 	end
+-- end
+-- function FightScene:jugde2()
+-- 	if Barrier.gid == 3 or Barrier.gid == 4 then
+-- 		Barrier.hp = 2000
+-- 		local Barrier2 = things:getTileAt(cc.p(Barrier.i,j+1))
+-- 		Barrier2.point:hide()
+-- 		Barrier2.hatag:hide()
+-- 	elseif Barrier.gid == 10 or Barrier.gid == 11 then
+-- 		Barrier.hp = 2000
+-- 		Barrier.hptag:setPosition(35,140)
+-- 		local Barrier2 = things:getTileAt(cc.p(Barrier.i,j-1))
+-- 		Barrier2.point:hide()
+-- 		Barrier2.hatag:hide()
+-- 	end
+-- end
 
-function FightScene:judge3()
-	if Barrier.gid == 5 or Barrier.gid == 12 then
-		Barrier.hp = 2000
-		Barrier.hptag:setPosition(70,70)
-		local Barrier2 = things:getTileAt(cc.p(Barrier.i+1,j))
-		Barrier2.point:hide()
-		Barrier2.hatag:hide()
-	elseif Barrier.gid == 6 or Barrier.gid == 13 then
-		Barrier.hp = 2000
-		Barrier.hptag:setPosition(0,70)
-		local Barrier2 = things:getTileAt(cc.p(Barrier.i-1,j))
-		Barrier2.point:hide()
-		Barrier2.hatag:hide()
-	end
-end
+-- function FightScene:judge3()
+-- 	if Barrier.gid == 5 or Barrier.gid == 12 then
+-- 		Barrier.hp = 2000
+-- 		Barrier.hptag:setPosition(70,70)
+-- 		local Barrier2 = things:getTileAt(cc.p(Barrier.i+1,j))
+-- 		Barrier2.point:hide()
+-- 		Barrier2.hatag:hide()
+-- 	elseif Barrier.gid == 6 or Barrier.gid == 13 then
+-- 		Barrier.hp = 2000
+-- 		Barrier.hptag:setPosition(0,70)
+-- 		local Barrier2 = things:getTileAt(cc.p(Barrier.i-1,j))
+-- 		Barrier2.point:hide()
+-- 		Barrier2.hatag:hide()
+-- 	end
+-- end
 
 function FightScene:HeroCreate()
 	self.heroSprite = Hero.new("#h01_move_"..GameState.GameData.HeroNumber..".png",200, 200, self.map)
@@ -1215,27 +1350,15 @@ function FightScene:success() --过关界面
 	if self.rabbit.hp < 3 then
 		starleft:show()
 		self.starnum = 1
-		GameState.GameData.LevelStarNum[self.pass] = 1
-		GameState.GameData.LevelPass[self.pass + 1] = true
-		GameState.save(GameState.GameData)
-		-- print(GameState.GameData.LevelPass[self.pass + 1])
 	elseif self.rabbit.hp >= 3 and self.rabbit.hp < 10 then
 		starleft:show()
 		starmid:show()
 		self.starnum = 2
-		GameState.GameData.LevelStarNum[self.pass] = 2
-		GameState.GameData.LevelPass[self.pass + 1] = true
-		GameState.save(GameState.GameData)
-		-- print(GameState.GameData.Levelpass[self.pass + 1])
 	else 
 		starleft:show()
 		starmid:show()
 		starright:show()
 		self.starnum = 3
-		GameState.GameData.LevelStarNum[self.pass] = 3
-		GameState.GameData.LevelPass[self.pass + 1] = true
-		GameState.save(GameState.GameData)
-		-- print(GameState.GameData.LevelPass[self.pass + 1])
 	end
 	local taskPic = self:spriteCreate(Tabel["taskItempic"][self.pass][1], sizeofPic.width*0.35,sizeofPic.height *0.35)
 	taskPic:setScale(0.55)

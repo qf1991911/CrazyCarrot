@@ -41,8 +41,8 @@ local initTable = {
     				0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 					},
     sumStarNum = 0,
-    LevelPass = {	true,	false,	false,	false,	false,
-    				false,	false,	false,	false,	false,
+    LevelPass = {	true,	true,	true,	true,	true,
+    				true,   true,   true,   true,   true,
     				false,	false,	false,	false,	false,
     				false,	false,	false,	false,	false,
     				false,	false,	false,	false,	false,
